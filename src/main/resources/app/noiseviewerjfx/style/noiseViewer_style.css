@@ -1,0 +1,227 @@
+/* APP-WIDE*/
+
+* {
+    -menu-bar-color: #1C1E23;
+    -background-color: #26292E;
+    -tab-color: #1E2022;
+    -accent-color: #535A6A;
+    -main-text-fill: #9EA0A8;
+    -emphasis-text-fill: #C4C7D2;
+    -highlight-text-fill: white;
+    -scroll-panel-color: #1E2022;
+    -icon-hover-fill: #303E62;
+    -line-color: #008CFF;
+    -fx-border-width: 0;
+}
+
+/* MENU */
+
+.menu-bar {
+    -fx-background-color: -menu-bar-color;
+}
+
+.menu {
+    -fx-padding: 0 5 0 5;
+}
+
+.menu .label,
+.menu-item .label {
+    -fx-text-fill: -main-text-fill;
+}
+
+/* TODO: handle menu selection in Java to get rid of blue selection*/
+
+.menu-bar .menu:hover .label {
+    -fx-text-fill: white;
+}
+
+.menu:hover,
+.menu-item:hover {
+    -fx-background-color: transparent;
+}
+
+.context-menu {
+    -fx-background-color: -menu-bar-color;
+}
+
+/* SPLIT  PANE */
+
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane *.split-pane-divider {
+    -fx-padding: 1;
+    -fx-background-color: -menu-bar-color;
+}
+
+/* TABS */
+
+#SCROLL-PANE-BOX {
+    -fx-background-color: -tab-color;
+}
+
+.tab-pane
+{
+    -fx-tab-min-height: 30;
+    -fx-tab-min-width: 80;
+    -fx-padding: 0 -1 -1 0;
+}
+
+.tab-pane .tab-header-background
+{
+    -fx-background-color: -tab-color;
+}
+
+.tab-pane:top .tab-header-area
+{
+    -fx-background-insets: 0, 0 0 0;
+    -fx-padding: 0.0em 0.0em 0.0em 0.0em;
+}
+
+.tab .tab-label {
+    -fx-text-fill: -main-text-fill;
+}
+
+.tab:selected .tab-label, .tab:hover .tab-label {
+    -fx-text-fill: -highlight-text-fill;
+}
+
+.tab
+{
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-color: -tab-color;
+}
+
+.tab:selected, .tab:hover{
+    -fx-background-color: -accent-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -line-color;
+}
+
+/* SCROLLING */
+
+.scroll-bar:vertical .decrement-arrow,
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-button,
+.scroll-bar:vertical .increment-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -line-color;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: -tab-color;
+}
+
+/* BUTTONS */
+
+.button {
+    -fx-text-fill: -main-text-fill;
+    -fx-background-color: -background-color;
+    -fx-min-height: 2em;
+    -fx-text-alignment: left;
+    -fx-background-radius: 0.5em;
+}
+
+.button:hover {
+    -fx-background-color: -accent-color;
+    -fx-text-fill: white;
+}
+
+/* SPINNERS */
+
+.spinner {
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: -accent-color;
+    -fx-background-color: transparent;
+}
+
+.spinner .text-field {
+    -fx-border-width: 0;
+    -fx-background-color: -background-color;
+    -fx-text-fill: -main-text-fill;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: -background-color;
+    -fx-padding: 5;
+}
+
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-background-color: -accent-color;
+}
+
+/* TEXT FIELDS */
+
+.text-field {
+    -fx-background-color: -background-color;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: -accent-color;
+    -fx-text-fill: -main-text-fill;
+}
+
+/* CHECK-BOXES */
+
+.check-box .box {
+    -fx-background-color: -background-color;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -accent-color;
+}
+
+/* SLIDER */
+
+.slider .track {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-pref-height: 4;
+    -fx-background-color: -accent-color;
+}
+
+.slider .thumb {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-pref-height: 15;
+    -fx-pref-width: 5;
+    -fx-background-radius: 2;
+    -fx-background-color: -line-color;
+}
+
+/* IDS */
+
+#BACKGROUND {
+    -fx-background-color: -background-color;
+}
+
+#ICON-BUTTON {
+    -fx-background-color: transparent;
+    -fx-font-size: 15;
+}
+
+#ICON-BUTTON:hover {
+    -fx-background-color: -icon-hover-fill;
+    -fx-background-radius: 1em;
+}
+
+#RED-ICON {
+    -fx-fill: #B62727;
+}
+
+#TITLE {
+    -fx-fill: -emphasis-text-fill;
+}
+
+#MAIN-TEXT {
+    -fx-text-fill: -main-text-fill;
+    -fx-fill: -main-text-fill;
+}
