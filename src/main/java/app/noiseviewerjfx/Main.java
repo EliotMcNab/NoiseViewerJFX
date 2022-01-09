@@ -1,4 +1,4 @@
-package app.noiseviewerjfx.codebehind;
+package app.noiseviewerjfx;
 
 public class Main {
     public static void main(String[] args) {

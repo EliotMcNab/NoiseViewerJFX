@@ -1,4 +1,4 @@
-package app.noiseviewerjfx.utilities.text;
+package app.noiseviewerjfx.utilities;
 
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
