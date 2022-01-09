@@ -1,4 +1,4 @@
-package app.noiseviewerjfx.io;
+package app.noiseviewerjfx.utilities.io;
 
 import java.io.File;
 import java.io.FileInputStream;

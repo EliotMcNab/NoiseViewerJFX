@@ -1,6 +1,6 @@
-package app.noiseviewerjfx.io.write;
+package app.noiseviewerjfx.utilities.io.write;
 
-import app.noiseviewerjfx.io.FileType;
+import app.noiseviewerjfx.utilities.io.FileType;
 
 import java.io.File;
 import java.io.FileNotFoundException;

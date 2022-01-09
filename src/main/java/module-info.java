@@ -5,6 +5,8 @@ module app.noiseviewerjfx {
 
     opens app.noiseviewerjfx to javafx.fxml;
     exports app.noiseviewerjfx;
-    exports app.noiseviewerjfx.controller;
-    opens app.noiseviewerjfx.controller to javafx.fxml;
+    exports app.noiseviewerjfx.utilities.controller;
+    opens app.noiseviewerjfx.utilities.controller to javafx.fxml;
+    exports app.noiseviewerjfx.codebehind;
+    opens app.noiseviewerjfx.codebehind to javafx.fxml;
 }

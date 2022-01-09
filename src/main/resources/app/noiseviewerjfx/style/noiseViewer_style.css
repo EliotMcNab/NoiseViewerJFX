@@ -141,7 +141,7 @@
 }
 
 .scroll-bar:vertical {
-    -fx-background-color: transparent;
+    -fx-background-color: -tab-color;
 }
 
 .terrain-scroll-pane {
@@ -182,6 +182,10 @@
 }
 
 /* SPINNERS */
+
+#BAR-SPINNER .text-field {
+    -fx-background-radius: 0;
+}
 
 .spinner {
     -fx-border-width: 0 0 3 0;

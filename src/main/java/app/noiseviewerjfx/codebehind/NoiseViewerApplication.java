@@ -1,4 +1,4 @@
-package app.noiseviewerjfx;
+package app.noiseviewerjfx.codebehind;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,4 +1,4 @@
-package app.noiseviewerjfx.io;
+package app.noiseviewerjfx.utilities.io;
 
 public enum Directories {
 

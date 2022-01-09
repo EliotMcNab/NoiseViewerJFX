@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: app.noiseviewerjfx.Main
+Main-Class: app.noiseviewerjfx.codebehind.Main
 
