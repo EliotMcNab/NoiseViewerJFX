@@ -1,7 +1,8 @@
 package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.TextValidation;
-import javafx.application.Platform;
+import app.noiseviewerjfx.utilities.processing.ImageProcessing;
+import app.noiseviewerjfx.utilities.processing.NoiseProcessing;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -10,11 +11,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.nio.Buffer;
 import java.util.ResourceBundle;
 
 /**
@@ -66,15 +72,17 @@ public class NoiseViewerController implements Initializable {
     private Slider MASK_STRENGTH_SLIDER;
     // endregion SLIDERS
 
-    // TEXT FIELDS
+    // region TEXT FIELDS
     @FXML
     private TextField SEED_TEXT_FIELD;
+    // endregion
 
-    // PROGRESS BARS
+    // region PROGRESS BARS
     @FXML
     private ProgressBar OPACITY_PROGRESS_BAR;
+    // endregion
 
-    // BUTTONS
+    // region BUTTONS
     @FXML
     private Button RANDOM_OCTAVE_BUTTON;
 
@@ -83,6 +91,15 @@ public class NoiseViewerController implements Initializable {
 
     @FXML
     private Button RANDOM_SEED_BUTTON;
+
+    // endregion
+
+    // region IMAGE VIEW
+
+    @FXML
+    private ImageView WORLD_IMAGE_VIEW;
+
+    // endregion
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -117,46 +134,39 @@ public class NoiseViewerController implements Initializable {
 
         // region SLIDER
 
-        // =====================================
-        //             LISTENERS
-        // =====================================
-
-        // updates the value of the associated spinner if the slider changes value
-        MASK_WIDTH_SLIDER.valueProperty().addListener(updateAssociatedSpinner(MASK_WIDTH_SPINNER));
-        MASK_HEIGHT_SLIDER.valueProperty().addListener(updateAssociatedSpinner(MASK_HEIGHT_SPINNER));
-        MASK_STRENGTH_SLIDER.valueProperty().addListener(updateAssociatedSpinner(MASK_STRENGTH_SPINNER));
-        MASK_STRENGTH_SLIDER.setSnapToTicks(true);
-
-        // =====================================
-        //              STYLING
-        // =====================================
-
-        // changes the mouse's cursor icon when hovering over the slider
-        MASK_WIDTH_SLIDER.setOnMouseEntered(changeNodeCursor(MASK_WIDTH_SLIDER, Cursor.H_RESIZE));
-        MASK_HEIGHT_SLIDER.setOnMouseEntered(changeNodeCursor(MASK_HEIGHT_SLIDER, Cursor.H_RESIZE));
-        MASK_STRENGTH_SLIDER.setOnMouseEntered(changeNodeCursor(MASK_STRENGTH_SLIDER, Cursor.H_RESIZE));
+        SliderValueController maskWidthSliderVC = new SliderValueController(MASK_WIDTH_SLIDER, MASK_WIDTH_SPINNER);
+        SliderValueController maskHeightSliderVC = new SliderValueController(MASK_HEIGHT_SLIDER, MASK_HEIGHT_SPINNER);
+        SliderValueController maskStrengthSliderVC = new SliderValueController(MASK_STRENGTH_SLIDER, MASK_STRENGTH_SPINNER);
 
         // endregion
 
-        RANDOM_OCTAVE_BUTTON.setOnMouseEntered(changeNodeCursor(RANDOM_OCTAVE_BUTTON, Cursor.HAND));
-        RANDOM_PERSISTENCE_BUTTON.setOnMouseEntered(changeNodeCursor(RANDOM_PERSISTENCE_BUTTON, Cursor.HAND));
-        RANDOM_SEED_BUTTON.setOnMouseEntered(changeNodeCursor(RANDOM_SEED_BUTTON, Cursor.HAND));
-
         // region TEXT FIELDS
-
-        // =====================================
-        //     VALUE VALIDATION (no units)
-        // =====================================
 
         SEED_TEXT_FIELD.setTextFormatter(TextValidation.newIntegerFormatter());
 
         // endregion
 
+        // region button
 
-
-        // region PROGRESS BARS
+        RANDOM_OCTAVE_BUTTON.setOnMouseEntered(NodeController.changeNodeCursor(RANDOM_OCTAVE_BUTTON, Cursor.HAND));
+        RANDOM_PERSISTENCE_BUTTON.setOnMouseEntered(NodeController.changeNodeCursor(RANDOM_PERSISTENCE_BUTTON, Cursor.HAND));
+        RANDOM_SEED_BUTTON.setOnMouseEntered(NodeController.changeNodeCursor(RANDOM_SEED_BUTTON, Cursor.HAND));
 
         // endregion
+
+        int[][] noise = NoiseProcessing.PerlinNoise.generatePerlinNoise(
+                100,
+                100,
+                1,
+                0.1f,
+                234567898L
+        );
+
+        Image noiseImage = ImageProcessing.toGrayScale(noise);
+
+        WORLD_IMAGE_VIEW.setImage(noiseImage);
+
+
     }
 
     // =====================================
@@ -165,29 +175,7 @@ public class NoiseViewerController implements Initializable {
 
     // region SLIDERS
 
-    /**
-     * Updates the spinner associated to this slider
-     * @param targetSpinner (Spinner): the associated spinner
-     * @return (ChangeListener(Number)): listener for a change in the slider's value
-     */
-    private static ChangeListener<Number> updateAssociatedSpinner(Spinner<Integer> targetSpinner) {
-        return new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                targetSpinner.getValueFactory().setValue(newValue.intValue());
-            }
-        };
-    }
+
 
     // endregion
-
-    /**
-     * Changes the cursor upon hovering on a node
-     * @param targetNode (Node): the node of we want to change the hover cursor of
-     * @param newCursor (Cursor): the new cursor to apply upon hover
-     * @return (EventHandler(MouseEvent)): listener for changes in the mouse's state
-     */
-    private static EventHandler<MouseEvent> changeNodeCursor(Node targetNode, Cursor newCursor) {
-        return mouseEvent -> targetNode.setCursor(newCursor);
-    }
 }

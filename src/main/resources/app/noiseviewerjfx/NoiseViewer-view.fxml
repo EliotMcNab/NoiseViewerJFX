@@ -52,7 +52,7 @@
          <items>
             <BorderPane id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="767.0" prefWidth="532.0">
                <center>
-                  <ImageView id="TERRAIN_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView id="TERRAIN_VIEW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
                </center></BorderPane>
             <TabPane minWidth="350.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
                <tabs>

@@ -1,5 +1,9 @@
 package app.noiseviewerjfx.utilities.processing;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,7 +22,7 @@ public class ImageProcessing {
 
     }
 
-    public static BufferedImage toGrayScale(int[][] grayScaleValues) {
+    /*public static BufferedImage toGrayScale(int[][] grayScaleValues) {
 
         // image size
         final int IMAGE_HEIGHT = grayScaleValues.length;
@@ -31,6 +35,26 @@ public class ImageProcessing {
                 int grayScaleValue = grayScaleValues[y][x];
                 int color = (grayScaleValue << 16) | (grayScaleValue << 8) | grayScaleValue;
                 grayScaleImage.setRGB(x, y, color);
+            }
+        }
+
+        return grayScaleImage;
+    }*/
+
+    public static Image toGrayScale(int[][] grayScaleValues) {
+
+        // image size
+        final int IMAGE_HEIGHT = grayScaleValues.length;
+        final int IMAGE_WIDTH = grayScaleValues[0].length;
+
+        WritableImage grayScaleImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
+        PixelWriter pixelWriter = grayScaleImage.getPixelWriter();
+
+        for (int y = 0; y < IMAGE_HEIGHT; y++) {
+            for (int x = 0; x < IMAGE_WIDTH; x++) {
+                int grayScaleValue = grayScaleValues[y][x];
+                int color = (0xFF << 24) | (grayScaleValue << 16) | (grayScaleValue << 8) | grayScaleValue;
+                pixelWriter.setArgb(x, y, color);
             }
         }
 
