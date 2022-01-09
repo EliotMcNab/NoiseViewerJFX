@@ -242,7 +242,7 @@ public class IntegerSpinnerValueController {
 
                 // updates the value in the associated progress bar to be that of the spinner
                 // (can now be the default value if there was an error in formatting)
-                targetProgressBar.setProgress(valueSpinner.getValue());
+                targetProgressBar.setProgress((double) valueSpinner.getValue() / 100);
             }
         };
     }

@@ -74,23 +74,15 @@ public class NoiseViewerController implements Initializable {
     @FXML
     private ProgressBar OPACITY_PROGRESS_BAR;
 
-    /*@FXML
-    private CheckBox MASK_CHECKBOX;
+    // BUTTONS
+    @FXML
+    private Button RANDOM_OCTAVE_BUTTON;
 
     @FXML
-    private CheckBox PERLIN_NOISE_CHECKBOX;
+    private Button RANDOM_PERSISTENCE_BUTTON;
 
     @FXML
-    private CheckBox TERRAIN_CHECKBOX;
-
-    @FXML
-    private Slider MASK_HEIGHT_SLIDER;
-
-    @FXML
-    private Slider MASK_STRENGTH_SLIDER;
-
-    @FXML
-    private Slider MASK_WIDTH_SLIDER;*/
+    private Button RANDOM_SEED_BUTTON;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -116,6 +108,9 @@ public class NoiseViewerController implements Initializable {
         );
         IntegerSpinnerValueController maskStrengthSpinnerVC = new IntegerSpinnerValueController(
                 MASK_STRENGTH_SPINNER, maskStrengthSpinnerVF, 1, "", MASK_STRENGTH_SLIDER
+        );
+        IntegerSpinnerValueController opacitySpinnerVC = new IntegerSpinnerValueController(
+                OPACITY_SPINNER, opacitySpinnerVF, 100, "%", OPACITY_PROGRESS_BAR
         );
 
         // endregion
@@ -143,6 +138,10 @@ public class NoiseViewerController implements Initializable {
 
         // endregion
 
+        RANDOM_OCTAVE_BUTTON.setOnMouseEntered(changeNodeCursor(RANDOM_OCTAVE_BUTTON, Cursor.HAND));
+        RANDOM_PERSISTENCE_BUTTON.setOnMouseEntered(changeNodeCursor(RANDOM_PERSISTENCE_BUTTON, Cursor.HAND));
+        RANDOM_SEED_BUTTON.setOnMouseEntered(changeNodeCursor(RANDOM_SEED_BUTTON, Cursor.HAND));
+
         // region TEXT FIELDS
 
         // =====================================
@@ -153,6 +152,8 @@ public class NoiseViewerController implements Initializable {
 
         // endregion
 
+
+
         // region PROGRESS BARS
 
         // endregion
@@ -161,126 +162,6 @@ public class NoiseViewerController implements Initializable {
     // =====================================
     //         LISTENERS GENERATORS
     // =====================================
-
-    // region SPINNERS
-
-    /**
-     * Updates the value of the associated slider when a change is detected
-     * @param targetSlider (Slider): the associated slider
-     * @return (ChangeListener(Integer)): listener for the spinner's values
-     */
-    private static ChangeListener<Integer> updateAssociatedSlider(Slider targetSlider) {
-        return (observableValue, oldValue, newValue) -> targetSlider.setValue(newValue);
-    }
-
-    /**
-     * Updates the value of the associated slider when the user presses the ENTER key
-     * @param targetSlider (Slider): the associated slider
-     * @param valueSpinner (Spinner(Integer)): the spinner from which we get the value
-     * @param defaultValue (int): the default value to set in case of a format error
-     * @return (EventHandler(KeyEvent)): listener for key presses within the spinner
-     */
-    private static EventHandler<KeyEvent> updateAssociatedSliderOnKeyPress(
-            Slider targetSlider, Spinner<Integer> valueSpinner, final int defaultValue) {
-        return updateAssociatedSliderOnKeyPress(targetSlider, valueSpinner, defaultValue,"");
-    }
-
-    /**
-     * Updates the value of the associated slider when the user presses the ENTER key
-     * @param targetSlider (Slider): the associated slider
-     * @param valueSpinner (Spinner(Integer)): the spinner from which we get the value
-     * @param defaultValue (int): the default value to set in case of a format error
-     * @param unit (String): the unit displayed in the spinner, "" for no unit
-     * @return (EventHandler(KeyEvent)): listener for key presses within the spinner
-     */
-    private static EventHandler<KeyEvent> updateAssociatedSliderOnKeyPress(
-            Slider targetSlider, Spinner<Integer> valueSpinner, final int defaultValue, String unit) {
-
-        return keyEvent -> {
-            // only tries to update the Slider's text when the user presses the ENTER keu
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-
-                // gets the text in the spinner's editor
-                String spinnerText = valueSpinner.getEditor().getText();
-
-                // if the spinner contains units, gets rid of the only legal occurrence
-                if (!unit.equals("")) spinnerText = spinnerText.replaceFirst(unit, "");
-
-                // checks that the spinner's text represents a valid value (ie: it doesn't have multiple units)
-                // if that is not the case sets the spinner's value back to default
-                if (!TextValidation.isValidIntString(spinnerText)) valueSpinner.getValueFactory().setValue(defaultValue);
-
-                // updates the value in the associated slider to be that of the spinner
-                // (can now be the default value if there was an error in formatting)
-                targetSlider.setValue(valueSpinner.getValue());
-            }
-
-        };
-    }
-
-    /**
-     * Updates the value of the associated progress bar when a change is detected
-     * @param targetProgressBar (Slider): the associated progress bar
-     * @return (ChangeListener(Integer)): listener for the spinner's values
-     */
-    private static ChangeListener<Integer> updateAssociatedProgressBar(ProgressBar targetProgressBar) {
-        return (observableValue, oldValue, newValue) -> targetProgressBar.setProgress((double) newValue / 100);
-    }
-
-    /**
-     * Updates the value of the associated progress bar when the user presses the ENTER key
-     * @param targetProgressBar (Slider): the associated progress bar
-     * @param valueSpinner (Spinner(Integer)): the spinner from which we get the value
-     * @param defaultValue (int): the default value to set in case of a format error
-     * @return (EventHandler(KeyEvent)): listener for key presses within the spinner
-     */
-    private static EventHandler<KeyEvent> updateAssociatedProgressBarOnKeyPress(
-            ProgressBar targetProgressBar, Spinner<Integer> valueSpinner, final int defaultValue) {
-        return updateAssociatedProgressBarOnKeyPress(targetProgressBar, valueSpinner, defaultValue, "");
-    }
-
-    /**
-     * Updates the value of the associated progress bar when the user presses the ENTER key
-     * @param targetProgressBar (Slider): the associated progress bar
-     * @param valueSpinner (Spinner(Integer)): the spinner from which we get the value
-     * @param defaultValue (int): the default value to set in case of a format error
-     * @param unit (String): the unit displayed in the spinner, "" for no unit
-     * @return (EventHandler(KeyEvent)): listener for key presses within the spinner
-     */
-    private static EventHandler<KeyEvent> updateAssociatedProgressBarOnKeyPress(
-            ProgressBar targetProgressBar, Spinner<Integer> valueSpinner, final int defaultValue, String unit) {
-        return keyEvent -> {
-            // only tries to update the progress bar's text when the user presses the ENTER keu
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-
-                // gets the text in the spinner's editor
-                String spinnerText = valueSpinner.getEditor().getText();
-
-                // if the spinner contains units, gets rid of the only legal occurrence
-                if (!unit.equals("")) spinnerText = spinnerText.replaceFirst(unit, "");
-
-                // checks that the spinner's text represents a valid value (ie: it doesn't have multiple units)
-                // if that is not the case sets the spinner's value back to default
-                if (!TextValidation.isValidIntString(spinnerText)) valueSpinner.getValueFactory().setValue(defaultValue);
-
-                // updates the value in the associated progress bar to be that of the spinner
-                // (can now be the default value if there was an error in formatting)
-                targetProgressBar.setProgress(valueSpinner.getValue());
-            }
-        };
-    }
-
-    /**
-     * Selects all the text in a spinner when it is clicked
-     * @param targetSpinner (Spinner): the spinner to select the text of
-     * @return (ChangeListener(Boolean)): listener for changes in the spinner's focus
-     */
-    private static ChangeListener<Boolean> selectAllSpinnerText(Spinner<?> targetSpinner) {
-        return (observableValue, oldState, newState) -> {
-            if (newState) Platform.runLater(targetSpinner.getEditor()::selectAll);
-        };
-    }
-    // endregion
 
     // region SLIDERS
 
