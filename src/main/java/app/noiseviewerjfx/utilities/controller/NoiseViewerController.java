@@ -32,12 +32,12 @@ public class NoiseViewerController implements Initializable {
     private final SpinnerValueFactory<Integer> persistenceSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
     @FXML
-    private Spinner<Integer> WIDTH_SPINNER;
-    private final SpinnerValueFactory<Integer> widthSpinnerVF =
+    private Spinner<Integer> MAP_WIDTH_SPINNER;
+    private final SpinnerValueFactory<Integer> mapWidthSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(100, 1000, 100);
     @FXML
-    private Spinner<Integer> HEIGHT_SPINNER;
-    private final SpinnerValueFactory<Integer> heightSpinnerVF =
+    private Spinner<Integer> MAP_HEIGHT_SPINNER;
+    private final SpinnerValueFactory<Integer> mapHeightSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(100, 1000, 100);
     @FXML
     private Spinner<Integer> OPACITY_SPINNER;
@@ -92,149 +92,31 @@ public class NoiseViewerController implements Initializable {
     @FXML
     private Slider MASK_WIDTH_SLIDER;*/
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // region SPINNERS
 
-        // =====================================
-        //     VALUE VALIDATION (no units)
-        // =====================================
-
-        // octave
-        OCTAVE_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerFormatter());
-        // persistence
-        PERSISTENCE_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerFormatter());
-        // map width
-        WIDTH_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerFormatter());
-        // map height
-        HEIGHT_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerFormatter());
-        // mask strength
-        MASK_STRENGTH_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerFormatter());
-
-        // =====================================
-        //           VALUE VALIDATION
-        //        (spinners with units)
-        // =====================================
-        // need a custom converter to remove the units when getting the value)
-
-        // mask height
-        maskHeightSpinnerVF.setConverter(TextValidation.newIntegerPercentageConverter());
-        MASK_HEIGHT_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerPercentageFormatter());
-        // mask width
-        maskWidthSpinnerVF.setConverter(TextValidation.newIntegerPercentageConverter());
-        MASK_WIDTH_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerPercentageFormatter());
-        // layer opacity
-        opacitySpinnerVF.setConverter(TextValidation.newIntegerPercentageConverter());
-        OPACITY_SPINNER.getEditor().setTextFormatter(TextValidation.newIntegerPercentageFormatter());
-
-        // =====================================
-        //              STYLING
-        // =====================================
-        // sets the spinner to have horizontal rather than vertical arrows
-
-        // octave
-        OCTAVE_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // persistence
-        PERSISTENCE_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // map width
-        WIDTH_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // map height
-        HEIGHT_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // mask width
-        MASK_WIDTH_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // mask height
-        MASK_HEIGHT_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // mask strength
-        MASK_STRENGTH_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-        // terrain opacity
-        OPACITY_SPINNER.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
-
-        // =====================================
-        //           SPINNER VALUES
-        // =====================================
-        // sets the spinner's values to their respective value factories
-
-        // octaves
-        OCTAVE_SPINNER.setValueFactory(octaveSpinnerVF);
-        // persistence
-        PERSISTENCE_SPINNER.setValueFactory(persistenceSpinnerVF);
-        // map width
-        WIDTH_SPINNER.setValueFactory(widthSpinnerVF);
-        // map height
-        HEIGHT_SPINNER.setValueFactory(heightSpinnerVF);
-        // mask width
-        MASK_WIDTH_SPINNER.setValueFactory(maskWidthSpinnerVF);
-        // mask height
-        MASK_HEIGHT_SPINNER.setValueFactory(maskHeightSpinnerVF);
-        // mask strength
-        MASK_STRENGTH_SPINNER.setValueFactory(maskStrengthSpinnerVF);
-        // terrain opacity
-        OPACITY_SPINNER.setValueFactory(opacitySpinnerVF);
-
-        // =====================================
-        //              LISTENERS
-        // =====================================
-
-        // octaves.
-        // selects all the spinner's text
-        OCTAVE_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(OCTAVE_SPINNER));
-
-        // persistence.
-        // selects all the spinner's text
-        PERSISTENCE_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(PERSISTENCE_SPINNER));
-
-        // map width.
-        // selects all the spinner's text
-        WIDTH_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(WIDTH_SPINNER));
-
-        // map height.
-        // selects all the spinner's text
-        HEIGHT_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(HEIGHT_SPINNER));
-
-        // mask width.
-        // selects all the spinner's text
-        MASK_WIDTH_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(MASK_WIDTH_SPINNER));
-        // value sync between spinner and slider
-        MASK_WIDTH_SLIDER.setValue(MASK_WIDTH_SPINNER.getValue());
-        // updates the slider if the user ENTERS a new value
-        MASK_WIDTH_SPINNER.setOnKeyPressed(updateAssociatedSliderOnKeyPress(
-                MASK_WIDTH_SLIDER, MASK_WIDTH_SPINNER, 0, "%"));
-        // updates the slider if the user uses the arrow buttons
-        MASK_WIDTH_SPINNER.valueProperty().addListener(updateAssociatedSlider(MASK_WIDTH_SLIDER));
-
-        // mask height.
-        // value sync between spinner and slider
-        MASK_HEIGHT_SLIDER.setValue(MASK_HEIGHT_SPINNER.getValue());
-        // selects all the spinner's text
-        MASK_HEIGHT_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(MASK_HEIGHT_SPINNER));
-        // updates the slider if the user ENTERS a new value
-        MASK_HEIGHT_SPINNER.setOnKeyPressed(updateAssociatedSliderOnKeyPress
-                (MASK_HEIGHT_SLIDER, MASK_HEIGHT_SPINNER, 0, "%"));
-        // updates the slider if the user uses the arrow buttons
-        MASK_HEIGHT_SPINNER.valueProperty().addListener(updateAssociatedSlider(MASK_HEIGHT_SLIDER));
-
-        // mask strength.
-        // value sync between spinner and slider
-        MASK_STRENGTH_SLIDER.setValue(MASK_STRENGTH_SPINNER.getValue());
-        // selects all the spinner's text
-        MASK_STRENGTH_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(MASK_STRENGTH_SPINNER));
-        // updates the slider if the user ENTERS a new value
-        MASK_STRENGTH_SPINNER.setOnKeyPressed(updateAssociatedSliderOnKeyPress(
-                MASK_STRENGTH_SLIDER, MASK_STRENGTH_SPINNER, 1));
-        // updates the slider if the user uses the arrow buttons
-        MASK_STRENGTH_SPINNER.valueProperty().addListener(updateAssociatedSlider(MASK_STRENGTH_SLIDER));
-
-        // opacity.
-        // value sync between spinner and progress bar
-        OPACITY_PROGRESS_BAR.setProgress((double) OPACITY_SPINNER.getValue() / 100);
-        // selects all the spinner's text
-        OPACITY_SPINNER.getEditor().focusedProperty().addListener(selectAllSpinnerText(OPACITY_SPINNER));
-        // updates the progress bar if the user ENTERS a new value
-        OPACITY_SPINNER.setOnKeyPressed(updateAssociatedProgressBarOnKeyPress(
-                OPACITY_PROGRESS_BAR, OPACITY_SPINNER, 0, "%"));
-        // updates the progress bar if the user uses the arrow buttons
-        OPACITY_SPINNER.valueProperty().addListener(updateAssociatedProgressBar(OPACITY_PROGRESS_BAR));
+        IntegerSpinnerValueController octaveSpinnerVC = new IntegerSpinnerValueController(
+                OCTAVE_SPINNER, octaveSpinnerVF, 1, ""
+        );
+        IntegerSpinnerValueController persistenceSpinnerVC = new IntegerSpinnerValueController(
+                PERSISTENCE_SPINNER, persistenceSpinnerVF, 1, ""
+        );
+        IntegerSpinnerValueController mapWidthSpinnerVC = new IntegerSpinnerValueController(
+                MAP_WIDTH_SPINNER, mapWidthSpinnerVF, 100, ""
+        );
+        IntegerSpinnerValueController mapHeightSpinnerVC = new IntegerSpinnerValueController(
+                MAP_HEIGHT_SPINNER, mapHeightSpinnerVF, 100, ""
+        );
+        IntegerSpinnerValueController maskWidthSpinnerVC = new IntegerSpinnerValueController(
+                MASK_WIDTH_SPINNER, maskWidthSpinnerVF, 50, "%", MASK_WIDTH_SLIDER
+        );
+        IntegerSpinnerValueController maskHeightSpinnerVC = new IntegerSpinnerValueController(
+                MASK_HEIGHT_SPINNER, maskHeightSpinnerVF, 50, "%", MASK_HEIGHT_SLIDER
+        );
+        IntegerSpinnerValueController maskStrengthSpinnerVC = new IntegerSpinnerValueController(
+                MASK_STRENGTH_SPINNER, maskStrengthSpinnerVF, 1, "", MASK_STRENGTH_SLIDER
+        );
 
         // endregion
 
