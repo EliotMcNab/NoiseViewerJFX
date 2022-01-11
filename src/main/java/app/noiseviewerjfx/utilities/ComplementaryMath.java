@@ -1,6 +1,9 @@
 package app.noiseviewerjfx.utilities;
 
-public class Math {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class ComplementaryMath {
 
     public static int maptoInt(float val, float minA, float maxA, int minB, int maxB) {
         return (int) ((1 - ((val - minA) / (maxA - minA))) * minB + ((val - minA) / (maxA - minA)) * maxB);
@@ -23,6 +26,10 @@ public class Math {
      */
     public static float distanceToCircle(float x, float y, float h, float i, float r) {
         return (float) java.lang.Math.abs(java.lang.Math.sqrt((x - h) * (x - h) + (y - i) * (y - i)) - r);
+    }
+
+    public static double roundToPrecision(double value, int precision) {
+        return BigDecimal.valueOf(value).setScale(precision, RoundingMode.HALF_UP).doubleValue();
     }
 
 }

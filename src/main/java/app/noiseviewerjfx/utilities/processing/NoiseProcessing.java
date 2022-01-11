@@ -1,9 +1,9 @@
 
 package app.noiseviewerjfx.utilities.processing;
 
-import static app.noiseviewerjfx.utilities.Math.maptoInt;
-import static app.noiseviewerjfx.utilities.Math.euclideanDistance;
-import static app.noiseviewerjfx.utilities.Math.distanceToCircle;
+import static app.noiseviewerjfx.utilities.ComplementaryMath.maptoInt;
+import static app.noiseviewerjfx.utilities.ComplementaryMath.euclideanDistance;
+import static app.noiseviewerjfx.utilities.ComplementaryMath.distanceToCircle;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -310,6 +310,12 @@
     -fx-background-radius: 100;
 }
 
+/* IMAGE */
+
+#TERRAIN_VIEW {
+    -fx-effect: dropShadow(gaussian, rgba(18, 18, 23, 0.5), 10, 0.5, 5, 5);
+}
+
 /* IDS */
 
 #BACKGROUND {

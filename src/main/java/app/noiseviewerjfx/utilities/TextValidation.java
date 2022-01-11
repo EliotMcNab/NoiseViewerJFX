@@ -27,18 +27,29 @@ public class TextValidation {
 
     }
 
+    public static boolean isValidDoubleString(String text) {
+        if (text.length() == 0 || text.equals(".")) return true;
+
+        try {
+            Double.parseDouble(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public static StringConverter<Integer> newIntegerPercentageConverter() {
         return new StringConverter<>() {
             @Override
             public String toString(Integer integer) {
-                return integer.toString() + "%";
+                return integer + "%";
             }
 
             @Override
             public Integer fromString(String valueString) {
-                String valueWithoutUnits = valueString.replaceAll("%", "").trim();
+                String valueWithoutUnits = removeUnit(valueString, "%");
 
-                if (valueWithoutUnits.isEmpty()) return 0;
+                if (valueWithoutUnits.isEmpty() || !isValidIntString(valueWithoutUnits)) return 0;
 
                 return Integer.parseInt(valueWithoutUnits);
             }
@@ -46,13 +57,13 @@ public class TextValidation {
     }
 
     public static TextFormatter<String> newIntegerPercentageFormatter() {
-        return new TextFormatter<String>(change -> {
+        return new TextFormatter<>(change -> {
 
             if (!change.isContentChange()) return change;
 
-            String text = change.getText().replaceAll("%", "").trim();
+            String valueWithoutUnits = removeUnit(change.getText(), "%");
 
-            if (!TextValidation.isValidIntString(text)) return null;
+            if (!isValidIntString(valueWithoutUnits)) return null;
 
             return change;
         });
@@ -65,9 +76,73 @@ public class TextValidation {
 
             String text = change.getText();
 
-            if (!TextValidation.isValidIntString(text)) return null;
+            if (!isValidIntString(text)) return null;
 
             return change;
         });
+    }
+
+    public static StringConverter<Double> newDoubleUnitConverter(String unit) {
+        return new StringConverter<>() {
+            @Override
+            public String toString(Double aDouble) {
+                return aDouble + unit;
+            }
+
+            @Override
+            public Double fromString(String valueString) {
+                String valueWithoutUnits = removeUnit(valueString, unit);
+
+                if (valueWithoutUnits.isEmpty() || !isValidDoubleString(valueWithoutUnits)) return (double) 0;
+
+                return Double.parseDouble(valueWithoutUnits);
+            }
+        };
+    }
+
+    public static TextFormatter<String> newDoubleUnitFormatter(String unit) {
+        return new TextFormatter<>(change -> {
+
+            if (!change.isContentChange()) return change;
+
+            String valueWithoutUnits = removeUnit(change.getText(), unit);
+
+            if (!isValidDoubleString(valueWithoutUnits)) return null;
+
+            return change;
+        });
+    }
+
+    public static StringConverter<Double> newDoubleConverter() {
+        return new StringConverter<>() {
+            @Override
+            public String toString(Double aDouble) {
+                return Double.toString(aDouble);
+            }
+
+            @Override
+            public Double fromString(String valueString) {
+
+                if (!isValidDoubleString(valueString)) return (double) 0;
+
+                return Double.parseDouble(valueString);
+            }
+        };
+    }
+
+    public static TextFormatter<String> newDoubleFormatter() {
+        return new TextFormatter<>(change -> {
+            if (!change.isContentChange()) return change;
+
+            String valueString = change.getText();
+
+            if (!isValidDoubleString(valueString)) return null;
+
+            return change;
+        });
+    }
+
+    private static String removeUnit(String valueString, String unit) {
+        return valueString.replaceFirst(unit, "").trim();
     }
 }

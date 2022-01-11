@@ -1,26 +1,17 @@
 package app.noiseviewerjfx.utilities.controller;
 
-import app.noiseviewerjfx.utilities.TextValidation;
+import app.noiseviewerjfx.utilities.controller.valueControllers.*;
+import app.noiseviewerjfx.utilities.tasks.PeriodicTask;
 import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.NoiseProcessing;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
+import app.noiseviewerjfx.utilities.tasks.UpdateManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.nio.Buffer;
 import java.util.ResourceBundle;
 
 /**
@@ -34,9 +25,9 @@ public class NoiseViewerController implements Initializable {
     private final SpinnerValueFactory<Integer> octaveSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
     @FXML
-    private Spinner<Integer> PERSISTENCE_SPINNER;
-    private final SpinnerValueFactory<Integer> persistenceSpinnerVF =
-            new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+    private Spinner<Double> PERSISTENCE_SPINNER;
+    private final SpinnerValueFactory<Double> persistenceSpinnerVF =
+            new SpinnerValueFactory.DoubleSpinnerValueFactory(0.1, 1, 0.1, 0.1);
     @FXML
     private Spinner<Integer> MAP_WIDTH_SPINNER;
     private final SpinnerValueFactory<Integer> mapWidthSpinnerVF =
@@ -103,62 +94,101 @@ public class NoiseViewerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        UpdateManager noiseUpdateManager = new UpdateManager();
+
         // region SPINNERS
 
-        IntegerSpinnerValueController octaveSpinnerVC = new IntegerSpinnerValueController(
-                OCTAVE_SPINNER, octaveSpinnerVF, 1, ""
-        );
-        IntegerSpinnerValueController persistenceSpinnerVC = new IntegerSpinnerValueController(
-                PERSISTENCE_SPINNER, persistenceSpinnerVF, 1, ""
-        );
         IntegerSpinnerValueController mapWidthSpinnerVC = new IntegerSpinnerValueController(
                 MAP_WIDTH_SPINNER, mapWidthSpinnerVF, 100, ""
         );
         IntegerSpinnerValueController mapHeightSpinnerVC = new IntegerSpinnerValueController(
                 MAP_HEIGHT_SPINNER, mapHeightSpinnerVF, 100, ""
         );
-        IntegerSpinnerValueController maskWidthSpinnerVC = new IntegerSpinnerValueController(
-                MASK_WIDTH_SPINNER, maskWidthSpinnerVF, 50, "%", MASK_WIDTH_SLIDER
+
+        UpdatableIntegerSpinner octaveSpinner = new UpdatableIntegerSpinner(
+                OCTAVE_SPINNER, octaveSpinnerVF, 1, ""
         );
-        IntegerSpinnerValueController maskHeightSpinnerVC = new IntegerSpinnerValueController(
-                MASK_HEIGHT_SPINNER, maskHeightSpinnerVF, 50, "%", MASK_HEIGHT_SLIDER
+        UpdatableDoubleSpinner persistenceSpinner = new UpdatableDoubleSpinner(
+                PERSISTENCE_SPINNER, persistenceSpinnerVF, 0.1, ""
         );
-        IntegerSpinnerValueController maskStrengthSpinnerVC = new IntegerSpinnerValueController(
-                MASK_STRENGTH_SPINNER, maskStrengthSpinnerVF, 1, "", MASK_STRENGTH_SLIDER
+        UpdatableIntegerSpinner maskWidthSpinner = new UpdatableIntegerSpinner(
+                MASK_WIDTH_SPINNER, maskWidthSpinnerVF, 50, "%"
         );
-        IntegerSpinnerValueController opacitySpinnerVC = new IntegerSpinnerValueController(
-                OPACITY_SPINNER, opacitySpinnerVF, 100, "%", OPACITY_PROGRESS_BAR
+        UpdatableIntegerSpinner maskHeightSpinner = new UpdatableIntegerSpinner(
+                MASK_HEIGHT_SPINNER, maskHeightSpinnerVF, 50, "%"
         );
+        UpdatableIntegerSpinner maskStrengthSpinner = new UpdatableIntegerSpinner(
+                MASK_STRENGTH_SPINNER, maskStrengthSpinnerVF, 1, ""
+        );
+        UpdatableIntegerSpinner opacitySpinner = new UpdatableIntegerSpinner(
+                OPACITY_SPINNER, opacitySpinnerVF, 100, "%"
+        );
+
 
         // endregion
 
         // region SLIDER
 
-        SliderValueController maskWidthSliderVC = new SliderValueController(MASK_WIDTH_SLIDER, MASK_WIDTH_SPINNER);
-        SliderValueController maskHeightSliderVC = new SliderValueController(MASK_HEIGHT_SLIDER, MASK_HEIGHT_SPINNER);
-        SliderValueController maskStrengthSliderVC = new SliderValueController(MASK_STRENGTH_SLIDER, MASK_STRENGTH_SPINNER);
+        UpdatableSlider maskWidthSlider     = new UpdatableSlider(MASK_WIDTH_SLIDER);
+        UpdatableSlider maskHeightSlider    = new UpdatableSlider(MASK_HEIGHT_SLIDER);
+        UpdatableSlider maskStrengthSlider  = new UpdatableSlider(MASK_STRENGTH_SLIDER);
 
         // endregion
 
         // region TEXT FIELDS
 
-        SEED_TEXT_FIELD.setTextFormatter(TextValidation.newIntegerFormatter());
+        UpdatableIntegerTextField seedTextField = new UpdatableIntegerTextField(SEED_TEXT_FIELD, 0, "");
+
+        // endregion
+
+        // region PROGRESS BAR
+
+        UpdatableProgressBar opacityProgressBar = new UpdatableProgressBar(OPACITY_PROGRESS_BAR);
 
         // endregion
 
         // region button
 
-        RANDOM_OCTAVE_BUTTON.setOnMouseEntered(NodeController.changeNodeCursor(RANDOM_OCTAVE_BUTTON, Cursor.HAND));
-        RANDOM_PERSISTENCE_BUTTON.setOnMouseEntered(NodeController.changeNodeCursor(RANDOM_PERSISTENCE_BUTTON, Cursor.HAND));
-        RANDOM_SEED_BUTTON.setOnMouseEntered(NodeController.changeNodeCursor(RANDOM_SEED_BUTTON, Cursor.HAND));
+        RandomIntegerButtonValueController randomOctaveButton = new RandomIntegerButtonValueController(
+                RANDOM_OCTAVE_BUTTON, 1, 10);
+        RandomDoubleButtonValueController randomPersistenceButton = new RandomDoubleButtonValueController(
+                RANDOM_PERSISTENCE_BUTTON, 0.1, 1);
+        RandomIntegerButtonValueController randomSeedButton = new RandomIntegerButtonValueController(
+                RANDOM_SEED_BUTTON, 0, Integer.MAX_VALUE);
 
         // endregion
+
+        // region UPDATABLE
+
+        noiseUpdateManager.registerUpdatable(octaveSpinner, randomOctaveButton);
+        noiseUpdateManager.registerUpdatable(persistenceSpinner, randomPersistenceButton);
+        noiseUpdateManager.registerUpdatable(seedTextField, randomSeedButton);
+        noiseUpdateManager.registerUpdatable(maskWidthSlider, maskWidthSpinner);
+        noiseUpdateManager.registerUpdatable(maskWidthSpinner, maskWidthSlider);
+        noiseUpdateManager.registerUpdatable(maskHeightSlider, maskHeightSpinner);
+        noiseUpdateManager.registerUpdatable(maskHeightSpinner, maskHeightSlider);
+        noiseUpdateManager.registerUpdatable(maskStrengthSlider, maskStrengthSpinner);
+        noiseUpdateManager.registerUpdatable(maskStrengthSpinner, maskStrengthSlider);
+        noiseUpdateManager.registerUpdatable(opacityProgressBar, opacitySpinner);
+
+        // endregion
+
+        // region TESTING
+
+        PeriodicTask periodicTask = new PeriodicTask(10) {
+            @Override
+            public void run() {
+                noiseUpdateManager.update();
+            }
+        };
+        periodicTask.start();
 
         int[][] noise = NoiseProcessing.PerlinNoise.generatePerlinNoise(
                 100,
                 100,
-                1,
-                0.1f,
+                4,
+                0.4f,
                 234567898L
         );
 
@@ -166,16 +196,8 @@ public class NoiseViewerController implements Initializable {
 
         WORLD_IMAGE_VIEW.setImage(noiseImage);
 
+        // endregion
 
     }
 
-    // =====================================
-    //         LISTENERS GENERATORS
-    // =====================================
-
-    // region SLIDERS
-
-
-
-    // endregion
 }
