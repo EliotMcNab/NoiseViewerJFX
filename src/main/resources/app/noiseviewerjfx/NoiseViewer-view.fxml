@@ -50,15 +50,20 @@
    <center>
       <SplitPane dividerPositions="0.626447016918967" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="160.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <items>
-            <BorderPane id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="767.0" prefWidth="532.0">
-               <center>
-                  <ImageView id="TERRAIN_VIEW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
-               </center></BorderPane>
+            <ScrollPane fx:id="DISPLAY_SCROLL_PANE" fitToHeight="true" fitToWidth="true">
+               <content>
+                  <BorderPane id="BACKGROUND" fx:id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="2000.0" minWidth="2000.0" prefHeight="767.0" prefWidth="532.0">
+                     <center>
+                        <ImageView id="TERRAIN_VIEW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" smooth="false" />
+                     </center>
+                  </BorderPane>
+               </content>
+            </ScrollPane>
             <TabPane minWidth="350.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
                <tabs>
                   <Tab closable="false" text="Noise">
                      <content>
-                        <ScrollPane id="TEST" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
                            <content>
                               <VBox id="SCROLL-PANE-BOX" fx:id="scrollPaneVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
                                  <children>
@@ -69,7 +74,7 @@
                                                 <Insets />
                                              </HBox.margin>
                                              <graphic>
-                                                <FontIcon id="RED-ICON" iconLiteral="fas-sync-alt" styleClass="big-icon"/>
+                                                <FontIcon id="RED-ICON" iconLiteral="fas-sync-alt" styleClass="big-icon" />
                                              </graphic>
                                           </Button>
                                           <Text id="TITLE" strokeType="OUTSIDE" strokeWidth="0.0" text="Noise Generation">

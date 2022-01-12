@@ -83,7 +83,7 @@ public class NoiseProcessing {
          * @return float array containing calculated "Perlin-Noise" values
          * @implNote Author: <a href="http://java.algorithmexamples.com/web/Others/PerlinNoise.html">java.algorithmexamples.com/</a>
          */
-        public static int[][] generatePerlinNoise(int width, int height, int octaveCount, float persistence, long seed) {
+        public static int[][] generatePerlinNoise(int width, int height, int octaveCount, double persistence, long seed) {
 
             final float[][] base = new float[height][width];
             final float[][] perlinNoise = new float[height][width];

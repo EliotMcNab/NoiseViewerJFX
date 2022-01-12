@@ -3,14 +3,13 @@ package app.noiseviewerjfx.utilities.controller;
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.*;
 import app.noiseviewerjfx.utilities.tasks.PeriodicTask;
-import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.NoiseProcessing;
 import app.noiseviewerjfx.utilities.tasks.UpdateManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,6 +18,12 @@ import java.util.ResourceBundle;
  * Controller for the Noise Viewer application
  */
 public class NoiseViewerController implements Initializable {
+
+    @FXML
+    private ScrollPane DISPLAY_SCROLL_PANE;
+
+    @FXML
+    private BorderPane BACKGROUND;
 
     // region SPINNERS
     @FXML
@@ -160,6 +165,24 @@ public class NoiseViewerController implements Initializable {
 
         // endregion
 
+        // region NOISE DISPLAY
+
+        NoiseImageViewController noiseDisplay = new NoiseImageViewController(
+                BACKGROUND,
+                DISPLAY_SCROLL_PANE,
+                WORLD_IMAGE_VIEW,
+                octaveSpinner,
+                persistenceSpinner,
+                seedTextField,
+                mapWidthSpinnerVC,
+                mapHeightSpinnerVC,
+                maskWidthSpinner,
+                maskHeightSpinner,
+                maskStrengthSpinner
+        );
+
+        // endregion
+
         // region UPDATABLE
 
         octaveSpinner.setAssociateNode(randomOctaveButton);
@@ -171,6 +194,7 @@ public class NoiseViewerController implements Initializable {
         maskHeightSpinner.setAssociateNode(maskHeightSlider);
         maskStrengthSlider.setAssociateNode(maskStrengthSpinner);
         maskStrengthSpinner.setAssociateNode(maskStrengthSlider);
+        opacityProgressBar.setAssociateNode(opacitySpinner);
 
         noiseUpdateManager.registerAll(
                 octaveSpinner,
@@ -181,7 +205,9 @@ public class NoiseViewerController implements Initializable {
                 maskHeightSlider,
                 maskHeightSpinner,
                 maskStrengthSlider,
-                maskStrengthSpinner
+                maskStrengthSpinner,
+                opacityProgressBar,
+                noiseDisplay
         );
 
         // endregion
@@ -204,9 +230,9 @@ public class NoiseViewerController implements Initializable {
                 234567898L
         );
 
-        Image noiseImage = ImageProcessing.toGrayScale(noise);
+        // Image noiseImage = ImageProcessing.toGrayScale(noise);
 
-        WORLD_IMAGE_VIEW.setImage(noiseImage);
+        // WORLD_IMAGE_VIEW.setImage(noiseImage);
 
         // endregion
 

@@ -16,16 +16,14 @@ public class NoiseViewerApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(NoiseViewerApplication.class.getResource("NoiseViewer-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-
+        mainScene = loadMainScene();
         mainStage = stage;
 
         Image appIcon = new Image(getClass().getResourceAsStream("/app/noiseviewerjfx/icons/terrain.png"));
         mainStage.getIcons().add(appIcon);
 
         mainStage.setTitle("Noise Viewer");
-        mainStage.setScene(scene);
+        mainStage.setScene(mainScene);
 
         // displays the stage
         mainStage.show();
@@ -38,4 +36,10 @@ public class NoiseViewerApplication extends Application {
     public static void launchApplication(String[] args) {
         launch();
     }
+
+    private Scene loadMainScene() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(NoiseViewerApplication.class.getResource("NoiseViewer-view.fxml"));
+        return new Scene(fxmlLoader.load());
+    }
+
 }

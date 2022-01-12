@@ -314,8 +314,15 @@
 
 #TERRAIN_VIEW {
     -fx-effect: dropShadow(gaussian, rgba(18, 18, 23, 0.5), 10, 0.5, 5, 5);
+    -fx-border-width: 1;
+    -fx-border-color: red;
 }
 
+
+#TEST {
+    -fx-border-width: 1;
+    -fx-border-color: green;
+}
 /* IDS */
 
 #BACKGROUND {

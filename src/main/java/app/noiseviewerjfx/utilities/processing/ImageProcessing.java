@@ -1,6 +1,7 @@
 package app.noiseviewerjfx.utilities.processing;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
@@ -53,12 +54,36 @@ public class ImageProcessing {
         for (int y = 0; y < IMAGE_HEIGHT; y++) {
             for (int x = 0; x < IMAGE_WIDTH; x++) {
                 int grayScaleValue = grayScaleValues[y][x];
-                int color = (0xFF << 24) | (grayScaleValue << 16) | (grayScaleValue << 8) | grayScaleValue;
+                int color = ColorProcessing.grayScaleToArgb(grayScaleValue);
                 pixelWriter.setArgb(x, y, color);
             }
         }
 
         return grayScaleImage;
+    }
+
+    public static Image upScale(Image originalImage, final int scale) {
+
+        final int IMAGE_WIDTH = (int) originalImage.getWidth();
+        final int IMAGE_HEIGHT = (int) originalImage.getHeight();
+
+        WritableImage scaledImage = new WritableImage(IMAGE_WIDTH * scale, IMAGE_HEIGHT * scale);
+
+        PixelReader reader = originalImage.getPixelReader();
+        PixelWriter writer = scaledImage.getPixelWriter();
+
+        for (int y = 0; y < IMAGE_HEIGHT; y++) {
+            for (int x = 0; x < IMAGE_WIDTH; x++) {
+                int pixelColor = reader.getArgb(x, y);
+                for (int dx = 0; dx < scale; dx++) {
+                    for (int dy = 0; dy < scale; dy++) {
+                        writer.setArgb(x * scale + dx, y * scale + dy, pixelColor);
+                    }
+                }
+            }
+        }
+
+        return scaledImage;
     }
 
     public static BufferedImage terrainGeneration(int[][] noiseMap, int shallows1Height, int shallows2Height, int plainsHeight, int forestHeight, int mountainHeight, float scale) {
