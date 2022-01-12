@@ -1,10 +1,13 @@
-package app.noiseviewerjfx.utilities.controller.valueControllers;
+package app.noiseviewerjfx.utilities.controller.valueControllers.associative;
 
 import app.noiseviewerjfx.utilities.ComplementaryMath;
+import app.noiseviewerjfx.utilities.controller.valueControllers.DoubleSpinnerValueController;
+import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
-public class UpdatableDoubleSpinner extends DoubleSpinnerValueController implements Updatable {
+public class AssociativeDoubleSpinner extends DoubleSpinnerValueController implements Associative {
+
     private ValueController associatedNode;
     private int lastNodeState;
 
@@ -14,7 +17,7 @@ public class UpdatableDoubleSpinner extends DoubleSpinnerValueController impleme
      * @param defaultValue (int): fallback value in case of invalid format
      * @param unit (String): unit shown in the text field
      */
-    public UpdatableDoubleSpinner(
+    public AssociativeDoubleSpinner(
             Spinner<Double> linkedSpinner,
             SpinnerValueFactory<Double> valueFactory,
             double defaultValue,
@@ -25,9 +28,20 @@ public class UpdatableDoubleSpinner extends DoubleSpinnerValueController impleme
 
     @Override
     public void setAssociateNode(ValueController associatedNode) {
+
+        if (associatedNode == this) {
+            System.out.printf("ERROR: cannot register associated node for %s\n", this);
+            return;
+        }
+
         this.associatedNode = associatedNode;
         lastNodeState = associatedNode.getCurrentState();
         syncSpinnerValue();
+    }
+
+    @Override
+    public boolean hasAssociatedNode() {
+        return associatedNode != null;
     }
 
     @Override

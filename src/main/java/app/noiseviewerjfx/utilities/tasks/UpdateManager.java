@@ -1,7 +1,6 @@
 package app.noiseviewerjfx.utilities.tasks;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.Updatable;
-import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,28 +8,36 @@ import java.util.List;
 
 public class UpdateManager {
 
-    private final List<Updatable> updatables = new ArrayList<>();
+    private final List<Updatable> updatableNodes = new ArrayList<>();
 
     public boolean registerUpdatable(Updatable toRegister) {
-        return updatables.add(toRegister);
-    }
-
-    public boolean registerUpdatable(Updatable toRegister, ValueController associatedNode) {
-        toRegister.setAssociateNode(associatedNode);
-
-        return updatables.add(toRegister);
+        return tryRegister(toRegister);
     }
 
     public boolean registerAll(List<Updatable> toRegister) {
-        return updatables.addAll(toRegister);
+        boolean errorHappen = false;
+
+        for (Updatable updatable : toRegister) {
+            errorHappen = !tryRegister(updatable);
+        }
+
+        return !errorHappen;
     }
 
     public boolean registerAll(Updatable... toRegister) {
-        return updatables.addAll(Arrays.asList(toRegister));
+        return registerAll(Arrays.stream(toRegister).toList());
+    }
+
+    private boolean tryRegister(Updatable toRegister) {
+        if (!toRegister.canBeRegistered()) {
+            System.out.printf("ERROR: cannot register associative node %s since it has no node associated to it", toRegister);
+            return false;
+        }
+        return updatableNodes.add(toRegister);
     }
 
     public void update() {
-        for (Updatable updatable : updatables) {
+        for (Updatable updatable : updatableNodes) {
             updatable.update();
         }
     }

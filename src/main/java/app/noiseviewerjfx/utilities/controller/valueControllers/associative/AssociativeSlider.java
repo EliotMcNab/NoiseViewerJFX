@@ -1,9 +1,10 @@
-package app.noiseviewerjfx.utilities.controller.valueControllers;
+package app.noiseviewerjfx.utilities.controller.valueControllers.associative;
 
-import javafx.scene.Node;
+import app.noiseviewerjfx.utilities.controller.valueControllers.SliderValueController;
+import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 import javafx.scene.control.Slider;
 
-public class UpdatableSlider extends SliderValueController implements Updatable{
+public class AssociativeSlider extends SliderValueController implements Associative{
 
     private ValueController associatedNode;
     private int lastNodeState;
@@ -12,15 +13,26 @@ public class UpdatableSlider extends SliderValueController implements Updatable{
      * Create a new SliderValueController with a node associated to it
      * @param linkedSlider   (Slider): the slider associated to the SliderValueController
      */
-    public UpdatableSlider(Slider linkedSlider) {
+    public AssociativeSlider(Slider linkedSlider) {
         super(linkedSlider);
     }
 
     @Override
     public void setAssociateNode(ValueController associatedNode) {
+
+        if (associatedNode == this) {
+            System.out.printf("ERROR: cannot register associated node for %s\n", this);
+            return;
+        }
+
         this.associatedNode = associatedNode;
         lastNodeState = associatedNode.getCurrentState();
         syncSliderValue();
+    }
+
+    @Override
+    public boolean hasAssociatedNode() {
+        return associatedNode != null;
     }
 
     @Override

@@ -69,7 +69,7 @@
                                                 <Insets />
                                              </HBox.margin>
                                              <graphic>
-                                                <FontIcon id="RED-ICON" iconLiteral="fas-sync-alt" styleClass="big-icon" />
+                                                <FontIcon id="RED-ICON" iconLiteral="fas-sync-alt" styleClass="big-icon"/>
                                              </graphic>
                                           </Button>
                                           <Text id="TITLE" strokeType="OUTSIDE" strokeWidth="0.0" text="Noise Generation">

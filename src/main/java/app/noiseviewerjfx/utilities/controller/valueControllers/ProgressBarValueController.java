@@ -11,7 +11,7 @@ public class ProgressBarValueController extends ValueController{
     }
 
     @Override
-    protected double getValue() {
+    public double getValue() {
         return PROGRESS_BAR.getProgress();
     }
 

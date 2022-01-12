@@ -8,6 +8,8 @@ public interface Updatable {
         return lastState != currentState;
     }
 
-    void setAssociateNode(ValueController associatedNode);
+    default boolean canBeRegistered() {
+        return true;
+    }
 
 }

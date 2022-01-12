@@ -1,6 +1,7 @@
 package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.*;
 import app.noiseviewerjfx.utilities.tasks.PeriodicTask;
 import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.NoiseProcessing;
@@ -106,22 +107,22 @@ public class NoiseViewerController implements Initializable {
                 MAP_HEIGHT_SPINNER, mapHeightSpinnerVF, 100, ""
         );
 
-        UpdatableIntegerSpinner octaveSpinner = new UpdatableIntegerSpinner(
+        AssociativeIntegerSpinner octaveSpinner = new AssociativeIntegerSpinner(
                 OCTAVE_SPINNER, octaveSpinnerVF, 1, ""
         );
-        UpdatableDoubleSpinner persistenceSpinner = new UpdatableDoubleSpinner(
+        AssociativeDoubleSpinner persistenceSpinner = new AssociativeDoubleSpinner(
                 PERSISTENCE_SPINNER, persistenceSpinnerVF, 0.1, ""
         );
-        UpdatableIntegerSpinner maskWidthSpinner = new UpdatableIntegerSpinner(
+        AssociativeIntegerSpinner maskWidthSpinner = new AssociativeIntegerSpinner(
                 MASK_WIDTH_SPINNER, maskWidthSpinnerVF, 50, "%"
         );
-        UpdatableIntegerSpinner maskHeightSpinner = new UpdatableIntegerSpinner(
+        AssociativeIntegerSpinner maskHeightSpinner = new AssociativeIntegerSpinner(
                 MASK_HEIGHT_SPINNER, maskHeightSpinnerVF, 50, "%"
         );
-        UpdatableIntegerSpinner maskStrengthSpinner = new UpdatableIntegerSpinner(
+        AssociativeIntegerSpinner maskStrengthSpinner = new AssociativeIntegerSpinner(
                 MASK_STRENGTH_SPINNER, maskStrengthSpinnerVF, 1, ""
         );
-        UpdatableIntegerSpinner opacitySpinner = new UpdatableIntegerSpinner(
+        AssociativeIntegerSpinner opacitySpinner = new AssociativeIntegerSpinner(
                 OPACITY_SPINNER, opacitySpinnerVF, 100, "%"
         );
 
@@ -130,21 +131,21 @@ public class NoiseViewerController implements Initializable {
 
         // region SLIDER
 
-        UpdatableSlider maskWidthSlider     = new UpdatableSlider(MASK_WIDTH_SLIDER);
-        UpdatableSlider maskHeightSlider    = new UpdatableSlider(MASK_HEIGHT_SLIDER);
-        UpdatableSlider maskStrengthSlider  = new UpdatableSlider(MASK_STRENGTH_SLIDER);
+        AssociativeSlider maskWidthSlider     = new AssociativeSlider(MASK_WIDTH_SLIDER);
+        AssociativeSlider maskHeightSlider    = new AssociativeSlider(MASK_HEIGHT_SLIDER);
+        AssociativeSlider maskStrengthSlider  = new AssociativeSlider(MASK_STRENGTH_SLIDER);
 
         // endregion
 
         // region TEXT FIELDS
 
-        UpdatableIntegerTextField seedTextField = new UpdatableIntegerTextField(SEED_TEXT_FIELD, 0, "");
+        AssociativeIntegerTextField seedTextField = new AssociativeIntegerTextField(SEED_TEXT_FIELD, 0, "");
 
         // endregion
 
         // region PROGRESS BAR
 
-        UpdatableProgressBar opacityProgressBar = new UpdatableProgressBar(OPACITY_PROGRESS_BAR);
+        AssociativeProgressBar opacityProgressBar = new AssociativeProgressBar(OPACITY_PROGRESS_BAR);
 
         // endregion
 
@@ -161,16 +162,27 @@ public class NoiseViewerController implements Initializable {
 
         // region UPDATABLE
 
-        noiseUpdateManager.registerUpdatable(octaveSpinner, randomOctaveButton);
-        noiseUpdateManager.registerUpdatable(persistenceSpinner, randomPersistenceButton);
-        noiseUpdateManager.registerUpdatable(seedTextField, randomSeedButton);
-        noiseUpdateManager.registerUpdatable(maskWidthSlider, maskWidthSpinner);
-        noiseUpdateManager.registerUpdatable(maskWidthSpinner, maskWidthSlider);
-        noiseUpdateManager.registerUpdatable(maskHeightSlider, maskHeightSpinner);
-        noiseUpdateManager.registerUpdatable(maskHeightSpinner, maskHeightSlider);
-        noiseUpdateManager.registerUpdatable(maskStrengthSlider, maskStrengthSpinner);
-        noiseUpdateManager.registerUpdatable(maskStrengthSpinner, maskStrengthSlider);
-        noiseUpdateManager.registerUpdatable(opacityProgressBar, opacitySpinner);
+        octaveSpinner.setAssociateNode(randomOctaveButton);
+        persistenceSpinner.setAssociateNode(randomPersistenceButton);
+        seedTextField.setAssociateNode(randomSeedButton);
+        maskWidthSlider.setAssociateNode(maskWidthSpinner);
+        maskWidthSpinner.setAssociateNode(maskWidthSlider);
+        maskHeightSlider.setAssociateNode(maskHeightSpinner);
+        maskHeightSpinner.setAssociateNode(maskHeightSlider);
+        maskStrengthSlider.setAssociateNode(maskStrengthSpinner);
+        maskStrengthSpinner.setAssociateNode(maskStrengthSlider);
+
+        noiseUpdateManager.registerAll(
+                octaveSpinner,
+                persistenceSpinner,
+                seedTextField,
+                maskWidthSlider,
+                maskWidthSpinner,
+                maskHeightSlider,
+                maskHeightSpinner,
+                maskStrengthSlider,
+                maskStrengthSpinner
+        );
 
         // endregion
 

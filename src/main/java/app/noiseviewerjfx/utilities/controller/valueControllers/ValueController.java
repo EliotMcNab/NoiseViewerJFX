@@ -4,7 +4,7 @@ abstract public class ValueController {
 
     private int currentState = 0;
 
-    protected abstract double getValue();
+    public abstract double getValue();
 
     protected abstract void setValue(double value);
 
