@@ -2,14 +2,13 @@ package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.*;
-import app.noiseviewerjfx.utilities.processing.ImageProcessing;
+import app.noiseviewerjfx.utilities.io.input.Keyboard;
 import app.noiseviewerjfx.utilities.tasks.PeriodicTask;
-import app.noiseviewerjfx.utilities.processing.NoiseProcessing;
 import app.noiseviewerjfx.utilities.tasks.UpdateManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -169,7 +168,7 @@ public class NoiseViewerController implements Initializable {
 
         // region NOISE DISPLAY
 
-        /*NoiseImageViewController noiseDisplay = new NoiseImageViewController(
+        NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(
                 WORLD_IMAGE_VIEW,
                 octaveSpinner,
                 persistenceSpinner,
@@ -179,7 +178,7 @@ public class NoiseViewerController implements Initializable {
                 maskWidthSpinner,
                 maskHeightSpinner,
                 maskStrengthSpinner
-        );*/
+        );
 
         // endregion
 
@@ -206,8 +205,8 @@ public class NoiseViewerController implements Initializable {
                 maskHeightSpinner,
                 maskStrengthSlider,
                 maskStrengthSpinner,
-                opacityProgressBar
-                //noiseDisplay
+                opacityProgressBar,
+                noiseDisplay
         );
 
         // endregion
@@ -228,7 +227,9 @@ public class NoiseViewerController implements Initializable {
                 WORLD_IMAGE_VIEW
         );
 
-        int[][] noise = NoiseProcessing.PerlinNoise.generatePerlinNoise(
+        Platform.runLater(() -> DISPLAY_SCROLL_PANE.requestFocus());
+
+        /*int[][] noise = NoiseProcessing.PerlinNoise.generatePerlinNoise(
                 100,
                 100,
                 4,
@@ -238,7 +239,7 @@ public class NoiseViewerController implements Initializable {
 
         Image noiseImage = ImageProcessing.toGrayScale(noise);
 
-        WORLD_IMAGE_VIEW.setImage(noiseImage);
+        WORLD_IMAGE_VIEW.setImage(noiseImage);*/
 
         // endregion
 

@@ -5,6 +5,11 @@ public class Vector2D {
     private final double X;
     private final double Y;
 
+    public Vector2D() {
+        this.X = 0;
+        this.Y = 0;
+    }
+
     public Vector2D(double x, double y) {
         this.X = x;
         this.Y = y;
@@ -21,6 +26,10 @@ public class Vector2D {
 
     public Vector2D add(Vector2D other) {
         return new Vector2D(X + other.X, Y + other.Y);
+    }
+
+    public Vector2D add(double X, double Y) {
+        return new Vector2D(this.X + X, this.Y + Y);
     }
 
     public Vector2D div(double d) {

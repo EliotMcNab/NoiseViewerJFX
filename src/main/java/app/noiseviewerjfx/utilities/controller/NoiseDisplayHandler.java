@@ -4,20 +4,10 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.Updatable;
 import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.NoiseProcessing;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 
-public class NoiseImageViewController implements Updatable {
-
-    /*private final Node LISTENER_NODE;
-    private final ScrollPane DISPLAY_SCROLL_PANE;*/
+public class NoiseDisplayHandler implements Updatable {
 
     private final ImageView DISPLAY;
 
@@ -58,9 +48,7 @@ public class NoiseImageViewController implements Updatable {
      * @param maskHeight (ValueController) : Mask height spinner
      * @param maskStrength (ValueController) : Mask strength spinner
      */
-    public NoiseImageViewController(
-            /*Node listenerNode,
-            ScrollPane displayScrollPane,*/
+    public NoiseDisplayHandler(
             ImageView mainDisplay,
             ValueController octave,
             ValueController persistence,
@@ -70,10 +58,6 @@ public class NoiseImageViewController implements Updatable {
             ValueController maskWidth,
             ValueController maskHeight,
             ValueController maskStrength) {
-
-        /*this.LISTENER_NODE = listenerNode;
-
-        this.DISPLAY_SCROLL_PANE = displayScrollPane;*/
 
         this.DISPLAY        = mainDisplay;
 
@@ -96,14 +80,8 @@ public class NoiseImageViewController implements Updatable {
         lastMaskStrengthState   = MASK_STRENGTH.getCurrentState();
 
         addListeners();
-        /*style();*/
         updateView(generateView());
     }
-
-    /*private void style() {
-        DISPLAY_SCROLL_PANE.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        DISPLAY_SCROLL_PANE.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    }*/
 
     @Override
     public void update() {
@@ -112,7 +90,6 @@ public class NoiseImageViewController implements Updatable {
 
     private void updateView(Image newView) {
         DISPLAY.setImage(newView);
-        /*applyZoom();*/
     }
 
     private Image generateView() {
@@ -196,90 +173,4 @@ public class NoiseImageViewController implements Updatable {
     private void addListeners() {
 
     }
-
-    /*private void applyZoom() {
-
-        DISPLAY.setFitHeight(getMapHeight() * zoomAmount);
-        DISPLAY.setFitWidth(getMapWidth() * zoomAmount);
-
-        if (!zoomPossible()) return;
-
-        centerView();
-    }
-
-    private void reset() {
-        DISPLAY_SCROLL_PANE.setHvalue(0.5);
-        DISPLAY_SCROLL_PANE.setVvalue(0.5);
-    }
-
-    private void centerView() {
-        *//*ystem.out.println("++++++++++++++++");
-
-        System.out.println("border height: " + scrollPaneHeight);
-        System.out.println("border width: " + scrollPaneWidth);
-
-        System.out.println("++++++++++++++++");
-
-        System.out.println("mouse X: " + mousePosition.getX());
-        System.out.println("mouse Y: " + mousePosition.getY());
-
-        System.out.println("++++++++++++++++");*//*
-
-        System.out.println(mousePositionRatio.getX());
-        System.out.println(mousePositionRatio.getY());
-
-        DISPLAY_SCROLL_PANE.setHvalue(mousePositionRatio.getX());
-        DISPLAY_SCROLL_PANE.setVvalue(mousePositionRatio.getY());
-    }
-
-    private void zoom() {
-        if (zoomAmount <= 30) zoomAmount += ZOOM_STRENGTH;
-    }
-
-    private void dezoom() {
-        if (zoomAmount >= ZOOM_STRENGTH + 0.2f) zoomAmount -= ZOOM_STRENGTH;
-    }
-
-    private boolean zoomPossible() {
-        return ((zoomAmount <= 30) && (zoomAmount >= ZOOM_STRENGTH + 0.2f));
-    }
-
-    private void addListeners() {
-        addScrollListeners();
-        addMouseMovementListeners();
-    }
-
-    private void addScrollListeners() {
-        LISTENER_NODE.setOnScroll(zoomOnScroll());
-    }
-
-    private void addMouseMovementListeners() {
-        LISTENER_NODE.setOnMouseMoved(updateMousePositionRatio());
-    }
-
-    private EventHandler<ScrollEvent> zoomOnScroll() {
-        return scrollEvent -> {
-            if (!scrollEvent.isControlDown()) return;
-
-            if (scrollEvent.getDeltaY() > 0) zoom();
-            else if (scrollEvent.getDeltaY() < 0) dezoom();
-
-            applyZoom();
-        };
-    }
-
-    private EventHandler<MouseEvent> updateMousePositionRatio() {
-        return mouseEvent -> {
-            Bounds displayBounds = LISTENER_NODE.getBoundsInParent();
-
-            double displayWidth = displayBounds.getWidth();
-            double displayHeight = displayBounds.getHeight();
-
-            double mouseX = mouseEvent.getX();
-            double mouseY = mouseEvent.getY();
-
-            mousePositionRatio = new Point2D(mouseX / displayWidth, mouseY / displayHeight);
-        };
-    }*/
-
 }

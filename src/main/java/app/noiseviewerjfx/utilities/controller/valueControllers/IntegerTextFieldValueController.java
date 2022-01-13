@@ -71,6 +71,7 @@ public class IntegerTextFieldValueController extends ValueController {
     @Override
     protected void setValue(double value) {
         TEXT_FIELD.setText((int) value + UNIT);
+        newState();
     }
 
     /**
