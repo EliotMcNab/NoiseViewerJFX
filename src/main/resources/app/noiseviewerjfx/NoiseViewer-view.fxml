@@ -14,6 +14,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -55,7 +56,11 @@
                <content>
                   <AnchorPane id="BACKGROUND" fx:id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <children>
-                        <ImageView id="TERRAIN_VIEW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                        <ImageView id="TERRAIN_VIEW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                           <image>
+                              <Image url="@images/generation_example.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
                </content>

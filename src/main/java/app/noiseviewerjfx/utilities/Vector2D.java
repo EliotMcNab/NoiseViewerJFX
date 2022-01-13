@@ -1,5 +1,7 @@
 package app.noiseviewerjfx.utilities;
 
+import javafx.geometry.Point2D;
+
 public class Vector2D {
 
     private final double X;
@@ -32,6 +34,10 @@ public class Vector2D {
         return new Vector2D(this.X + X, this.Y + Y);
     }
 
+    public Vector2D mult(double d) {
+        return new Vector2D(X * d, Y * d);
+    }
+
     public Vector2D div(double d) {
         return new Vector2D(X / d, Y / d);
     }
@@ -42,6 +48,10 @@ public class Vector2D {
 
     public double getY() {
         return Y;
+    }
+
+    public Point2D toPoint2D() {
+        return new Point2D(X, Y);
     }
 
     @Override

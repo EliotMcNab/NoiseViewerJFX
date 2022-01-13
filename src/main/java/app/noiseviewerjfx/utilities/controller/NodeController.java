@@ -3,7 +3,13 @@ package app.noiseviewerjfx.utilities.controller;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+
+import java.awt.*;
 
 public class NodeController {
 
@@ -15,6 +21,28 @@ public class NodeController {
      */
     public static EventHandler<MouseEvent> changeNodeCursor(Node targetNode, Cursor newCursor) {
         return mouseEvent -> targetNode.setCursor(newCursor);
+    }
+
+    public static DropShadow generateDropShadow(
+            BlurType blurType, Color color, final int radius, final double spread, final double offsetX, final double offsetY) {
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setBlurType(blurType);
+        dropShadow.setColor(color);
+        dropShadow.setRadius(radius);
+        dropShadow.setSpread(spread);
+        dropShadow.setOffsetX(offsetX);
+        dropShadow.setOffsetY(offsetY);
+
+        return dropShadow;
+    }
+
+    public static Glow generateGlow(final double level) {
+
+        Glow glow = new Glow();
+        glow.setLevel(level);
+
+        return glow;
     }
 
 }

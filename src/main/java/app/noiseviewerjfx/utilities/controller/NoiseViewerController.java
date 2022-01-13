@@ -168,7 +168,7 @@ public class NoiseViewerController implements Initializable {
 
         // region NOISE DISPLAY
 
-        NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(
+        /*NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(
                 WORLD_IMAGE_VIEW,
                 octaveSpinner,
                 persistenceSpinner,
@@ -178,7 +178,7 @@ public class NoiseViewerController implements Initializable {
                 maskWidthSpinner,
                 maskHeightSpinner,
                 maskStrengthSpinner
-        );
+        );*/
 
         // endregion
 
@@ -205,8 +205,8 @@ public class NoiseViewerController implements Initializable {
                 maskHeightSpinner,
                 maskStrengthSlider,
                 maskStrengthSpinner,
-                opacityProgressBar,
-                noiseDisplay
+                opacityProgressBar/*,
+                noiseDisplay*/
         );
 
         // endregion

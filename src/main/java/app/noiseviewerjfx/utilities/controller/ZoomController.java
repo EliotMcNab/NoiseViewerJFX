@@ -5,15 +5,23 @@ import app.noiseviewerjfx.utilities.io.input.Keyboard;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+
+import java.awt.*;
 
 public class ZoomController {
 
@@ -24,19 +32,23 @@ public class ZoomController {
     private Vector2D lastContentPosition    = new Vector2D(0, 0);
     private Vector2D lastMousePosition      = new Vector2D(0, 0);
     private Vector2D dragOffset             = new Vector2D(0, 0);
+    private boolean dragInitialised         = false;
     private final int SCROLL_AMOUNT         = 10;
+    private double scale = 1;
 
     private final Keyboard KEYBOARD = new Keyboard() {
         @Override
         protected void onKeyPressed(KeyEvent keyEvent) {
-            if (isKeyPressed(KeyCode.SPACE)) SCROLL_PANE.setCursor(Cursor.CLOSED_HAND);
-            if (areAllKeysPressed(KeyCode.CONTROL, KeyCode.O)) resetView();
-
+            if (isKeyPressed(KeyCode.SPACE)) selectImage();
+            if (areAllKeysPressed(KeyCode.CONTROL, KeyCode.SHIFT, KeyCode.O)) resetView();
         }
 
         @Override
         protected void onKeyReleased(KeyEvent keyEvent) {
-            if (isKeyReleased(KeyCode.SPACE)) SCROLL_PANE.setCursor(Cursor.DEFAULT);
+            if (isKeyReleased(KeyCode.SPACE)) {
+                deselectImage();
+                dragInitialised = false;
+            }
         }
     };
 
@@ -56,7 +68,9 @@ public class ZoomController {
         PLANE.heightProperty().addListener(centerContent());
         PLANE.widthProperty().addListener(centerContent());
 
-        PLANE.setOnMousePressed(getMousePosition());
+        PLANE.setOnMouseMoved(getMousePosition());
+        PLANE.setOnMousePressed(initialiseDrag());
+        PLANE.setOnMouseReleased(endDrag());
         PLANE.setOnMouseDragged(drag());
         PLANE.setOnScroll(handleScroll());
 
@@ -83,6 +97,67 @@ public class ZoomController {
         };
     }
 
+    private void selectImage() {
+        SCROLL_PANE.setCursor(Cursor.CLOSED_HAND);
+    }
+
+    private void pickUpImage() {
+
+        Translate pickUp = new Translate(-5, -5);
+        CONTENT.getTransforms().add(pickUp);
+
+        CONTENT.setEffect(NodeController.generateDropShadow(
+                BlurType.GAUSSIAN,
+                Color.rgb(18, 18, 23, 0.5),
+                10,
+                0.5,
+                10,
+                10
+        ));
+    }
+
+    private void deselectImage() {
+        SCROLL_PANE.setCursor(Cursor.DEFAULT);
+        dropImage();
+    }
+
+    private void dropImage() {
+
+        if (!dragInitialised) return;
+
+        Translate drop = new Translate(5, 5);
+        CONTENT.getTransforms().add(drop);
+
+        CONTENT.setEffect(NodeController.generateDropShadow(
+                BlurType.GAUSSIAN,
+                Color.rgb(18, 18, 23, 0.5),
+                10,
+                0.5,
+                5,
+                5
+        ));
+    }
+
+    private EventHandler<MouseEvent> initialiseDrag() {
+        return mouseEvent -> {
+
+            if (!KEYBOARD.isKeyPressed(KeyCode.SPACE)) return;
+
+            pickUpImage();
+            dragInitialised = true;
+        };
+    }
+
+    private EventHandler<MouseEvent> endDrag() {
+        return mouseEvent -> {
+
+            if (!dragInitialised) return;
+
+            dropImage();
+            dragInitialised = false;
+        };
+    }
+
     private EventHandler<MouseEvent> drag() {
         return mouseEvent -> {
 
@@ -92,7 +167,7 @@ public class ZoomController {
             Vector2D mouseTranslation = lastMousePosition.sub(newMousePosition);
             lastMousePosition = newMousePosition;
 
-            applyDrag(mouseTranslation);
+            applyDrag(mouseTranslation.div(scale));
         };
     }
 
@@ -101,11 +176,11 @@ public class ZoomController {
 
             if (scrollEvent.getDeltaY() == 0 && scrollEvent.getDeltaX() == 0) return;
 
-            scroll(scrollEvent);
-
-            if (!KEYBOARD.isKeyPressed(KeyCode.CONTROL)) return;
-
-            System.out.println(scrollEvent.getDeltaY());
+            if (KEYBOARD.isKeyPressed(KeyCode.CONTROL)) {
+                zoom(scrollEvent);
+            } else {
+                scroll(scrollEvent);
+            }
 
         };
     }
@@ -127,55 +202,118 @@ public class ZoomController {
     }
 
     private void resetView() {
-        dragOffset = new Vector2D();
+        resetZoom();
+        resetDrag();
         centerView();
     }
 
     private void centerView() {
-        Vector2D contentSize    = getContentSize();
-        Vector2D availableSpace = getAvailableSpace();
-        Vector2D centerPosition = availableSpace.sub(contentSize).div(2);
+        // gets the coordinates we need to place the image at for it to be centered
+        Vector2D centerPosition = getCenterEdge();
+        // calculates the path to take from the image's current position
+        // to the position it has to be at to be centered
+        // ie: the displacement vector
         Vector2D translation    = centerPosition.sub(lastContentPosition);
 
+        // applies the necessary translation to the image...
         Translate translateToCenter = new Translate();
+        // ...while account for drag so image is not fully re-centered
         translateToCenter.setX(translation.getX() + dragOffset.getX());
         translateToCenter.setY(translation.getY() + dragOffset.getY());
-
         CONTENT.getTransforms().add(translateToCenter);
 
+        // saves the image's position after it has been centered
         updateContentPosition();
     }
 
-    private void applyDrag(Vector2D dragAmount) {
-        Translate drag = new Translate();
-        drag.setX(-dragAmount.getX());
-        drag.setY(-dragAmount.getY());
+    private void resetDrag() {
+        dragOffset = new Vector2D();
+        applyDrag(new Vector2D());
+    }
 
+    private void applyDrag(Vector2D dragAmount) {
+        // drag amount always corresponds to the mouse's displacement
+        // for the moment this is a 1 to 1 mapping
+        // since I have not figured out how to take the scale into consideration
+
+        // updates the total displacement caused by drag (used when we re-center the image)
         dragOffset = dragOffset.sub(dragAmount);
 
+        // applies the necessary translation to the image...
+        Translate drag = new Translate();
+        // ...based on the mouse's movement
+        drag.setX(-dragAmount.getX());
+        drag.setY(-dragAmount.getY());
         CONTENT.getTransforms().add(drag);
+
+        // saves the image's position after it has been dragged
+        updateContentPosition();
+    }
+
+    private void resetZoom() {
+        applyZoom(1 / scale, getContentSize().div(2).toPoint2D());
+        scale = 1;
+    }
+
+    private void zoom(ScrollEvent scrollEvent) {
+        lastMousePosition = new Vector2D(scrollEvent.getX(), scrollEvent.getY());
+
+        // adds or subtracts to the image's scale based on
+        // whether user is scrolling backwards or forwards
+        final double dScale = scrollEvent.getDeltaY() > 0 ? 0.1 : -0.1;
+        scale += dScale;
+
+        // gets the coordinates IN THE IMAGE's FRAME OF REFERENCE
+        // of the point at which to zoom the image so it is centered on the mouse
+        Point2D target = CONTENT.parentToLocal(new Point2D(scrollEvent.getX(), scrollEvent.getY()));
+
+        // applies the zoom to the image
+        applyZoom(1 + dScale, target);
+
+        // saves the image's position once it has been zoomed
+        updateContentPosition();
+    }
+
+    private void applyZoom(final double zoomAmount, Point2D target) {
+        // applies the necessary scaling to the image...
+        Scale zoom = new Scale(zoomAmount, zoomAmount);
+        // ...and centers the scaling to the point where the mouse is located at
+        zoom.setPivotY(target.getY());
+        zoom.setPivotX(target.getX());
+        CONTENT.getTransforms().add(zoom);
 
         updateContentPosition();
     }
 
     private void updateContentPosition() {
-        lastContentPosition = new Vector2D(getContentPosition());
+        // updates the image's position
+        lastContentPosition = getContentPosition();
     }
 
     private Vector2D getContentSize() {
+        // gets the bounds around the image
         Bounds contentBounds = CONTENT.getBoundsInParent();
-
         return new Vector2D(contentBounds.getWidth(), contentBounds.getHeight());
     }
 
     private Vector2D getContentPosition() {
+        // gets the minimal coordinates of the bounds around the image
+        // ie: the image's coordinates
         Bounds contentBounds = CONTENT.getBoundsInParent();
-
         return new Vector2D(contentBounds.getMinX(), contentBounds.getMinY());
     }
 
     private Vector2D getAvailableSpace() {
+        // gets the size of the Anchorpane the image is inn
         return new Vector2D(PLANE.getWidth(), PLANE.getHeight());
+    }
+
+    private Vector2D getCenterEdge() {
+        // gets the size of the image and the anchor pane it is in...
+        Vector2D contentSize    = getContentSize();
+        Vector2D availableSpace = getAvailableSpace();
+        // ...to determine the coordinates at which to place the image for it to be centerd
+        return availableSpace.sub(contentSize).div(2);
     }
 
 }
