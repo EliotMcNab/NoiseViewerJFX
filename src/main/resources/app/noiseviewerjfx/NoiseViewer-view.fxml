@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -25,7 +26,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane id="BACKGROUND" fx:id="BACKGROUND" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" stylesheets="@style/noiseViewer_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.noiseviewerjfx.utilities.controller.NoiseViewerController">
+<BorderPane id="BACKGROUND" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" stylesheets="@style/noiseViewer_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.noiseviewerjfx.utilities.controller.NoiseViewerController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -52,11 +53,11 @@
          <items>
             <ScrollPane fx:id="DISPLAY_SCROLL_PANE" fitToHeight="true" fitToWidth="true">
                <content>
-                  <BorderPane id="BACKGROUND" fx:id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="2000.0" minWidth="2000.0" prefHeight="767.0" prefWidth="532.0">
-                     <center>
+                  <AnchorPane id="BACKGROUND" fx:id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <children>
                         <ImageView id="TERRAIN_VIEW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" smooth="false" />
-                     </center>
-                  </BorderPane>
+                     </children>
+                  </AnchorPane>
                </content>
             </ScrollPane>
             <TabPane minWidth="350.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">

@@ -16,8 +16,8 @@ import javafx.scene.input.ScrollEvent;
 
 public class NoiseImageViewController implements Updatable {
 
-    private final Node LISTENER_NODE;
-    private final ScrollPane DISPLAY_SCROLL_PANE;
+    /*private final Node LISTENER_NODE;
+    private final ScrollPane DISPLAY_SCROLL_PANE;*/
 
     private final ImageView DISPLAY;
 
@@ -39,9 +39,9 @@ public class NoiseImageViewController implements Updatable {
     private int lastMaskHeightState;
     private int lastMaskStrengthState;
 
-    private float zoomAmount = 1;
+    /*private float zoomAmount = 1;
     private final float ZOOM_STRENGTH = 0.5f;
-    private Point2D mousePositionRatio = new Point2D(0.5, 0.5);
+    private Point2D mousePositionRatio = new Point2D(0.5, 0.5);*/
 
     /**
      * Creates a new Value Controller responsible for drawing
@@ -59,8 +59,8 @@ public class NoiseImageViewController implements Updatable {
      * @param maskStrength (ValueController) : Mask strength spinner
      */
     public NoiseImageViewController(
-            Node listenerNode,
-            ScrollPane displayScrollPane,
+            /*Node listenerNode,
+            ScrollPane displayScrollPane,*/
             ImageView mainDisplay,
             ValueController octave,
             ValueController persistence,
@@ -71,9 +71,9 @@ public class NoiseImageViewController implements Updatable {
             ValueController maskHeight,
             ValueController maskStrength) {
 
-        this.LISTENER_NODE = listenerNode;
+        /*this.LISTENER_NODE = listenerNode;
 
-        this.DISPLAY_SCROLL_PANE = displayScrollPane;
+        this.DISPLAY_SCROLL_PANE = displayScrollPane;*/
 
         this.DISPLAY        = mainDisplay;
 
@@ -96,14 +96,14 @@ public class NoiseImageViewController implements Updatable {
         lastMaskStrengthState   = MASK_STRENGTH.getCurrentState();
 
         addListeners();
-        style();
+        /*style();*/
         updateView(generateView());
     }
 
-    private void style() {
+    /*private void style() {
         DISPLAY_SCROLL_PANE.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         DISPLAY_SCROLL_PANE.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    }
+    }*/
 
     @Override
     public void update() {
@@ -112,7 +112,7 @@ public class NoiseImageViewController implements Updatable {
 
     private void updateView(Image newView) {
         DISPLAY.setImage(newView);
-        applyZoom();
+        /*applyZoom();*/
     }
 
     private Image generateView() {
@@ -193,7 +193,11 @@ public class NoiseImageViewController implements Updatable {
         return (int) MASK_STRENGTH.getValue();
     }
 
-    private void applyZoom() {
+    private void addListeners() {
+
+    }
+
+    /*private void applyZoom() {
 
         DISPLAY.setFitHeight(getMapHeight() * zoomAmount);
         DISPLAY.setFitWidth(getMapWidth() * zoomAmount);
@@ -209,7 +213,7 @@ public class NoiseImageViewController implements Updatable {
     }
 
     private void centerView() {
-        /*ystem.out.println("++++++++++++++++");
+        *//*ystem.out.println("++++++++++++++++");
 
         System.out.println("border height: " + scrollPaneHeight);
         System.out.println("border width: " + scrollPaneWidth);
@@ -219,7 +223,7 @@ public class NoiseImageViewController implements Updatable {
         System.out.println("mouse X: " + mousePosition.getX());
         System.out.println("mouse Y: " + mousePosition.getY());
 
-        System.out.println("++++++++++++++++");*/
+        System.out.println("++++++++++++++++");*//*
 
         System.out.println(mousePositionRatio.getX());
         System.out.println(mousePositionRatio.getY());
@@ -276,6 +280,6 @@ public class NoiseImageViewController implements Updatable {
 
             mousePositionRatio = new Point2D(mouseX / displayWidth, mouseY / displayHeight);
         };
-    }
+    }*/
 
 }
