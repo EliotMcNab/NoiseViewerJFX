@@ -73,5 +73,6 @@
     <orderEntry type="library" name="Maven: org.kordamp.ikonli:ikonli-core:12.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.kordamp.ikonli:ikonli-javafx:12.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.kordamp.ikonli:ikonli-material2-pack:12.3.0" level="project" />
   </component>
 </module>

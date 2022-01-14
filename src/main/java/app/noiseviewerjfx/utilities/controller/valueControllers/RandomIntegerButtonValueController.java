@@ -1,12 +1,12 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 
-public class RandomIntegerButtonValueController extends ValueController{
+public class RandomIntegerButtonValueController extends ButtonValueController implements Associable {
 
-    private final Button BUTTON;
     private int randomValue;
     private final int MIN_VALUE;
     private final int MAX_VALUE;
@@ -19,11 +19,17 @@ public class RandomIntegerButtonValueController extends ValueController{
      * Creates a new ButtonValueController
      * @param linkedButton (Button): the button associated to the ButtonValueController
      */
-    public RandomIntegerButtonValueController(Button linkedButton, int minValue, int maxValue) {
-        this.BUTTON = linkedButton;
+    public RandomIntegerButtonValueController(
+            Button linkedButton,
+            int minValue,
+            int maxValue) {
+
+        super(linkedButton);
+
         this.MIN_VALUE = minValue;
         this.MAX_VALUE = maxValue;
         randomValue = minValue;
+
         addListeners();
     }
 
@@ -34,11 +40,6 @@ public class RandomIntegerButtonValueController extends ValueController{
     @Override
     public double getValue() {
         return randomValue;
-    }
-
-    @Override
-    protected void setValue(double value) {
-
     }
 
     private void generateRandomValue() {
@@ -52,7 +53,8 @@ public class RandomIntegerButtonValueController extends ValueController{
     /**
      * Adds the necessary listeners to the button
      */
-    private void addListeners() {
+    @Override
+    protected void addListeners() {
         BUTTON.setOnMouseClicked(update());
     }
 

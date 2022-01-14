@@ -4,10 +4,12 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.IntegerTextField
 import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 import javafx.scene.control.TextField;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AssociativeIntegerTextField extends IntegerTextFieldValueController implements Associative{
 
-    private ValueController associatedNode;
-    private int lastNodeState;
+    private final Map<Associable, Integer> associatedNodes = new HashMap<>();
 
     /**
      * Creates a new IntegerTextFieldValueController with no node associated to it
@@ -21,36 +23,49 @@ public class AssociativeIntegerTextField extends IntegerTextFieldValueController
     }
 
     @Override
-    public void setAssociateNode(ValueController associatedNode) {
+    public boolean addAssociatedNode(Associable associatedNode) {
+        if (associatedNode == this) return false;
+        syncTextFieldValue();
+        return associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null;
+    }
 
-        if (associatedNode == this) {
-            System.out.printf("ERROR: cannot register associated node for %s\n", this);
-            return;
+    @Override
+    public boolean addAllAssociatedNodes(Associable... associatedNodes) {
+        boolean errorHappen = false;
+        for (Associable associatedNode : associatedNodes) {
+            if (associatedNode == this) {
+                errorHappen = false;
+                continue;
+            }
+            errorHappen = this.associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null | errorHappen;
         }
 
-        this.associatedNode = associatedNode;
-        lastNodeState = associatedNode.getCurrentState();
         syncTextFieldValue();
+
+        return !errorHappen;
     }
 
     @Override
     public boolean hasAssociatedNode() {
-        return associatedNode != null;
+        return associatedNodes.size() != 0;
     }
 
     @Override
     public void update() {
 
-        int currentNodeState = associatedNode.getCurrentState();
+        for (Associable associatedNode : associatedNodes.keySet()) {
+            if (!hasUpdated(associatedNodes.get(associatedNode), associatedNode.getCurrentState())) continue;
 
-        if (!hasUpdated(lastNodeState, currentNodeState)) return;
-
-        syncTextFieldValue();
-        lastNodeState = currentNodeState;
+            associatedNodes.replace(associatedNode, associatedNode.getCurrentState());
+            setValue((int) associatedNode.getValue());
+        }
 
     }
 
     private void syncTextFieldValue() {
-        setValue(associatedNode.getValue());
+        for (Associable associatedNode : associatedNodes.keySet()) {
+            setValue((int) associatedNode.getValue());
+            return;
+        }
     }
 }

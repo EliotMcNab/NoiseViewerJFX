@@ -42,4 +42,14 @@ public class UpdateManager {
         }
     }
 
+    public void startUpdating() {
+        PeriodicTask periodicTask = new PeriodicTask(10) {
+            @Override
+            public void run() {
+                update();
+            }
+        };
+        periodicTask.start();
+    }
+
 }

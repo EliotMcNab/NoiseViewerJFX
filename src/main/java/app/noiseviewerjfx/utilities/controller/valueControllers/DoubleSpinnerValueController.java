@@ -1,6 +1,7 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.TextValidation;
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,7 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.w3c.dom.Text;
 
-public class DoubleSpinnerValueController extends ValueController {
+public class DoubleSpinnerValueController extends ValueController implements Associable {
 
     // the spinner the IntegerSpinnerValueController is associated to
     private final Spinner<Double> SPINNER;
@@ -66,8 +67,10 @@ public class DoubleSpinnerValueController extends ValueController {
         return SPINNER.getValue();
     }
 
-    protected void setValue(double newValue) {
+    protected boolean setValue(double newValue) {
         SPINNER.getValueFactory().setValue(newValue);
+        newState();
+        return true;
     }
 
     /**
@@ -92,7 +95,6 @@ public class DoubleSpinnerValueController extends ValueController {
         if (hasChanged) lastValue = newValue;
 
         return hasChanged;
-
     }
 
     // =================================
@@ -142,7 +144,7 @@ public class DoubleSpinnerValueController extends ValueController {
     private EventHandler<KeyEvent> updateOnKeyPress() {
         return keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER) && changeDetected()) {
-                System.out.println(SPINNER.getValue());
+                newState();
             }
         };
     }

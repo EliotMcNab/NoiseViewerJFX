@@ -1,14 +1,10 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
-abstract public class ValueController {
+abstract public class ValueController implements Evolving{
 
     private int currentState = 0;
 
-    public abstract double getValue();
-
-    protected abstract void setValue(double value);
-
-    protected final void newState() {
+    public final void newState() {
         currentState++;
         currentState %= 100;
     }
@@ -17,4 +13,7 @@ abstract public class ValueController {
         return currentState;
     }
 
+    protected boolean setValue(double value) {
+        return false;
+    }
 }

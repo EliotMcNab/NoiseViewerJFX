@@ -247,6 +247,25 @@
     -fx-background-color: -accent-blue;
 }
 
+/* CHECKS BOX */
+
+.check-box {
+    -fx-text-fill: -main-text-fill;
+}
+
+.check-box .box {
+    -fx-background-radius: 7;
+    -fx-background-color: -layer-hover-fill;
+    -fx-effect: innershadow(gaussian, rgba(18, 18, 23, 0.5), 10, 0.5, 1, 1);}
+
+.check-box:selected .mark{
+    -fx-background-color: -accent-blue;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -accent-gray;
+}
+
 /* TERRAIN */
 
 #TERRAIN_LAYERS {
@@ -310,18 +329,16 @@
     -fx-background-radius: 100;
 }
 
+#TOOLBAR_ICON {
+    -fx-icon-size: 20;
+}
+
 /* IMAGE */
 
-#TERRAIN_VIEW {
+#IMAGE_SHADOW {
     -fx-effect: dropShadow(gaussian, rgba(18, 18, 23, 0.5), 10, 0.5, 5, 5);
-    -fx-border-width: 1;
 }
 
-
-#TEST {
-    -fx-border-width: 1;
-    -fx-border-color: green;
-}
 /* IDS */
 
 #BACKGROUND {

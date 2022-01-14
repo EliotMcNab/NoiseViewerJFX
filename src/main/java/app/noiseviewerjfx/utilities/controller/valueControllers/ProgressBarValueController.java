@@ -1,8 +1,9 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
 import javafx.scene.control.ProgressBar;
 
-public class ProgressBarValueController extends ValueController{
+public class ProgressBarValueController extends ValueController implements Associable {
 
     private final ProgressBar PROGRESS_BAR;
 
@@ -16,7 +17,8 @@ public class ProgressBarValueController extends ValueController{
     }
 
     @Override
-    protected void setValue(double value) {
+    protected boolean setValue(double value) {
         PROGRESS_BAR.setProgress(value);
+        return true;
     }
 }

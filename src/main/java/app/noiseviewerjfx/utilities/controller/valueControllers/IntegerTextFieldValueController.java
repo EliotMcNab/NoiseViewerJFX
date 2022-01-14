@@ -1,6 +1,7 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.TextValidation;
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -10,7 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.w3c.dom.Node;
 
-public class IntegerTextFieldValueController extends ValueController {
+public class IntegerTextFieldValueController extends ValueController implements Associable {
 
     private final TextField TEXT_FIELD;
     private final int DEFAULT_VALUE;
@@ -69,9 +70,9 @@ public class IntegerTextFieldValueController extends ValueController {
     }
 
     @Override
-    protected void setValue(double value) {
+    protected boolean setValue(double value) {
         TEXT_FIELD.setText((int) value + UNIT);
-        newState();
+        return true;
     }
 
     /**
@@ -90,21 +91,25 @@ public class IntegerTextFieldValueController extends ValueController {
     // =================================
 
     private void addListeners() {
-        TEXT_FIELD.setOnKeyPressed(update());
         TEXT_FIELD.focusedProperty().addListener(selectAllText());
+        TEXT_FIELD.textProperty().addListener(updateOnTextChange());
     }
 
     /**
      * Updates the state of the text field when the user presses the ENTER key
      * @return (EventHandler(KeyEvent)): event listener for key presses in the text field
      */
-    private EventHandler<KeyEvent> update() {
+    private EventHandler<KeyEvent> updateOnKeyPress() {
         return keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER) && changeDetected()){
                 newState();
                 updateText();
             }
         };
+    }
+
+    private ChangeListener<String> updateOnTextChange() {
+        return (observableValue, s, t1) -> newState();
     }
 
     /**

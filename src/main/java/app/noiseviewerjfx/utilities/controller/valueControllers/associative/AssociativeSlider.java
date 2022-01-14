@@ -4,11 +4,12 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.SliderValueContr
 import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 import javafx.scene.control.Slider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AssociativeSlider extends SliderValueController implements Associative{
 
-    private ValueController associatedNode;
-    private int lastNodeState;
-
+    private final Map<Associable, Integer> associatedNodes = new HashMap<>();
     /**
      * Create a new SliderValueController with a node associated to it
      * @param linkedSlider   (Slider): the slider associated to the SliderValueController
@@ -18,36 +19,48 @@ public class AssociativeSlider extends SliderValueController implements Associat
     }
 
     @Override
-    public void setAssociateNode(ValueController associatedNode) {
-
-        if (associatedNode == this) {
-            System.out.printf("ERROR: cannot register associated node for %s\n", this);
-            return;
-        }
-
-        this.associatedNode = associatedNode;
-        lastNodeState = associatedNode.getCurrentState();
+    public boolean addAssociatedNode(Associable associatedNode) {
+        if (associatedNode == this) return false;
+        boolean errorHappen = associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null;
         syncSliderValue();
+        return errorHappen;
     }
 
     @Override
+    public boolean addAllAssociatedNodes(Associable... associatedNodes) {
+        boolean errorHappen = false;
+        for (Associable associatedNode : associatedNodes) {
+            if (associatedNode == this) {
+                errorHappen = false;
+                continue;
+            }
+            errorHappen = this.associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null | errorHappen;
+        }
+
+        syncSliderValue();
+
+        return !errorHappen;
+    }
+    @Override
     public boolean hasAssociatedNode() {
-        return associatedNode != null;
+        return associatedNodes.size() != 0;
     }
 
     @Override
     public void update() {
 
-        int currentNodeState = associatedNode.getCurrentState();
+        for (Associable associatedNode : associatedNodes.keySet()) {
+            if (!hasUpdated(associatedNodes.get(associatedNode), associatedNode.getCurrentState())) continue;
 
-        if (!hasUpdated(lastNodeState, currentNodeState)) return;
-
-        syncSliderValue();
-        lastNodeState = currentNodeState;
+            associatedNodes.replace(associatedNode, associatedNode.getCurrentState());
+            setValue(associatedNode.getValue());
+        }
 
     }
 
     private void syncSliderValue() {
-        setValue(associatedNode.getValue());
+        for (Associable associatedNode : associatedNodes.keySet()) {
+            setValue(associatedNode.getValue());
+        }
     }
 }

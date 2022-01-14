@@ -1,13 +1,14 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.controller.NodeController;
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 
-public class SliderValueController extends ValueController {
+public class SliderValueController extends ValueController implements Associable {
 
     private final Slider SLIDER;
 
@@ -35,8 +36,9 @@ public class SliderValueController extends ValueController {
     }
 
     @Override
-    protected void setValue(double value) {
+    protected boolean setValue(double value) {
         SLIDER.setValue(value);
+        return true;
     }
 
     // =================================

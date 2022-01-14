@@ -2,6 +2,10 @@ package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.Vector2D;
 import app.noiseviewerjfx.utilities.io.input.Keyboard;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -10,8 +14,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -20,8 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-
-import java.awt.*;
+import javafx.util.Duration;
 
 public class ZoomController {
 
@@ -62,6 +63,8 @@ public class ZoomController {
         this.CONTENT        = content;
 
         addListeners();
+
+        Platform.runLater(SCROLL_PANE::requestFocus);
     }
 
     private void addListeners() {
@@ -103,8 +106,14 @@ public class ZoomController {
 
     private void pickUpImage() {
 
-        Translate pickUp = new Translate(-5, -5);
-        CONTENT.getTransforms().add(pickUp);
+        ScaleTransition pickupScale = new ScaleTransition(
+                Duration.millis(50),
+                CONTENT
+        );
+
+        pickupScale.setToX(1.02);
+        pickupScale.setToY(1.02);
+        pickupScale.play();
 
         CONTENT.setEffect(NodeController.generateDropShadow(
                 BlurType.GAUSSIAN,
@@ -125,8 +134,14 @@ public class ZoomController {
 
         if (!dragInitialised) return;
 
-        Translate drop = new Translate(5, 5);
-        CONTENT.getTransforms().add(drop);
+        ScaleTransition pickupScale = new ScaleTransition(
+                Duration.millis(50),
+                CONTENT
+        );
+
+        pickupScale.setToX(1/1.02);
+        pickupScale.setToY(1/1.02);
+        pickupScale.play();
 
         CONTENT.setEffect(NodeController.generateDropShadow(
                 BlurType.GAUSSIAN,
@@ -256,7 +271,6 @@ public class ZoomController {
     }
 
     private void zoom(ScrollEvent scrollEvent) {
-        lastMousePosition = new Vector2D(scrollEvent.getX(), scrollEvent.getY());
 
         // adds or subtracts to the image's scale based on
         // whether user is scrolling backwards or forwards

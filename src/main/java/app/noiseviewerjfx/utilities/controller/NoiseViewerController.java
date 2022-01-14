@@ -2,18 +2,20 @@ package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.*;
-import app.noiseviewerjfx.utilities.io.input.Keyboard;
-import app.noiseviewerjfx.utilities.tasks.PeriodicTask;
+import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskValueController;
+import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController;
 import app.noiseviewerjfx.utilities.tasks.UpdateManager;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Controller for the Noise Viewer application
@@ -92,6 +94,57 @@ public class NoiseViewerController implements Initializable {
 
     // endregion
 
+    // region ICON BUTTONS
+
+    @FXML
+    private Button NOISE_VISIBILITY_BUTTON;
+
+    @FXML
+    private Button MASK_VISIBILITY_BUTTON;
+
+    @FXML
+    private Button TERRAIN_VISIBILITY_BUTTON;
+
+    @FXML
+    private Button TERRAIN_LAYER_VISIBILITY_BUTTON;
+
+    @FXML
+    private Button TERRAIN_LAYER_LOCK_BUTTON;
+
+    // endregion
+
+    // region ICONS
+
+    @FXML
+    private FontIcon NOISE_VISIBILITY_ICON;
+
+    @FXML
+    private FontIcon MASK_VISIBILITY_ICON;
+
+    @FXML
+    private FontIcon TERRAIN_VISIBILITY_ICON;
+
+    @FXML
+    private FontIcon TERRAIN_LAYER_VISIBILITY_ICON;
+
+    @FXML
+    private FontIcon TERRAIN_LAYER_LOCK_ICON;
+
+    // endregion
+
+    // region CHECKBOX
+
+    @FXML
+    private CheckBox APPLY_MASK_CHECKBOX;
+
+    @FXML
+    private CheckBox CIRCLE_MASK_CHECKBOX;
+
+    @FXML
+    private CheckBox RECTANGLE_MASK_CHECKBOX;
+
+    // endregion
+
     // region IMAGE VIEW
 
     @FXML
@@ -99,10 +152,15 @@ public class NoiseViewerController implements Initializable {
 
     // endregion
 
+    // region HBOX
+
+    @FXML
+    private HBox WORLD_CONTAINER;
+
+    // endregion
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        UpdateManager noiseUpdateManager = new UpdateManager();
 
         // region SPINNERS
 
@@ -155,7 +213,7 @@ public class NoiseViewerController implements Initializable {
 
         // endregion
 
-        // region button
+        // region BUTTON
 
         RandomIntegerButtonValueController randomOctaveButton = new RandomIntegerButtonValueController(
                 RANDOM_OCTAVE_BUTTON, 1, 10);
@@ -166,35 +224,93 @@ public class NoiseViewerController implements Initializable {
 
         // endregion
 
+        // region ICON BUTTONS
+
+        IconButtonValueController noiseVisibilityButton = new IconButtonValueController(
+                NOISE_VISIBILITY_BUTTON,
+                NOISE_VISIBILITY_ICON,
+                "far-eye-slash",
+                "far-eye"
+        );
+
+        IconButtonValueController maskVisibilityButton = new IconButtonValueController(
+                MASK_VISIBILITY_BUTTON,
+                MASK_VISIBILITY_ICON,
+                "far-eye-slash",
+                "far-eye"
+        );
+
+        IconButtonValueController terrainVisibilityButton = new IconButtonValueController(
+                TERRAIN_VISIBILITY_BUTTON,
+                TERRAIN_VISIBILITY_ICON,
+                "far-eye-slash",
+                "far-eye"
+        );
+
+        IconButtonValueController terrainLayerVisibilityButton = new IconButtonValueController(
+                TERRAIN_LAYER_VISIBILITY_BUTTON,
+                TERRAIN_LAYER_VISIBILITY_ICON,
+                "far-eye-slash",
+                "far-eye"
+        );
+
+        IconButtonValueController terrainLayerLockButton = new IconButtonValueController(
+                TERRAIN_LAYER_LOCK_BUTTON,
+                TERRAIN_LAYER_LOCK_ICON,
+                "fas-lock",
+                "fas-lock-open"
+
+        );
+
+        // endregion
+
+        // region CHECKBOX
+
+        CheckBoxValueController circleCheckBox      = new CheckBoxValueController(CIRCLE_MASK_CHECKBOX);
+        CheckBoxValueController rectangleCheckBox   = new CheckBoxValueController(RECTANGLE_MASK_CHECKBOX);
+
+        // endregion
+
         // region NOISE DISPLAY
 
-        /*NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(
-                WORLD_IMAGE_VIEW,
+        NoiseValueController noiseValueController = new NoiseValueController(
                 octaveSpinner,
                 persistenceSpinner,
                 seedTextField,
                 mapWidthSpinnerVC,
-                mapHeightSpinnerVC,
+                mapHeightSpinnerVC
+        );
+
+        MaskValueController maskValueController = new MaskValueController(
                 maskWidthSpinner,
                 maskHeightSpinner,
-                maskStrengthSpinner
-        );*/
+                maskStrengthSpinner,
+                circleCheckBox,
+                rectangleCheckBox
+        );
+
+        NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(
+                WORLD_IMAGE_VIEW,
+                noiseValueController,
+                maskValueController
+        );
 
         // endregion
 
         // region UPDATABLE
 
-        octaveSpinner.setAssociateNode(randomOctaveButton);
-        persistenceSpinner.setAssociateNode(randomPersistenceButton);
-        seedTextField.setAssociateNode(randomSeedButton);
-        maskWidthSlider.setAssociateNode(maskWidthSpinner);
-        maskWidthSpinner.setAssociateNode(maskWidthSlider);
-        maskHeightSlider.setAssociateNode(maskHeightSpinner);
-        maskHeightSpinner.setAssociateNode(maskHeightSlider);
-        maskStrengthSlider.setAssociateNode(maskStrengthSpinner);
-        maskStrengthSpinner.setAssociateNode(maskStrengthSlider);
-        opacityProgressBar.setAssociateNode(opacitySpinner);
+        octaveSpinner.addAssociatedNode(randomOctaveButton);
+        persistenceSpinner.addAssociatedNode(randomPersistenceButton);
+        seedTextField.addAssociatedNode(randomSeedButton);
+        maskWidthSlider.addAssociatedNode(maskWidthSpinner);
+        maskWidthSpinner.addAssociatedNode(maskWidthSlider);
+        maskHeightSlider.addAssociatedNode(maskHeightSpinner);
+        maskHeightSpinner.addAssociatedNode(maskHeightSlider);
+        maskStrengthSlider.addAssociatedNode(maskStrengthSpinner);
+        maskStrengthSpinner.addAssociatedNode(maskStrengthSlider);
+        opacityProgressBar.addAssociatedNode(opacitySpinner);
 
+        UpdateManager noiseUpdateManager = new UpdateManager();
         noiseUpdateManager.registerAll(
                 octaveSpinner,
                 persistenceSpinner,
@@ -205,41 +321,22 @@ public class NoiseViewerController implements Initializable {
                 maskHeightSpinner,
                 maskStrengthSlider,
                 maskStrengthSpinner,
-                opacityProgressBar/*,
-                noiseDisplay*/
+                opacityProgressBar,
+                noiseDisplay,
+                noiseValueController,
+                maskValueController
         );
+        noiseUpdateManager.startUpdating();
 
         // endregion
 
         // region TESTING
 
-        PeriodicTask periodicTask = new PeriodicTask(10) {
-            @Override
-            public void run() {
-                noiseUpdateManager.update();
-            }
-        };
-        periodicTask.start();
-
         ZoomController testZoomController = new ZoomController(
                 DISPLAY_SCROLL_PANE,
                 BACKGROUND,
-                WORLD_IMAGE_VIEW
+                WORLD_CONTAINER
         );
-
-        Platform.runLater(() -> DISPLAY_SCROLL_PANE.requestFocus());
-
-        /*int[][] noise = NoiseProcessing.PerlinNoise.generatePerlinNoise(
-                100,
-                100,
-                4,
-                0.4f,
-                234567898L
-        );
-
-        Image noiseImage = ImageProcessing.toGrayScale(noise);
-
-        WORLD_IMAGE_VIEW.setImage(noiseImage);*/
 
         // endregion
 

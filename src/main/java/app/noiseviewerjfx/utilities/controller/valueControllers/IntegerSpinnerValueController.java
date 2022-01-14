@@ -1,6 +1,7 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.TextValidation;
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -13,7 +14,7 @@ import javafx.util.StringConverter;
 /**
  * Handles value changes for spinners
  */
-public class IntegerSpinnerValueController extends ValueController {
+public class IntegerSpinnerValueController extends ValueController implements Associable {
 
     // the spinner the IntegerSpinnerValueController is associated to
     private final Spinner<Integer> SPINNER;
@@ -68,8 +69,9 @@ public class IntegerSpinnerValueController extends ValueController {
         return SPINNER.getValue();
     }
 
-    protected void setValue(double newValue) {
+    protected boolean setValue(double newValue) {
         SPINNER.getValueFactory().setValue((int) newValue);
+        return true;
     }
 
     /**

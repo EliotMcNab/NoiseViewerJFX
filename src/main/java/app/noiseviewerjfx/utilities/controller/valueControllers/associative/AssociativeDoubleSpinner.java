@@ -6,10 +6,14 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.ValueController;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class AssociativeDoubleSpinner extends DoubleSpinnerValueController implements Associative {
 
-    private ValueController associatedNode;
-    private int lastNodeState;
+    private final Map<Associable, Integer> associatedNodes = new HashMap<>();
 
     /**
      * Creates a new IntegerSpinnerValueController with no node associated to it
@@ -27,36 +31,51 @@ public class AssociativeDoubleSpinner extends DoubleSpinnerValueController imple
     }
 
     @Override
-    public void setAssociateNode(ValueController associatedNode) {
+    public boolean addAssociatedNode(Associable associatedNode) {
+        if (associatedNode == this) return false;
+        boolean errorHappen = associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null;
+        syncSpinnerValue();
+        return errorHappen;
+    }
 
-        if (associatedNode == this) {
-            System.out.printf("ERROR: cannot register associated node for %s\n", this);
-            return;
+    @Override
+    public boolean addAllAssociatedNodes(Associable... associatedNodes) {
+
+        boolean errorHappen = false;
+        for (Associable associatedNode : associatedNodes) {
+            if (associatedNode == this) {
+                errorHappen = false;
+                continue;
+            }
+            errorHappen = this.associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null | errorHappen;
         }
 
-        this.associatedNode = associatedNode;
-        lastNodeState = associatedNode.getCurrentState();
         syncSpinnerValue();
+
+        return !errorHappen;
     }
 
     @Override
     public boolean hasAssociatedNode() {
-        return associatedNode != null;
+        return associatedNodes.size() != 0;
     }
 
     @Override
     public void update() {
 
-        int currentNodeState = associatedNode.getCurrentState();
+        for (Associable associatedNode : associatedNodes.keySet()) {
+            if (!hasUpdated(associatedNodes.get(associatedNode), associatedNode.getCurrentState())) continue;
 
-        if (!hasUpdated(lastNodeState, currentNodeState)) return;
-
-        syncSpinnerValue();
-        lastNodeState = currentNodeState;
+            associatedNodes.replace(associatedNode, associatedNode.getCurrentState());
+            setValue(associatedNode.getValue());
+        }
 
     }
 
     private void syncSpinnerValue() {
-        setValue(ComplementaryMath.roundToPrecision(associatedNode.getValue(), 1));
+        for (Associable associatedNode : associatedNodes.keySet()) {
+            setValue(ComplementaryMath.roundToPrecision(associatedNode.getValue(), 2));
+            return;
+        }
     }
 }
