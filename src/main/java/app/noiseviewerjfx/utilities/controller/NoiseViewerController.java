@@ -209,7 +209,7 @@ public class NoiseViewerController implements Initializable {
 
         // region PROGRESS BAR
 
-        AssociativeProgressBar opacityProgressBar = new AssociativeProgressBar(OPACITY_PROGRESS_BAR);
+        AssociativeDraggableProgressBar opacityProgressBar = new AssociativeDraggableProgressBar(OPACITY_PROGRESS_BAR);
 
         // endregion
 

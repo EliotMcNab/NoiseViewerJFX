@@ -1,16 +1,16 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers.associative;
 
-import app.noiseviewerjfx.utilities.controller.valueControllers.ProgressBarValueController;
+import app.noiseviewerjfx.utilities.controller.valueControllers.DraggableProgressBarValueController;
 import javafx.scene.control.ProgressBar;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AssociativeProgressBar extends ProgressBarValueController implements Associative{
+public class AssociativeDraggableProgressBar extends DraggableProgressBarValueController implements Associative{
 
-    protected final Map<Associable, Integer> associatedNodes = new HashMap<>();
+    private final Map<Associable, Integer> associatedNodes = new HashMap<>();
 
-    public AssociativeProgressBar(ProgressBar linkedProgressBar) {
+    public AssociativeDraggableProgressBar(ProgressBar linkedProgressBar) {
         super(linkedProgressBar);
     }
 
@@ -60,5 +60,4 @@ public class AssociativeProgressBar extends ProgressBarValueController implement
             setValue(associatedNode.getValue() / 100);
         }
     }
-
 }
