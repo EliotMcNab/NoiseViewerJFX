@@ -16,4 +16,6 @@ module app.noiseviewerjfx {
     opens app.noiseviewerjfx.utilities.controller.valueControllers.associative to javafx.fxml;
     exports app.noiseviewerjfx.utilities.controller.valueControllers.settings;
     opens app.noiseviewerjfx.utilities.controller.valueControllers.settings to javafx.fxml;
+    exports app.noiseviewerjfx.utilities.controller.valueControllers.associative.switches;
+    opens app.noiseviewerjfx.utilities.controller.valueControllers.associative.switches to javafx.fxml;
 }

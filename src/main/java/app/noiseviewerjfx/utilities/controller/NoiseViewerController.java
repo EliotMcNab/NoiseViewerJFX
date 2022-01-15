@@ -2,6 +2,7 @@ package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.*;
+import app.noiseviewerjfx.utilities.controller.valueControllers.associative.switches.SwitchCheckBox;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskValueController;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController;
 import app.noiseviewerjfx.utilities.tasks.UpdateManager;
@@ -266,8 +267,8 @@ public class NoiseViewerController implements Initializable {
 
         // region CHECKBOX
 
-        CheckBoxValueController circleCheckBox      = new CheckBoxValueController(CIRCLE_MASK_CHECKBOX);
-        CheckBoxValueController rectangleCheckBox   = new CheckBoxValueController(RECTANGLE_MASK_CHECKBOX);
+        SwitchCheckBox circleCheckBox      = new SwitchCheckBox(CIRCLE_MASK_CHECKBOX);
+        SwitchCheckBox rectangleCheckBox   = new SwitchCheckBox(RECTANGLE_MASK_CHECKBOX);
 
         // endregion
 
@@ -310,6 +311,8 @@ public class NoiseViewerController implements Initializable {
         maskStrengthSpinner.addAssociatedNode(maskStrengthSlider);
         opacitySpinner.addAssociatedNode(opacityProgressBar);
         opacityProgressBar.addAssociatedNode(opacitySpinner);
+        rectangleCheckBox.addAssociatedNode(circleCheckBox);
+        circleCheckBox.addAllAssociatedNodes(rectangleCheckBox);
 
         UpdateManager noiseUpdateManager = new UpdateManager();
         noiseUpdateManager.registerAll(
@@ -324,6 +327,8 @@ public class NoiseViewerController implements Initializable {
                 maskStrengthSpinner,
                 opacityProgressBar,
                 opacitySpinner,
+                rectangleCheckBox,
+                circleCheckBox,
                 noiseDisplay,
                 noiseValueController,
                 maskValueController
