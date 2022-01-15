@@ -330,4 +330,11 @@ public class ZoomController {
         return availableSpace.sub(contentSize).div(2);
     }
 
+    private Vector2D getContentCenter() {
+        // gets the central coordinates of the bounds around the image
+        // ie: the center of the image
+        Bounds contentBounds = CONTENT.getBoundsInLocal();
+        return new Vector2D(contentBounds.getCenterX(), contentBounds.getCenterY());
+    }
+
 }

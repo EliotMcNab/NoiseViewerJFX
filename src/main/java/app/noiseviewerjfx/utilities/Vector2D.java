@@ -26,6 +26,10 @@ public class Vector2D {
         return new Vector2D(X - other.X, Y - other.Y);
     }
 
+    public Vector2D sub(double X, double Y) {
+        return new Vector2D(this.X - X, this.Y - Y);
+    }
+
     public Vector2D add(Vector2D other) {
         return new Vector2D(X + other.X, Y + other.Y);
     }

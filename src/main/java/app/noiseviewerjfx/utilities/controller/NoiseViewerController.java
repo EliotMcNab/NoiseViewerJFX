@@ -308,6 +308,7 @@ public class NoiseViewerController implements Initializable {
         maskHeightSpinner.addAssociatedNode(maskHeightSlider);
         maskStrengthSlider.addAssociatedNode(maskStrengthSpinner);
         maskStrengthSpinner.addAssociatedNode(maskStrengthSlider);
+        opacitySpinner.addAssociatedNode(opacityProgressBar);
         opacityProgressBar.addAssociatedNode(opacitySpinner);
 
         UpdateManager noiseUpdateManager = new UpdateManager();
@@ -322,6 +323,7 @@ public class NoiseViewerController implements Initializable {
                 maskStrengthSlider,
                 maskStrengthSpinner,
                 opacityProgressBar,
+                opacitySpinner,
                 noiseDisplay,
                 noiseValueController,
                 maskValueController

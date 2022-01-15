@@ -1,6 +1,8 @@
 package app.noiseviewerjfx.utilities.controller;
 
+import app.noiseviewerjfx.utilities.Vector2D;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.effect.BlurType;
@@ -8,8 +10,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
-import java.awt.*;
 
 public class NodeController {
 
@@ -43,6 +43,16 @@ public class NodeController {
         glow.setLevel(level);
 
         return glow;
+    }
+
+    public static Vector2D getLocalContentSize(Node content) {
+        Bounds contentBounds = content.getBoundsInLocal();
+        return new Vector2D(contentBounds.getMaxX(), contentBounds.getMaxY());
+    }
+
+    public static Vector2D getParentContentSize(Node content) {
+        Bounds contentBounds = content.getBoundsInParent();
+        return new Vector2D(contentBounds.getMaxX(), contentBounds.getMaxY());
     }
 
 }

@@ -585,7 +585,7 @@
                                             </rowConstraints>
                                              <children>
                                                 <ProgressBar fx:id="OPACITY_PROGRESS_BAR" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="200.0" progress="1.0" />
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Opacity">
+                                                <Text disable="true" fill="WHITE" focusTraversable="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Opacity">
                                                    <GridPane.margin>
                                                       <Insets bottom="4.0" left="10.0" />
                                                    </GridPane.margin>
