@@ -41,6 +41,14 @@ public class AssociativeSlider extends SliderValueController implements Associat
 
         return !errorHappen;
     }
+
+    @Override
+    public boolean removeAssociatedNode(Associable associated) {
+        if (!associatedNodes.containsKey(associated)) return false;
+
+        return associatedNodes.remove(associated) != null;
+    }
+
     @Override
     public boolean hasAssociatedNode() {
         return associatedNodes.size() != 0;

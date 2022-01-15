@@ -59,12 +59,34 @@ public class NoiseDisplayHandler implements Updatable {
     private Image generateView() {
 
         int[][] noise = NoiseProcessing.PerlinNoise.generatePerlinNoise(
-            lastNoiseValues.MAP_HEIGHT(),
             lastNoiseValues.MAP_WIDTH(),
+            lastNoiseValues.MAP_HEIGHT(),
             lastNoiseValues.OCTAVES(),
             lastNoiseValues.PERSISTENCE(),
             lastNoiseValues.SEED()
         );
+
+        if (useMask() && !maskIsVisible()) {
+
+            int[][] mask;
+
+            if (lastMaskValues.IS_CIRCLE_MASK()) {
+                mask = NoiseProcessing.Mask.generateCircularMask(
+                        lastNoiseValues.MAP_WIDTH(),
+                        lastNoiseValues.MAP_HEIGHT(),
+                        (float) lastMaskValues.MASK_WIDTH()
+                );
+                noise = NoiseProcessing.subtract(noise, mask, lastMaskValues.MASK_STRENGTH());
+            } else if (lastMaskValues.IS_RECTANGLE_MASK()) {
+                mask = NoiseProcessing.Mask.generateRoundedSquareMask(
+                        lastNoiseValues.MAP_WIDTH(),
+                        lastNoiseValues.MAP_HEIGHT(),
+                        (float) lastMaskValues.MASK_WIDTH(),
+                        (float) lastMaskValues.MASK_HEIGHT()
+                );
+                noise = NoiseProcessing.subtract(noise, mask, lastMaskValues.MASK_STRENGTH());
+            }
+        }
 
         Image grayScaleImage = ImageProcessing.toGrayScale(noise);
 
@@ -91,5 +113,13 @@ public class NoiseDisplayHandler implements Updatable {
 
     private MaskValues getMaskValues() {
         return (MaskValues) MASK.getObjectValue();
+    }
+
+    private boolean useMask() {
+        return lastMaskValues.IS_MASK_ACTIVE();
+    }
+
+    private boolean maskIsVisible() {
+        return lastMaskValues.IS_MASK_VISIBLE();
     }
 }

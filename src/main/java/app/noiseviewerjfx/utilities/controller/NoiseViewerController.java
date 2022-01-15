@@ -267,8 +267,9 @@ public class NoiseViewerController implements Initializable {
 
         // region CHECKBOX
 
-        SwitchCheckBox circleCheckBox      = new SwitchCheckBox(CIRCLE_MASK_CHECKBOX);
-        SwitchCheckBox rectangleCheckBox   = new SwitchCheckBox(RECTANGLE_MASK_CHECKBOX);
+        SwitchCheckBox circleCheckBox               = new SwitchCheckBox(CIRCLE_MASK_CHECKBOX);
+        SwitchCheckBox rectangleCheckBox            = new SwitchCheckBox(RECTANGLE_MASK_CHECKBOX);
+        CheckBoxValueController applyMaskCheckBox   = new CheckBoxValueController(APPLY_MASK_CHECKBOX);
 
         // endregion
 
@@ -283,11 +284,15 @@ public class NoiseViewerController implements Initializable {
         );
 
         MaskValueController maskValueController = new MaskValueController(
+                maskVisibilityButton,
+                applyMaskCheckBox,
                 maskWidthSpinner,
                 maskHeightSpinner,
                 maskStrengthSpinner,
                 circleCheckBox,
-                rectangleCheckBox
+                rectangleCheckBox,
+                maskWidthSlider,
+                maskHeightSlider
         );
 
         NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(

@@ -395,7 +395,7 @@
                                                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                          </VBox.margin>
                                                       </ImageView>
-                                                      <CheckBox fx:id="CIRCLE_MASK_CHECKBOX" mnemonicParsing="false" text="Circle" />
+                                                      <CheckBox fx:id="CIRCLE_MASK_CHECKBOX" mnemonicParsing="false" selected="true" text="Circle" />
                                                    </children>
                                                    <HBox.margin>
                                                       <Insets left="20.0" right="20.0" />

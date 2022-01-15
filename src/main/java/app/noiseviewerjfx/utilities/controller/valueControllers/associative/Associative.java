@@ -10,6 +10,10 @@ public interface Associative extends Updatable {
 
     boolean hasAssociatedNode();
 
+    default boolean removeAssociatedNode(Associable associated) {
+        return false;
+    };
+
     @Override
     default boolean canBeRegistered() {
         return hasAssociatedNode();
