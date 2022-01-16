@@ -1,7 +1,5 @@
 package app.noiseviewerjfx.utilities.io.serialization;
 
-import java.util.HashMap;
-
 public interface Loadable {
 
     default Save save() {
@@ -16,7 +14,7 @@ public interface Loadable {
         return false;
     }
 
-    default boolean returnToState(State state){
+    default boolean restoreToState(State state){
         return false;
     }
 

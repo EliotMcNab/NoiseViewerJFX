@@ -65,4 +65,12 @@ public class IconButtonValueController extends ButtonValueController implements 
     public double getValue() {
         return isSelected ? 1 : 0;
     }
+
+    @Override
+    protected boolean setValue(double value) {
+        isSelected = false;
+        updateIcon();
+        newState();
+        return true;
+    }
 }

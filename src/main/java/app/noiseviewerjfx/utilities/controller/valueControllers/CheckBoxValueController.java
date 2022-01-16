@@ -1,6 +1,7 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
+import app.noiseviewerjfx.utilities.io.serialization.State;
 import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseEvent;

@@ -29,8 +29,6 @@ public class IntegerSpinnerValueController extends ValueController implements As
     private Node associatedNode = null;
     private int lastValue;
 
-    private int currentVersion = 0;
-
     /**
      * Creates a new IntegerSpinnerValueController with no node associated to it
      * @param linkedSpinner (Spinner): the spinner associated to the IntegerSpinnerValueController
@@ -63,21 +61,6 @@ public class IntegerSpinnerValueController extends ValueController implements As
         styleSpinner();
         addListeners();
 
-    }
-
-    // =================================
-    //             LOADING
-    // =================================
-
-    @Override
-    public boolean returnToState(State state) {
-        System.out.println(state.getVALUE());
-        return true;
-    }
-
-    @Override
-    public State getState() {
-        return new State(currentVersion++, getValue());
     }
 
     // =================================

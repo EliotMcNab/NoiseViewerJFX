@@ -53,7 +53,6 @@ public class RandomIntegerButtonValueController extends ButtonValueController im
      */
     @Override
     protected void onButtonPress() {
-        System.out.println("here");
         update();
     }
 

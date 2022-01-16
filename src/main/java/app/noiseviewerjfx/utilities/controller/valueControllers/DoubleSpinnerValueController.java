@@ -2,6 +2,7 @@ package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.TextValidation;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
+import app.noiseviewerjfx.utilities.io.serialization.State;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

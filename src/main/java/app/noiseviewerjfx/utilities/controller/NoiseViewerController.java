@@ -98,6 +98,9 @@ public class NoiseViewerController implements Initializable {
     // region ICON BUTTONS
 
     @FXML
+    private Button NOISE_RESET_BUTTON;
+
+    @FXML
     private Button MASK_VISIBILITY_BUTTON;
 
     @FXML
@@ -115,6 +118,9 @@ public class NoiseViewerController implements Initializable {
     // endregion
 
     // region ICONS
+
+    @FXML
+    private FontIcon NOISE_RESET_ICON;
 
     @FXML
     private FontIcon MASK_VISIBILITY_ICON;
@@ -227,12 +233,19 @@ public class NoiseViewerController implements Initializable {
 
         // region ICON BUTTONS
 
+        IconButtonValueController noiseResetButton = new IconButtonValueController(
+                NOISE_RESET_BUTTON,
+                NOISE_RESET_ICON,
+                "fas-sync-alt",
+                "fas-sync-alt",
+                true
+        );
+
         IconButtonValueController maskVisibilityButton = new IconButtonValueController(
                 MASK_VISIBILITY_BUTTON,
                 MASK_VISIBILITY_ICON,
                 "far-eye-slash",
-                "far-eye",
-                true
+                "far-eye"
         );
 
         IconButtonValueController maskResetButton = new IconButtonValueController(
@@ -278,6 +291,7 @@ public class NoiseViewerController implements Initializable {
         // region NOISE DISPLAY
 
         NoiseValueController noiseValueController = new NoiseValueController(
+                noiseResetButton,
                 octaveSpinner,
                 persistenceSpinner,
                 seedTextField,

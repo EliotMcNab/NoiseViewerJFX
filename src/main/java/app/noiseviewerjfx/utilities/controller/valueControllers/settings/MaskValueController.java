@@ -6,8 +6,6 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Asso
 import app.noiseviewerjfx.utilities.io.serialization.Loadable;
 import app.noiseviewerjfx.utilities.io.serialization.Save;
 
-import java.util.HashMap;
-
 public class MaskValueController extends ValueController implements Updatable, Loadable {
 
     private final ValueController MASK_RESET;
@@ -21,6 +19,7 @@ public class MaskValueController extends ValueController implements Updatable, L
     private final AssociativeSlider MASK_WIDTH_SLIDER;
     private final AssociativeSlider MASK_HEIGHT_SLIDER;
 
+    private int lastMaskResetState;
     private int lastMaskVisibleState;
     private int lastMaskActiveState;
     private int lastMaskWidthState;
@@ -38,7 +37,7 @@ public class MaskValueController extends ValueController implements Updatable, L
     private final String RECTANGLE_MASK_KEY     = "IS_RECTANGLE_MASK";
 
     private int currentVersion = 0;
-    private final Save initialState;
+    private final Save originalSave;
 
     public MaskValueController(
             ValueController maskReset,
@@ -63,6 +62,7 @@ public class MaskValueController extends ValueController implements Updatable, L
         this.MASK_WIDTH_SLIDER  = maskWidthSlider;
         this.MASK_HEIGHT_SLIDER = maskHeightSlider;
 
+        this.lastMaskResetState     = MASK_RESET.getCurrentState();
         this.lastMaskVisibleState   = IS_MASK_VISIBLE.getCurrentState();
         this.lastMaskActiveState    = IS_MASK_ACTIVE.getCurrentState();
         this.lastMaskWidthState     = MASK_WIDTH.getCurrentState();
@@ -71,7 +71,7 @@ public class MaskValueController extends ValueController implements Updatable, L
         this.lastCircleMaskState    = IS_CIRCLE_MASK.getCurrentState();
         this.lastRectangleMaskState = IS_RECTANGLE_MASK.getCurrentState();
 
-        initialState = save();
+        originalSave = save();
     }
 
     @Override
@@ -91,7 +91,16 @@ public class MaskValueController extends ValueController implements Updatable, L
 
     @Override
     public boolean load(Save save) {
-        return MASK_WIDTH.returnToState(save.get(MASK_WIDTH_KEY));
+        boolean loadSuccessful = true;
+
+        loadSuccessful = IS_MASK_VISIBLE    .restoreToState(save.get(MASK_VISIBILITY_KEY))   && loadSuccessful;
+        loadSuccessful = MASK_WIDTH         .restoreToState(save.get(MASK_WIDTH_KEY))        && loadSuccessful;
+        loadSuccessful = MASK_HEIGHT        .restoreToState(save.get(MASK_HEIGHT_KEY))       && loadSuccessful;
+        loadSuccessful = MASK_STRENGTH      .restoreToState(save.get(MASK_STRENGTH_KEY))     && loadSuccessful;
+        loadSuccessful = IS_CIRCLE_MASK     .restoreToState(save.get(CIRCLE_MASK_KEY))       && loadSuccessful;
+        loadSuccessful = IS_RECTANGLE_MASK  .restoreToState(save.get(RECTANGLE_MASK_KEY))    && loadSuccessful;
+
+        return loadSuccessful;
     }
 
     public record MaskValues (
@@ -148,7 +157,10 @@ public class MaskValueController extends ValueController implements Updatable, L
     }
 
     private boolean changeOccurred() {
-        if (hasUpdated(lastMaskVisibleState, IS_MASK_VISIBLE.getCurrentState())) {
+        if (hasUpdated(lastMaskResetState, MASK_RESET.getCurrentState())) {
+            lastMaskResetState = MASK_RESET.getCurrentState();
+            return true;
+        } else if (hasUpdated(lastMaskVisibleState, IS_MASK_VISIBLE.getCurrentState())) {
             lastMaskVisibleState = IS_MASK_VISIBLE.getCurrentState();
             return true;
         } else if (hasUpdated(lastMaskActiveState, IS_MASK_ACTIVE.getCurrentState())) {
@@ -175,7 +187,13 @@ public class MaskValueController extends ValueController implements Updatable, L
 
     @Override
     public void update() {
-        if (changeOccurred()) newState();
+        if (!changeOccurred()) return;
+
+        newState();
+
+        if (shouldResetMask()) {
+            load(originalSave);
+        }
 
         if (isCircleMask()) {
             MASK_WIDTH_SLIDER.addAssociatedNode(MASK_HEIGHT_SLIDER);
