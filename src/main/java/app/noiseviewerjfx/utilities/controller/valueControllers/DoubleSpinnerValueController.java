@@ -24,6 +24,8 @@ public class DoubleSpinnerValueController extends ValueController implements Ass
     private final String UNIT;
     private double lastValue;
 
+    private int precision;
+
     /**
      * Creates a new IntegerSpinnerValueController with no node associated to it
      * @param linkedSpinner (Spinner): the spinner associated to the IntegerSpinnerValueController
@@ -35,6 +37,15 @@ public class DoubleSpinnerValueController extends ValueController implements Ass
             Spinner<Double> linkedSpinner, SpinnerValueFactory<Double> valueFactory,
             final double defaultValue, String unit) {
 
+        this(linkedSpinner, valueFactory, defaultValue, unit, 5);
+    }
+
+    public DoubleSpinnerValueController(
+            Spinner<Double> linkedSpinner, SpinnerValueFactory<Double> valueFactory,
+            final double defaultValue, String unit, int precision) {
+
+        this.precision = precision;
+
         // saves info related to the spinner
         this.SPINNER = linkedSpinner;
         this.DEFAULT_VALUE = defaultValue;
@@ -45,7 +56,7 @@ public class DoubleSpinnerValueController extends ValueController implements Ass
             // ...sets the correct converter
             valueFactory.setConverter(TextValidation.newDoubleUnitConverter(unit));
         } else {
-            valueFactory.setConverter(TextValidation.newDoubleConverter());
+            valueFactory.setConverter(TextValidation.newDoubleConverter(precision));
         }
 
         // determines how the spinner displays text based on its units
@@ -71,6 +82,10 @@ public class DoubleSpinnerValueController extends ValueController implements Ass
         SPINNER.getValueFactory().setValue(newValue);
         newState();
         return true;
+    }
+
+    public void setPrecision(int newPrecision) {
+        this.precision = precision;
     }
 
     /**

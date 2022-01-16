@@ -113,11 +113,11 @@ public class TextValidation {
         });
     }
 
-    public static StringConverter<Double> newDoubleConverter() {
+    public static StringConverter<Double> newDoubleConverter(int precision) {
         return new StringConverter<>() {
             @Override
             public String toString(Double aDouble) {
-                return Double.toString(aDouble);
+                return Double.toString(ComplementaryMath.roundToPrecision(aDouble, precision));
             }
 
             @Override

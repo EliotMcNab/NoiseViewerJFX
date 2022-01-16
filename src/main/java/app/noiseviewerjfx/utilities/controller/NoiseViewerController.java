@@ -176,7 +176,7 @@ public class NoiseViewerController implements Initializable {
                 OCTAVE_SPINNER, octaveSpinnerVF, 1, ""
         );
         AssociativeDoubleSpinner persistenceSpinner = new AssociativeDoubleSpinner(
-                PERSISTENCE_SPINNER, persistenceSpinnerVF, 0.1, ""
+                PERSISTENCE_SPINNER, persistenceSpinnerVF, 0.1, "", 1
         );
         AssociativeIntegerSpinner maskWidthSpinner = new AssociativeIntegerSpinner(
                 MASK_WIDTH_SPINNER, maskWidthSpinnerVF, 50, "%"

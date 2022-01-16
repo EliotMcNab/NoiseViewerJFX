@@ -1,10 +1,6 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class ButtonValueController extends ValueController {
 

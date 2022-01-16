@@ -26,8 +26,16 @@ public class AssociativeDoubleSpinner extends DoubleSpinnerValueController imple
             SpinnerValueFactory<Double> valueFactory,
             double defaultValue,
             String unit) {
-
         super(linkedSpinner, valueFactory, defaultValue, unit);
+    }
+
+    public AssociativeDoubleSpinner(
+            Spinner<Double> linkedSpinner,
+            SpinnerValueFactory<Double> valueFactory,
+            double defaultValue,
+            String unit,
+            int precision) {
+        super(linkedSpinner, valueFactory, defaultValue, unit, precision);
     }
 
     @Override
