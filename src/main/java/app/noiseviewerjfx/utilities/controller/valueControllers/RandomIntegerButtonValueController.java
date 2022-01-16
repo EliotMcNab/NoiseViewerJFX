@@ -1,9 +1,7 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 
 public class RandomIntegerButtonValueController extends ButtonValueController implements Associable {
 

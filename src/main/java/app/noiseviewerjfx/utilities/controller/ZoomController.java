@@ -2,9 +2,7 @@ package app.noiseviewerjfx.utilities.controller;
 
 import app.noiseviewerjfx.utilities.Vector2D;
 import app.noiseviewerjfx.utilities.io.input.Keyboard;
-import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -30,9 +28,8 @@ public class ZoomController {
     private final AnchorPane PLANE;
     private final Node CONTENT;
 
-    private Vector2D lastContentPosition    = new Vector2D(0, 0);
-    private Vector2D lastMousePosition      = new Vector2D(0, 0);
-    private Vector2D dragOffset             = new Vector2D(0, 0);
+    private Point2D lastMousePosition       = new Point2D(0, 0);
+    private Point2D dragOffset              = new Point2D(0, 0);
     private boolean dragInitialised         = false;
     private final int SCROLL_AMOUNT         = 10;
     private double scale = 1;
@@ -90,7 +87,7 @@ public class ZoomController {
 
     private EventHandler<MouseEvent> getMousePosition() {
         return mouseEvent -> {
-            lastMousePosition = new Vector2D(mouseEvent.getX(), mouseEvent.getY());
+            lastMousePosition = new Point2D(mouseEvent.getX(), mouseEvent.getY());
         };
     }
 
@@ -178,11 +175,11 @@ public class ZoomController {
 
             if (!KEYBOARD.isKeyPressed(KeyCode.SPACE)) return;
 
-            Vector2D newMousePosition = new Vector2D(mouseEvent.getX(), mouseEvent.getY());
-            Vector2D mouseTranslation = lastMousePosition.sub(newMousePosition);
+            Point2D newMousePosition = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+            Point2D mouseTranslation = lastMousePosition.subtract(newMousePosition);
             lastMousePosition = newMousePosition;
 
-            applyDrag(mouseTranslation.div(scale));
+            applyDrag(mouseTranslation);
         };
     }
 
@@ -203,14 +200,14 @@ public class ZoomController {
     private void scroll(ScrollEvent scrollEvent) {
 
         final int deltaDrag;
-        final Vector2D dragAmount;
+        final Point2D dragAmount;
 
         if (KEYBOARD.isKeyPressed(KeyCode.SHIFT)) {
             deltaDrag = scrollEvent.getDeltaX() > 0 ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
-            dragAmount = new Vector2D(deltaDrag, 0);
+            dragAmount = new Point2D(deltaDrag, 0);
         } else {
             deltaDrag = scrollEvent.getDeltaY() > 0 ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
-            dragAmount = new Vector2D(0, deltaDrag);
+            dragAmount = new Point2D(0, deltaDrag);
         }
 
         applyDrag(dragAmount);
@@ -224,11 +221,11 @@ public class ZoomController {
 
     private void centerView() {
         // gets the coordinates we need to place the image at for it to be centered
-        Vector2D centerPosition = getCenterEdge();
+        Point2D centerPosition = CONTENT.parentToLocal(getCenterEdge().toPoint2D());
         // calculates the path to take from the image's current position
         // to the position it has to be at to be centered
         // ie: the displacement vector
-        Vector2D translation    = centerPosition.sub(lastContentPosition);
+        Point2D translation    = centerPosition.subtract(getContentPosition());
 
         // applies the necessary translation to the image...
         Translate translateToCenter = new Translate();
@@ -236,23 +233,16 @@ public class ZoomController {
         translateToCenter.setX(translation.getX() + dragOffset.getX());
         translateToCenter.setY(translation.getY() + dragOffset.getY());
         CONTENT.getTransforms().add(translateToCenter);
-
-        // saves the image's position after it has been centered
-        updateContentPosition();
     }
 
     private void resetDrag() {
-        dragOffset = new Vector2D();
-        applyDrag(new Vector2D());
+        dragOffset = new Point2D(0, 0);
+        applyDrag(new Point2D(0, 0));
     }
 
-    private void applyDrag(Vector2D dragAmount) {
-        // drag amount always corresponds to the mouse's displacement
-        // for the moment this is a 1 to 1 mapping
-        // since I have not figured out how to take the scale into consideration
-
+    private void applyDrag(Point2D dragAmount) {
         // updates the total displacement caused by drag (used when we re-center the image)
-        dragOffset = dragOffset.sub(dragAmount);
+        dragOffset = dragOffset.subtract(dragAmount);
 
         // applies the necessary translation to the image...
         Translate drag = new Translate();
@@ -260,9 +250,6 @@ public class ZoomController {
         drag.setX(-dragAmount.getX());
         drag.setY(-dragAmount.getY());
         CONTENT.getTransforms().add(drag);
-
-        // saves the image's position after it has been dragged
-        updateContentPosition();
     }
 
     private void resetZoom() {
@@ -283,9 +270,6 @@ public class ZoomController {
 
         // applies the zoom to the image
         applyZoom(1 + dScale, target);
-
-        // saves the image's position once it has been zoomed
-        updateContentPosition();
     }
 
     private void applyZoom(final double zoomAmount, Point2D target) {
@@ -295,13 +279,6 @@ public class ZoomController {
         zoom.setPivotY(target.getY());
         zoom.setPivotX(target.getX());
         CONTENT.getTransforms().add(zoom);
-
-        updateContentPosition();
-    }
-
-    private void updateContentPosition() {
-        // updates the image's position
-        lastContentPosition = getContentPosition();
     }
 
     private Vector2D getContentSize() {
@@ -310,14 +287,14 @@ public class ZoomController {
         return new Vector2D(contentBounds.getWidth(), contentBounds.getHeight());
     }
 
-    private Vector2D getContentPosition() {
+    private Point2D getContentPosition() {
         // gets the minimal coordinates of the bounds around the image
         // ie: the image's coordinates
-        Bounds contentBounds = CONTENT.getBoundsInParent();
-        return new Vector2D(contentBounds.getMinX(), contentBounds.getMinY());
+        Bounds contentBounds = CONTENT.getBoundsInLocal();
+        return new Point2D(contentBounds.getMinX(), contentBounds.getMinY());
     }
 
-    private Vector2D getAvailableSpace() {
+    private Vector2D getParentSize() {
         // gets the size of the Anchorpane the image is inn
         return new Vector2D(PLANE.getWidth(), PLANE.getHeight());
     }
@@ -325,7 +302,7 @@ public class ZoomController {
     private Vector2D getCenterEdge() {
         // gets the size of the image and the anchor pane it is in...
         Vector2D contentSize    = getContentSize();
-        Vector2D availableSpace = getAvailableSpace();
+        Vector2D availableSpace = getParentSize();
         // ...to determine the coordinates at which to place the image for it to be centerd
         return availableSpace.sub(contentSize).div(2);
     }
