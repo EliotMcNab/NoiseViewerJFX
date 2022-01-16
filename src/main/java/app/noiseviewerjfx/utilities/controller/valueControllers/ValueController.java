@@ -1,6 +1,9 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
-abstract public class ValueController implements Evolving{
+import app.noiseviewerjfx.utilities.io.serialization.Loadable;
+import app.noiseviewerjfx.utilities.io.serialization.Save;
+
+abstract public class ValueController implements Evolving, Loadable {
 
     private int currentState = 0;
 

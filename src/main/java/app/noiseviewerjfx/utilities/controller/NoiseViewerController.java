@@ -98,9 +98,6 @@ public class NoiseViewerController implements Initializable {
     // region ICON BUTTONS
 
     @FXML
-    private Button NOISE_VISIBILITY_BUTTON;
-
-    @FXML
     private Button MASK_VISIBILITY_BUTTON;
 
     @FXML
@@ -112,15 +109,18 @@ public class NoiseViewerController implements Initializable {
     @FXML
     private Button TERRAIN_LAYER_LOCK_BUTTON;
 
+    @FXML
+    private Button MASK_RESET_BUTTON;
+
     // endregion
 
     // region ICONS
 
     @FXML
-    private FontIcon NOISE_VISIBILITY_ICON;
+    private FontIcon MASK_VISIBILITY_ICON;
 
     @FXML
-    private FontIcon MASK_VISIBILITY_ICON;
+    private FontIcon MASK_RESET_ICON;
 
     @FXML
     private FontIcon TERRAIN_VISIBILITY_ICON;
@@ -227,18 +227,20 @@ public class NoiseViewerController implements Initializable {
 
         // region ICON BUTTONS
 
-        IconButtonValueController noiseVisibilityButton = new IconButtonValueController(
-                NOISE_VISIBILITY_BUTTON,
-                NOISE_VISIBILITY_ICON,
-                "far-eye-slash",
-                "far-eye"
-        );
-
         IconButtonValueController maskVisibilityButton = new IconButtonValueController(
                 MASK_VISIBILITY_BUTTON,
                 MASK_VISIBILITY_ICON,
                 "far-eye-slash",
-                "far-eye"
+                "far-eye",
+                true
+        );
+
+        IconButtonValueController maskResetButton = new IconButtonValueController(
+                MASK_RESET_BUTTON,
+                MASK_RESET_ICON,
+                "fas-sync-alt",
+                "fas-sync-alt",
+                true
         );
 
         IconButtonValueController terrainVisibilityButton = new IconButtonValueController(
@@ -284,6 +286,7 @@ public class NoiseViewerController implements Initializable {
         );
 
         MaskValueController maskValueController = new MaskValueController(
+                maskResetButton,
                 maskVisibilityButton,
                 applyMaskCheckBox,
                 maskWidthSpinner,

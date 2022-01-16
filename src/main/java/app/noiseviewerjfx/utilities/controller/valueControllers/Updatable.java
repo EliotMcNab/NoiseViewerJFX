@@ -11,5 +11,4 @@ public interface Updatable {
     default boolean canBeRegistered() {
         return true;
     }
-
 }

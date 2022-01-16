@@ -1,8 +1,6 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -12,6 +10,7 @@ public class IconButtonValueController extends ButtonValueController implements 
     private final FontIcon ICON;
     private final String BUTTON_SELECTED_ICON_LITERAL;
     private final String BUTTON_DESELECTED_ICON_LITERAL;
+    private final boolean TOGGLEABLE;
     private boolean isSelected = false;
 
     public IconButtonValueController(
@@ -20,26 +19,38 @@ public class IconButtonValueController extends ButtonValueController implements 
             String buttonSelectedIcon,
             String buttonDeselectedIcon
     ) {
+        this(button, icon, buttonSelectedIcon, buttonDeselectedIcon, false);
+    }
+
+    public IconButtonValueController(
+            Button button,
+            FontIcon icon,
+            String buttonSelectedIcon,
+            String buttonDeselectedIcon,
+            boolean toggleable
+    ) {
         super(button);
 
         this.ICON = icon;
         this.BUTTON_SELECTED_ICON_LITERAL = buttonSelectedIcon;
         this.BUTTON_DESELECTED_ICON_LITERAL = buttonDeselectedIcon;
-
-        addListeners();
+        this.TOGGLEABLE = toggleable;
     }
 
     @Override
-    protected void addListeners() {
-        BUTTON.setOnAction(selectButton());
+    protected void onButtonPress() {
+        toggleButton();
     }
 
-    private EventHandler<ActionEvent> selectButton() {
-        return actionEvent -> {
-            isSelected = !isSelected;
-            updateIcon();
-            newState();
-        };
+    @Override
+    protected void onButtonRelease() {
+        if (TOGGLEABLE) toggleButton();
+    }
+
+    private void toggleButton() {
+        isSelected = !isSelected;
+        updateIcon();
+        newState();
     }
 
     private void updateIcon() {

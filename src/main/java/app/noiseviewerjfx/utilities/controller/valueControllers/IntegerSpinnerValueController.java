@@ -2,6 +2,8 @@ package app.noiseviewerjfx.utilities.controller.valueControllers;
 
 import app.noiseviewerjfx.utilities.TextValidation;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.Associable;
+import app.noiseviewerjfx.utilities.io.serialization.Save;
+import app.noiseviewerjfx.utilities.io.serialization.State;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -26,6 +28,8 @@ public class IntegerSpinnerValueController extends ValueController implements As
     // the node associated to the spinner
     private Node associatedNode = null;
     private int lastValue;
+
+    private int currentVersion = 0;
 
     /**
      * Creates a new IntegerSpinnerValueController with no node associated to it
@@ -59,6 +63,21 @@ public class IntegerSpinnerValueController extends ValueController implements As
         styleSpinner();
         addListeners();
 
+    }
+
+    // =================================
+    //             LOADING
+    // =================================
+
+    @Override
+    public boolean returnToState(State state) {
+        System.out.println(state.getVALUE());
+        return true;
+    }
+
+    @Override
+    public State getState() {
+        return new State(currentVersion++, getValue());
     }
 
     // =================================

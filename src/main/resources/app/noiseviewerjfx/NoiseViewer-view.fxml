@@ -87,11 +87,6 @@
                                  <children>
                                     <HBox alignment="CENTER">
                                        <children>
-                                          <Button id="BIG-ICON-BUTTON" fx:id="NOISE_VISIBILITY_BUTTON" mnemonicParsing="false">
-                                             <graphic>
-                                                <FontIcon id="GRAY-ICON" fx:id="NOISE_VISIBILITY_ICON" iconLiteral="far-eye" styleClass="big-icon" text="" />
-                                             </graphic>
-                                          </Button>
                                           <Button id="BIG-ICON-BUTTON" mnemonicParsing="false">
                                              <HBox.margin>
                                                 <Insets />
@@ -267,12 +262,12 @@
                                                 <FontIcon id="GRAY-ICON" fx:id="MASK_VISIBILITY_ICON" iconLiteral="far-eye" styleClass="big-icon" />
                                              </graphic>
                                           </Button>
-                                          <Button id="BIG-ICON-BUTTON" mnemonicParsing="false">
+                                          <Button id="BIG-ICON-BUTTON" fx:id="MASK_RESET_BUTTON" mnemonicParsing="false">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
                                              <graphic>
-                                                <FontIcon id="RED-ICON" iconLiteral="fas-sync-alt" styleClass="big-icon" />
+                                                <FontIcon id="RED-ICON" fx:id="MASK_RESET_ICON" iconLiteral="fas-sync-alt" styleClass="big-icon" />
                                              </graphic>
                                           </Button>
                                           <Text id="TITLE" strokeType="OUTSIDE" strokeWidth="0.0" text="Mask Generation">

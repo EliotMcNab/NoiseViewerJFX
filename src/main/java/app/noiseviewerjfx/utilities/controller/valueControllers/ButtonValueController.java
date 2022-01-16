@@ -1,5 +1,6 @@
 package app.noiseviewerjfx.utilities.controller.valueControllers;
 
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -17,14 +18,22 @@ public class ButtonValueController extends ValueController {
         addListeners();
     }
 
-    protected void addListeners() {
-        BUTTON.setOnAction(selectButton());
+    private void addListeners() {
+        BUTTON.armedProperty().addListener((observableValue, wasPressed, pressed) -> {
+            if (pressed) {
+                onButtonPress();
+            } else if (wasPressed) {
+                onButtonRelease();
+            }
+        });
     }
 
-    private EventHandler<ActionEvent> selectButton() {
-        return actionEvent -> {
-            newState();
-        };
+    protected void onButtonPress() {
+        newState();
+    }
+
+    protected void onButtonRelease() {
+
     }
 
 }
