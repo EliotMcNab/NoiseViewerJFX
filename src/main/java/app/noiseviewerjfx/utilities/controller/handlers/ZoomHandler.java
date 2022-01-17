@@ -1,6 +1,7 @@
-package app.noiseviewerjfx.utilities.controller;
+package app.noiseviewerjfx.utilities.controller.handlers;
 
 import app.noiseviewerjfx.utilities.Vector2D;
+import app.noiseviewerjfx.utilities.controller.NodeController;
 import app.noiseviewerjfx.utilities.io.input.Keyboard;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
@@ -22,7 +23,7 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
-public class ZoomController {
+public class ZoomHandler {
 
     private final ScrollPane SCROLL_PANE;
     private final AnchorPane PLANE;
@@ -38,7 +39,8 @@ public class ZoomController {
         @Override
         protected void onKeyPressed(KeyEvent keyEvent) {
             if (isKeyPressed(KeyCode.SPACE)) selectImage();
-            if (areAllKeysPressed(KeyCode.CONTROL, KeyCode.SHIFT, KeyCode.O)) resetView();
+            if (areAllKeysPressed(KeyCode.CONTROL, KeyCode.SHIFT, KeyCode.R)) resetView();
+            if (areAllKeysPressed(KeyCode.CONTROL, KeyCode.SHIFT, KeyCode.O)) returnToOrigin();
         }
 
         @Override
@@ -50,7 +52,7 @@ public class ZoomController {
         }
     };
 
-    public ZoomController(
+    public ZoomHandler(
             ScrollPane scrollPane,
             AnchorPane plane,
             Node content
@@ -215,6 +217,11 @@ public class ZoomController {
 
     private void resetView() {
         resetZoom();
+        resetDrag();
+        centerView();
+    }
+
+    private void returnToOrigin() {
         resetDrag();
         centerView();
     }

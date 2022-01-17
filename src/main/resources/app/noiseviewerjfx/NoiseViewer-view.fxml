@@ -26,7 +26,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane id="BACKGROUND" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" stylesheets="@style/noiseViewer_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.noiseviewerjfx.utilities.controller.NoiseViewerController">
+<BorderPane id="BACKGROUND" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" stylesheets="@style/noiseViewer_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.noiseviewerjfx.utilities.controller.MainAppController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -74,7 +74,7 @@
                   </ScrollPane>
                </center>
             </BorderPane>
-            <TabPane minWidth="350.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
+            <TabPane fx:id="SETTINGS_TAB_PANE" minWidth="350.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
                <tabs>
                   <Tab closable="false" text="Noise">
                      <content>
@@ -495,17 +495,17 @@
                                              <left>
                                                 <HBox BorderPane.alignment="CENTER">
                                                    <children>
-                                                      <Button id="ICON-BUTTON" mnemonicParsing="false">
+                                                      <Button id="ICON-BUTTON" fx:id="NEW_TERRAIN_LAYER_BUTTON" mnemonicParsing="false">
                                                          <graphic>
-                                                            <FontIcon id="GREEN-ICON" iconLiteral="fas-plus" />
+                                                            <FontIcon id="GREEN-ICON" fx:id="NEW_TERRAIN_LAYER_ICON" iconLiteral="fas-plus" />
                                                          </graphic>
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" top="-2.0" />
                                                          </HBox.margin>
                                                       </Button>
-                                                      <Button id="ICON-BUTTON" layoutX="10.0" layoutY="10.0" mnemonicParsing="false">
+                                                      <Button id="ICON-BUTTON" fx:id="DELETE_TERRAIN_LAYER_BUTTON" layoutX="10.0" layoutY="10.0" mnemonicParsing="false">
                                                          <graphic>
-                                                            <FontIcon id="RED-ICON" iconLiteral="fas-minus" />
+                                                            <FontIcon id="RED-ICON" fx:id="DELETE_TERRAIN_LAYER_ICON" iconLiteral="fas-minus" />
                                                          </graphic>
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" top="-2.0" />

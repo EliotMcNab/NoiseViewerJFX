@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A Save is {@link Map} which associates {@link State States} to a string representing the variable they originated from.
+ * This key is then used to retrieve the {@link State}
+ */
 public class Save implements Map<String, State> {
 
     private final HashMap<String, State> values = new HashMap<>();

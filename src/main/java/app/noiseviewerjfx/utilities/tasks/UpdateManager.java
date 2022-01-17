@@ -1,44 +1,43 @@
 package app.noiseviewerjfx.utilities.tasks;
 
-import app.noiseviewerjfx.utilities.controller.valueControllers.Updatable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * An UpdateManager is responsible for updating the active {@link UpdateScene UpdateScenes} which compose the UI
+ */
 public class UpdateManager {
 
-    private final List<Updatable> updatableNodes = new ArrayList<>();
+    private final List<UpdateScene> stages = new ArrayList<>();
+    private final List<Persistent> persistentsCompoenents = new ArrayList<>();
 
-    public boolean registerUpdatable(Updatable toRegister) {
-        return tryRegister(toRegister);
+    public UpdateManager(UpdateScene... updateStages) {
+        registerAll(updateStages);
     }
 
-    public boolean registerAll(List<Updatable> toRegister) {
-        boolean errorHappen = false;
-
-        for (Updatable updatable : toRegister) {
-            errorHappen = !tryRegister(updatable);
-        }
-
-        return !errorHappen;
+    public boolean registerStage(UpdateScene toRegister) {
+        return stages.add(toRegister);
     }
 
-    public boolean registerAll(Updatable... toRegister) {
-        return registerAll(Arrays.stream(toRegister).toList());
+    public boolean registerAll(List<UpdateScene> toRegister) {
+        return stages.addAll(toRegister);
     }
 
-    private boolean tryRegister(Updatable toRegister) {
-        if (!toRegister.canBeRegistered()) {
-            System.out.printf("ERROR: cannot register associative node %s since it has no node associated to it\n", toRegister);
-            return false;
-        }
-        return updatableNodes.add(toRegister);
+    public boolean registerAll(UpdateScene... toRegister) {
+        return stages.addAll(Arrays.asList(toRegister));
+    }
+
+    public boolean registerPersistent(Persistent persistentComponent) {
+        return persistentsCompoenents.add(persistentComponent);
     }
 
     public void update() {
-        for (Updatable updatable : updatableNodes) {
-            updatable.update();
+        for (UpdateScene stage : stages) {
+            if (stage.isActive()) stage.update();
+        }
+        for (Persistent persistentsCompoenent : persistentsCompoenents) {
+            persistentsCompoenent.update();
         }
     }
 

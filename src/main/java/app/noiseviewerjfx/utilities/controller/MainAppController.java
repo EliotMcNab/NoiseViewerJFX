@@ -1,17 +1,20 @@
 package app.noiseviewerjfx.utilities.controller;
 
+import app.noiseviewerjfx.utilities.controller.handlers.NoiseDisplayHandler;
+import app.noiseviewerjfx.utilities.controller.handlers.ZoomHandler;
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.*;
 import app.noiseviewerjfx.utilities.controller.valueControllers.associative.switches.SwitchCheckBox;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskValueController;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController;
+import app.noiseviewerjfx.utilities.tasks.TabsUpdateStage;
 import app.noiseviewerjfx.utilities.tasks.UpdateManager;
+import app.noiseviewerjfx.utilities.tasks.UpdateScene;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,7 +25,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 /**
  * Controller for the Noise Viewer application
  */
-public class NoiseViewerController implements Initializable {
+public class MainAppController implements Initializable {
 
     @FXML
     private AnchorPane BACKGROUND;
@@ -32,6 +35,9 @@ public class NoiseViewerController implements Initializable {
 
     @FXML
     private StackPane WORLD_CONTAINER;
+
+    @FXML
+    private TabPane SETTINGS_TAB_PANE;
 
     // region SPINNERS
     @FXML
@@ -116,16 +122,22 @@ public class NoiseViewerController implements Initializable {
     private Button MASK_VISIBILITY_BUTTON;
 
     @FXML
+    private Button MASK_RESET_BUTTON;
+
+    @FXML
     private Button TERRAIN_VISIBILITY_BUTTON;
+
+    @FXML
+    private Button NEW_TERRAIN_LAYER_BUTTON;
+
+    @FXML
+    private Button DELETE_TERRAIN_LAYER_BUTTON;
 
     @FXML
     private Button TERRAIN_LAYER_VISIBILITY_BUTTON;
 
     @FXML
     private Button TERRAIN_LAYER_LOCK_BUTTON;
-
-    @FXML
-    private Button MASK_RESET_BUTTON;
 
     // endregion
 
@@ -145,6 +157,12 @@ public class NoiseViewerController implements Initializable {
 
     @FXML
     private FontIcon TERRAIN_LAYER_VISIBILITY_ICON;
+
+    @FXML
+    private FontIcon NEW_TERRAIN_LAYER_ICON;
+
+    @FXML
+    private FontIcon DELETE_TERRAIN_LAYER_ICON;
 
     @FXML
     private FontIcon TERRAIN_LAYER_LOCK_ICON;
@@ -340,52 +358,83 @@ public class NoiseViewerController implements Initializable {
 
         // endregion
 
-        // region UPDATABLE
+        // region NOISE
 
-        octaveSpinner.addAssociatedNode(randomOctaveButton);
-        persistenceSpinner.addAssociatedNode(randomPersistenceButton);
-        seedTextField.addAssociatedNode(randomSeedButton);
-        maskWidthSlider.addAssociatedNode(maskWidthSpinner);
-        maskWidthSpinner.addAssociatedNode(maskWidthSlider);
-        maskHeightSlider.addAssociatedNode(maskHeightSpinner);
-        maskHeightSpinner.addAssociatedNode(maskHeightSlider);
-        maskStrengthSlider.addAssociatedNode(maskStrengthSpinner);
-        maskStrengthSpinner.addAssociatedNode(maskStrengthSlider);
-        rectangleCheckBox.addAssociatedNode(circleCheckBox);
-        circleCheckBox.addAllAssociatedNodes(rectangleCheckBox);
-        maskOpacitySpinner.addAssociatedNode(maskOpacityProgressBar);
-        maskOpacityProgressBar.addAssociatedNode(maskOpacitySpinner);
-        terrainLayerOpacitySpinner.addAssociatedNode(terrainLayerOpacityProgressBar);
-        terrainLayerOpacityProgressBar.addAssociatedNode(terrainLayerOpacitySpinner);
+        octaveSpinner       .addAssociatedNode(randomOctaveButton);
+        persistenceSpinner  .addAssociatedNode(randomPersistenceButton);
+        seedTextField       .addAssociatedNode(randomSeedButton);
 
-        UpdateManager noiseUpdateManager = new UpdateManager();
-        noiseUpdateManager.registerAll(
+        UpdateScene noiseUpdateStage = new UpdateScene(
                 octaveSpinner,
                 persistenceSpinner,
                 seedTextField,
+                noiseValueController
+        );
+
+        // endregion
+
+        // region MASK
+
+        maskWidthSlider         .addAssociatedNode(maskWidthSpinner);
+        maskWidthSpinner        .addAssociatedNode(maskWidthSlider);
+        maskHeightSlider        .addAssociatedNode(maskHeightSpinner);
+        maskHeightSpinner       .addAssociatedNode(maskHeightSlider);
+        maskStrengthSlider      .addAssociatedNode(maskStrengthSpinner);
+        maskStrengthSpinner     .addAssociatedNode(maskStrengthSlider);
+        rectangleCheckBox       .addAssociatedNode(circleCheckBox);
+        circleCheckBox          .addAllAssociatedNodes(rectangleCheckBox);
+        maskOpacitySpinner      .addAssociatedNode(maskOpacityProgressBar);
+        maskOpacityProgressBar  .addAssociatedNode(maskOpacitySpinner);
+
+        UpdateScene maskUpdateStage = new UpdateScene(
                 maskWidthSlider,
                 maskWidthSpinner,
                 maskHeightSlider,
                 maskHeightSpinner,
                 maskStrengthSlider,
                 maskStrengthSpinner,
-                maskOpacityProgressBar,
-                maskOpacitySpinner,
-                terrainLayerOpacityProgressBar,
-                terrainLayerOpacitySpinner,
                 rectangleCheckBox,
                 circleCheckBox,
-                noiseDisplay,
-                noiseValueController,
+                maskOpacitySpinner,
+                maskOpacityProgressBar,
                 maskValueController
         );
+
+        // endregion
+
+        // region TERRAIN
+
+        terrainLayerOpacitySpinner.addAssociatedNode(terrainLayerOpacityProgressBar);
+        terrainLayerOpacityProgressBar.addAssociatedNode(terrainLayerOpacitySpinner);
+
+        UpdateScene terrainUpdateStage = new UpdateScene(
+            terrainLayerOpacitySpinner,
+            terrainLayerOpacityProgressBar
+        );
+
+        // endregion
+
+        // region UPDATABLE
+
+        TabsUpdateStage tabsUpdateStage = new TabsUpdateStage(SETTINGS_TAB_PANE);
+        tabsUpdateStage.addScene("Noise", noiseUpdateStage);
+        tabsUpdateStage.addScene("Mask", maskUpdateStage);
+        tabsUpdateStage.addScene("Terrain", terrainUpdateStage);
+        tabsUpdateStage.setDefault("Noise");
+
+        UpdateManager noiseUpdateManager = new UpdateManager(
+                noiseUpdateStage,
+                maskUpdateStage,
+                terrainUpdateStage
+        );
+        noiseUpdateManager.registerPersistent(noiseDisplay);
         noiseUpdateManager.startUpdating();
 
         // endregion
 
         // region TESTING
 
-        ZoomController testZoomController = new ZoomController(
+        ZoomHandler testZoomController = new ZoomHandler(
                 DISPLAY_SCROLL_PANE,
                 BACKGROUND,
                 WORLD_CONTAINER

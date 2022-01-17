@@ -150,6 +150,7 @@ public class NoiseValueController extends ValueController implements Updatable {
 
     @Override
     public void update() {
+
         if (!changeOccurred()) return;
 
         newState();

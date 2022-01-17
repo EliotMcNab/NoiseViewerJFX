@@ -1,4 +1,4 @@
-package app.noiseviewerjfx.utilities.controller;
+package app.noiseviewerjfx.utilities.controller.handlers;
 
 import app.noiseviewerjfx.utilities.controller.valueControllers.Updatable;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskValueController;
@@ -7,10 +7,11 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseVa
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController.NoiseValues;
 import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.Map;
+import app.noiseviewerjfx.utilities.tasks.Persistent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class NoiseDisplayHandler implements Updatable {
+public class NoiseDisplayHandler implements Persistent {
 
     private final ImageView NOISE_LAYER;
     private final ImageView MASK_LAYER;

@@ -200,6 +200,7 @@ public class MaskValueController extends ValueController implements Updatable, L
 
     @Override
     public void update() {
+
         if (!changeOccurred()) return;
 
         newState();
