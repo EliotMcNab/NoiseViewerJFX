@@ -19,10 +19,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -153,7 +151,7 @@
                                           </BorderPane>
                                        </children>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                        </VBox.margin>
                                     </VBox>
                                     <Accordion />
@@ -188,7 +186,7 @@
                                           </VBox>
                                        </children>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                        </VBox.margin>
                                     </VBox>
                                     <VBox layoutX="20.0" layoutY="55.0">
@@ -233,7 +231,7 @@
                                           </BorderPane>
                                        </children>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                        </VBox.margin>
                                     </VBox>
                                  </children>
@@ -251,9 +249,9 @@
                         </ScrollPane>
                      </content>
                      <content>
-                        <ScrollPane fitToHeight="true" fitToWidth="true">
-                           <content>
-                              <VBox id="SCROLL-PANE-BOX" prefHeight="200.0" prefWidth="100.0">
+                        <BorderPane id="SCROLL-PANE-BOX">
+                           <top>
+                              <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                                  <children>
                                     <HBox alignment="CENTER">
                                        <children>
@@ -293,7 +291,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                          <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                                        </VBox.margin>
                                     </Text>
                                     <BorderPane>
@@ -317,7 +315,7 @@
                                           </Text>
                                        </left>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                          <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                                        </VBox.margin>
                                     </BorderPane>
                                     <BorderPane>
@@ -341,7 +339,7 @@
                                           </Text>
                                        </left>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                          <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                                        </VBox.margin>
                                     </BorderPane>
                                     <BorderPane>
@@ -365,12 +363,12 @@
                                           </Text>
                                        </left>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                          <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                                        </VBox.margin>
                                     </BorderPane>
                                     <VBox>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                          <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                                        </VBox.margin>
                                        <children>
                                           <Text id="TITLE" strokeType="OUTSIDE" strokeWidth="0.0" text="Mask Type">
@@ -419,10 +417,37 @@
                                           </HBox>
                                        </children>
                                     </VBox>
+                                    <HBox alignment="CENTER" />
                                  </children>
                               </VBox>
-                           </content>
-                        </ScrollPane>
+                           </top>
+                           <bottom>
+                              <BorderPane BorderPane.alignment="CENTER">
+                                 <center>
+                                    <StackPane alignment="CENTER_LEFT" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <ProgressBar fx:id="MASK_OPACITY_PROGRESS_BAR" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="200.0" progress="1.0" />
+                                          <Text disable="true" fill="WHITE" focusTraversable="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Opacity">
+                                             <StackPane.margin>
+                                                <Insets left="10.0" />
+                                             </StackPane.margin>
+                                          </Text>
+                                       </children>
+                                    </StackPane>
+                                 </center>
+                                 <right>
+                                    <StackPane BorderPane.alignment="CENTER">
+                                       <children>
+                                          <Spinner id="BAR-SPINNER" fx:id="MASK_OPACITY_SPINNER" editable="true" prefHeight="30.0" prefWidth="100.0" />
+                                       </children>
+                                    </StackPane>
+                                 </right>
+                                 <padding>
+                                    <Insets bottom="10.0" left="30.0" right="30.0" />
+                                 </padding>
+                              </BorderPane>
+                           </bottom>
+                        </BorderPane>
                      </content>
                   </Tab>
                   <Tab closable="false" text="Terrain">
@@ -568,35 +593,30 @@
                                     </BorderPane>
                                  </center>
                                  <bottom>
-                                    <VBox BorderPane.alignment="CENTER">
-                                       <children>
-                                          <GridPane maxWidth="1.7976931348623157E308" styleClass="progress-bar-container">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.39996337890625" minWidth="10.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
+                                    <BorderPane>
+                                       <center>
+                                          <StackPane alignment="CENTER_LEFT" prefWidth="200.0" BorderPane.alignment="CENTER">
                                              <children>
-                                                <ProgressBar fx:id="OPACITY_PROGRESS_BAR" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="200.0" progress="1.0" />
+                                                <ProgressBar fx:id="TERRAIN_LAYER_OPACITY_PROGRESS_BAR" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="200.0" progress="1.0" />
                                                 <Text disable="true" fill="WHITE" focusTraversable="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Opacity">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="4.0" left="10.0" />
-                                                   </GridPane.margin>
+                                                   <StackPane.margin>
+                                                      <Insets left="10.0" />
+                                                   </StackPane.margin>
                                                 </Text>
-                                                <HBox alignment="TOP_RIGHT" GridPane.columnIndex="1">
-                                                   <children>
-                                                      <Spinner id="BAR-SPINNER" fx:id="OPACITY_SPINNER" editable="true" prefHeight="50.0" />
-                                                   </children>
-                                                </HBox>
                                              </children>
-                                          </GridPane>
-                                       </children>
-                                       <BorderPane.margin>
+                                          </StackPane>
+                                       </center>
+                                       <right>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Spinner id="BAR-SPINNER" fx:id="TERRAIN_LAYER_OPACITY_SPINNER" editable="true" prefHeight="30.0" prefWidth="100.0" />
+                                             </children>
+                                          </StackPane>
+                                       </right>
+                                       <padding>
                                           <Insets bottom="10.0" left="30.0" right="30.0" />
-                                       </BorderPane.margin>
-                                    </VBox>
+                                       </padding>
+                                    </BorderPane>
                                  </bottom>
                               </BorderPane>
                           </content>

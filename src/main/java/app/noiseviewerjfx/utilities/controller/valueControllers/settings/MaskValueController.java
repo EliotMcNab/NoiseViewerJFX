@@ -11,13 +11,12 @@ public class MaskValueController extends ValueController implements Updatable, L
     private final ValueController MASK_RESET;
     private final ValueController IS_MASK_VISIBLE;
     private final ValueController IS_MASK_ACTIVE;
-    private final ValueController MASK_WIDTH;
-    private final ValueController MASK_HEIGHT;
     private final ValueController MASK_STRENGTH;
     private final ValueController IS_CIRCLE_MASK;
     private final ValueController IS_RECTANGLE_MASK;
-    private final AssociativeSlider MASK_WIDTH_SLIDER;
-    private final AssociativeSlider MASK_HEIGHT_SLIDER;
+    private final ValueController MASK_OPACITY;
+    private final AssociativeSlider MASK_WIDTH;
+    private final AssociativeSlider MASK_HEIGHT;
 
     private int lastMaskResetState;
     private int lastMaskVisibleState;
@@ -27,6 +26,7 @@ public class MaskValueController extends ValueController implements Updatable, L
     private int lastMaskStrengthState;
     private int lastCircleMaskState;
     private int lastRectangleMaskState;
+    private int lastMaskOpacityState;
 
     private final String MASK_VISIBILITY_KEY    = "IS_MASK_VISIBLE";
     private final String MASK_ACTIVE_KEY        = "IS_MASK_ACTIVE";
@@ -35,21 +35,23 @@ public class MaskValueController extends ValueController implements Updatable, L
     private final String MASK_STRENGTH_KEY      = "MASK_STRENGTH";
     private final String CIRCLE_MASK_KEY        = "IS_CIRCLE_MASK";
     private final String RECTANGLE_MASK_KEY     = "IS_RECTANGLE_MASK";
+    private final String MASK_OPACITY_KEY       = "MASK_OPACITY";
 
     private int currentVersion = 0;
     private final Save originalSave;
+
+    private boolean wasCircleMask = false;
 
     public MaskValueController(
             ValueController maskReset,
             ValueController isMaskVisible,
             ValueController isMaskActive,
-            ValueController maskWidth,
-            ValueController maskHeight,
             ValueController maskStrength,
             ValueController isCircleMask,
             ValueController isRectangleMask,
-            AssociativeSlider maskWidthSlider,
-            AssociativeSlider maskHeightSlider
+            ValueController opacity,
+            AssociativeSlider maskWidth,
+            AssociativeSlider maskHeight
     ) {
         this.MASK_RESET         = maskReset;
         this.IS_MASK_VISIBLE    = isMaskVisible;
@@ -59,8 +61,7 @@ public class MaskValueController extends ValueController implements Updatable, L
         this.MASK_STRENGTH      = maskStrength;
         this.IS_CIRCLE_MASK     = isCircleMask;
         this.IS_RECTANGLE_MASK  = isRectangleMask;
-        this.MASK_WIDTH_SLIDER  = maskWidthSlider;
-        this.MASK_HEIGHT_SLIDER = maskHeightSlider;
+        this.MASK_OPACITY       = opacity;
 
         this.lastMaskResetState     = MASK_RESET.getCurrentState();
         this.lastMaskVisibleState   = IS_MASK_VISIBLE.getCurrentState();
@@ -70,6 +71,7 @@ public class MaskValueController extends ValueController implements Updatable, L
         this.lastMaskStrengthState  = MASK_STRENGTH.getCurrentState();
         this.lastCircleMaskState    = IS_CIRCLE_MASK.getCurrentState();
         this.lastRectangleMaskState = IS_RECTANGLE_MASK.getCurrentState();
+        this.lastMaskOpacityState   = MASK_OPACITY.getCurrentState();
 
         originalSave = save();
     }
@@ -85,6 +87,7 @@ public class MaskValueController extends ValueController implements Updatable, L
         currentState.put(MASK_STRENGTH_KEY, MASK_STRENGTH.getState());
         currentState.put(CIRCLE_MASK_KEY, IS_CIRCLE_MASK.getState());
         currentState.put(RECTANGLE_MASK_KEY, IS_RECTANGLE_MASK.getState());
+        currentState.put(MASK_OPACITY_KEY, MASK_OPACITY.getState());
 
         return currentState;
     }
@@ -93,12 +96,13 @@ public class MaskValueController extends ValueController implements Updatable, L
     public boolean load(Save save) {
         boolean loadSuccessful = true;
 
-        loadSuccessful = IS_MASK_VISIBLE    .restoreToState(save.get(MASK_VISIBILITY_KEY))   && loadSuccessful;
-        loadSuccessful = MASK_WIDTH         .restoreToState(save.get(MASK_WIDTH_KEY))        && loadSuccessful;
-        loadSuccessful = MASK_HEIGHT        .restoreToState(save.get(MASK_HEIGHT_KEY))       && loadSuccessful;
-        loadSuccessful = MASK_STRENGTH      .restoreToState(save.get(MASK_STRENGTH_KEY))     && loadSuccessful;
-        loadSuccessful = IS_CIRCLE_MASK     .restoreToState(save.get(CIRCLE_MASK_KEY))       && loadSuccessful;
-        loadSuccessful = IS_RECTANGLE_MASK  .restoreToState(save.get(RECTANGLE_MASK_KEY))    && loadSuccessful;
+        loadSuccessful = IS_MASK_VISIBLE    .restoreToState(save.get(MASK_VISIBILITY_KEY))  && loadSuccessful;
+        loadSuccessful = MASK_WIDTH         .restoreToState(save.get(MASK_WIDTH_KEY))       && loadSuccessful;
+        loadSuccessful = MASK_HEIGHT        .restoreToState(save.get(MASK_HEIGHT_KEY))      && loadSuccessful;
+        loadSuccessful = MASK_STRENGTH      .restoreToState(save.get(MASK_STRENGTH_KEY))    && loadSuccessful;
+        loadSuccessful = IS_CIRCLE_MASK     .restoreToState(save.get(CIRCLE_MASK_KEY))      && loadSuccessful;
+        loadSuccessful = IS_RECTANGLE_MASK  .restoreToState(save.get(RECTANGLE_MASK_KEY))   && loadSuccessful;
+        loadSuccessful = MASK_OPACITY       .restoreToState(save.get(MASK_OPACITY_KEY))     && loadSuccessful;
 
         return loadSuccessful;
     }
@@ -110,7 +114,8 @@ public class MaskValueController extends ValueController implements Updatable, L
             double MASK_HEIGHT,
             int MASK_STRENGTH,
             boolean IS_CIRCLE_MASK,
-            boolean IS_RECTANGLE_MASK
+            boolean IS_RECTANGLE_MASK,
+            int MASK_OPACITY
     ) { }
 
     @Override
@@ -122,7 +127,8 @@ public class MaskValueController extends ValueController implements Updatable, L
                 getMaskHeight(),
                 getMaskStrength(),
                 isCircleMask(),
-                isRectangleMask()
+                isRectangleMask(),
+                getMaskOpacity()
         );
     }
 
@@ -156,6 +162,10 @@ public class MaskValueController extends ValueController implements Updatable, L
         return IS_RECTANGLE_MASK.getValue() >= 1;
     }
 
+    private int getMaskOpacity() {
+        return (int) MASK_OPACITY.getValue();
+    }
+
     private boolean changeOccurred() {
         if (hasUpdated(lastMaskResetState, MASK_RESET.getCurrentState())) {
             lastMaskResetState = MASK_RESET.getCurrentState();
@@ -181,6 +191,9 @@ public class MaskValueController extends ValueController implements Updatable, L
         } else if (hasUpdated(lastRectangleMaskState, IS_RECTANGLE_MASK.getCurrentState())) {
             lastRectangleMaskState = IS_RECTANGLE_MASK.getCurrentState();
             return true;
+        } else if (hasUpdated(lastMaskOpacityState, MASK_OPACITY.getCurrentState())) {
+            lastMaskOpacityState = MASK_OPACITY.getCurrentState();
+            return true;
         }
         return false;
     }
@@ -195,12 +208,14 @@ public class MaskValueController extends ValueController implements Updatable, L
             load(originalSave);
         }
 
-        if (isCircleMask()) {
-            MASK_WIDTH_SLIDER.addAssociatedNode(MASK_HEIGHT_SLIDER);
-            MASK_HEIGHT_SLIDER.addAssociatedNode(MASK_WIDTH_SLIDER);
-        } else if (isRectangleMask()) {
-            MASK_WIDTH_SLIDER.removeAssociatedNode(MASK_HEIGHT_SLIDER);
-            MASK_HEIGHT_SLIDER.removeAssociatedNode(MASK_WIDTH_SLIDER);
+        if (isCircleMask() && !wasCircleMask) {
+            MASK_WIDTH.addAssociatedNode(MASK_HEIGHT);
+            MASK_HEIGHT.addAssociatedNode(MASK_WIDTH);
+            wasCircleMask = true;
+        } else if (isRectangleMask() && wasCircleMask) {
+            MASK_WIDTH.removeAssociatedNode(MASK_HEIGHT);
+            MASK_HEIGHT.removeAssociatedNode(MASK_WIDTH);
+            wasCircleMask = false;
         }
     }
 }

@@ -30,7 +30,7 @@ public class UpdateManager {
 
     private boolean tryRegister(Updatable toRegister) {
         if (!toRegister.canBeRegistered()) {
-            System.out.printf("ERROR: cannot register associative node %s since it has no node associated to it", toRegister);
+            System.out.printf("ERROR: cannot register associative node %s since it has no node associated to it\n", toRegister);
             return false;
         }
         return updatableNodes.add(toRegister);

@@ -47,10 +47,6 @@ public class NoiseViewerController implements Initializable {
     private final SpinnerValueFactory<Integer> mapHeightSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(100, 1000, 100);
     @FXML
-    private Spinner<Integer> OPACITY_SPINNER;
-    private final SpinnerValueFactory<Integer> opacitySpinnerVF =
-            new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 100);
-    @FXML
     private Spinner<Integer> MASK_WIDTH_SPINNER;
     private final SpinnerValueFactory<Integer> maskWidthSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 50);
@@ -62,6 +58,14 @@ public class NoiseViewerController implements Initializable {
     private Spinner<Integer> MASK_STRENGTH_SPINNER;
     private final SpinnerValueFactory<Integer> maskStrengthSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+    @FXML
+    private Spinner<Integer> MASK_OPACITY_SPINNER;
+    private final SpinnerValueFactory<Integer> maskOpacitySpinnerVF =
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 100);
+    @FXML
+    private Spinner<Integer> TERRAIN_LAYER_OPACITY_SPINNER;
+    private final SpinnerValueFactory<Integer> terrainLayerOpacitySpinnerVF =
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 100);
     // endregion SPINNERS
 
     // region SLIDERS
@@ -79,8 +83,12 @@ public class NoiseViewerController implements Initializable {
     // endregion
 
     // region PROGRESS BARS
+
     @FXML
-    private ProgressBar OPACITY_PROGRESS_BAR;
+    private ProgressBar MASK_OPACITY_PROGRESS_BAR;
+
+    @FXML
+    private ProgressBar TERRAIN_LAYER_OPACITY_PROGRESS_BAR;
     // endregion
 
     // region BUTTONS
@@ -169,6 +177,9 @@ public class NoiseViewerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        MASK_WIDTH_SLIDER.setValue(50);
+        MASK_HEIGHT_SLIDER.setValue(50);
+
         // region SPINNERS
 
         IntegerSpinnerValueController mapWidthSpinnerVC = new IntegerSpinnerValueController(
@@ -193,8 +204,11 @@ public class NoiseViewerController implements Initializable {
         AssociativeIntegerSpinner maskStrengthSpinner = new AssociativeIntegerSpinner(
                 MASK_STRENGTH_SPINNER, maskStrengthSpinnerVF, 1, ""
         );
-        AssociativeIntegerSpinner opacitySpinner = new AssociativeIntegerSpinner(
-                OPACITY_SPINNER, opacitySpinnerVF, 100, "%"
+        AssociativeIntegerSpinner maskOpacitySpinner = new AssociativeIntegerSpinner(
+                MASK_OPACITY_SPINNER, maskOpacitySpinnerVF, 100, "%"
+        );
+        AssociativeIntegerSpinner terrainLayerOpacitySpinner = new AssociativeIntegerSpinner(
+                TERRAIN_LAYER_OPACITY_SPINNER, terrainLayerOpacitySpinnerVF, 100, "%"
         );
 
 
@@ -216,7 +230,9 @@ public class NoiseViewerController implements Initializable {
 
         // region PROGRESS BAR
 
-        AssociativeDraggableProgressBar opacityProgressBar = new AssociativeDraggableProgressBar(OPACITY_PROGRESS_BAR);
+        AssociativeDraggableProgressBar terrainLayerOpacityProgressBar = new AssociativeDraggableProgressBar(TERRAIN_LAYER_OPACITY_PROGRESS_BAR);
+
+        AssociativeDraggableProgressBar maskOpacityProgressBar = new AssociativeDraggableProgressBar(MASK_OPACITY_PROGRESS_BAR);
 
         // endregion
 
@@ -303,11 +319,10 @@ public class NoiseViewerController implements Initializable {
                 maskResetButton,
                 maskVisibilityButton,
                 applyMaskCheckBox,
-                maskWidthSpinner,
-                maskHeightSpinner,
                 maskStrengthSpinner,
                 circleCheckBox,
                 rectangleCheckBox,
+                maskOpacityProgressBar,
                 maskWidthSlider,
                 maskHeightSlider
         );
@@ -331,10 +346,12 @@ public class NoiseViewerController implements Initializable {
         maskHeightSpinner.addAssociatedNode(maskHeightSlider);
         maskStrengthSlider.addAssociatedNode(maskStrengthSpinner);
         maskStrengthSpinner.addAssociatedNode(maskStrengthSlider);
-        opacitySpinner.addAssociatedNode(opacityProgressBar);
-        opacityProgressBar.addAssociatedNode(opacitySpinner);
         rectangleCheckBox.addAssociatedNode(circleCheckBox);
         circleCheckBox.addAllAssociatedNodes(rectangleCheckBox);
+        maskOpacitySpinner.addAssociatedNode(maskOpacityProgressBar);
+        maskOpacityProgressBar.addAssociatedNode(maskOpacitySpinner);
+        terrainLayerOpacitySpinner.addAssociatedNode(terrainLayerOpacityProgressBar);
+        terrainLayerOpacityProgressBar.addAssociatedNode(terrainLayerOpacitySpinner);
 
         UpdateManager noiseUpdateManager = new UpdateManager();
         noiseUpdateManager.registerAll(
@@ -347,8 +364,10 @@ public class NoiseViewerController implements Initializable {
                 maskHeightSpinner,
                 maskStrengthSlider,
                 maskStrengthSpinner,
-                opacityProgressBar,
-                opacitySpinner,
+                maskOpacityProgressBar,
+                maskOpacitySpinner,
+                terrainLayerOpacityProgressBar,
+                terrainLayerOpacitySpinner,
                 rectangleCheckBox,
                 circleCheckBox,
                 noiseDisplay,

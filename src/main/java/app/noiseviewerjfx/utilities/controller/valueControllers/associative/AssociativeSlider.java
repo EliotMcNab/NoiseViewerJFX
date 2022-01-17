@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class AssociativeSlider extends SliderValueController implements Associative{
 
-    private final Map<Associable, Integer> associatedNodes = new HashMap<>();
+    public final Map<Associable, Integer> associatedNodes = new HashMap<>();
     /**
      * Create a new SliderValueController with a node associated to it
      * @param linkedSlider   (Slider): the slider associated to the SliderValueController
@@ -21,9 +21,9 @@ public class AssociativeSlider extends SliderValueController implements Associat
     @Override
     public boolean addAssociatedNode(Associable associatedNode) {
         if (associatedNode == this) return false;
-        boolean errorHappen = associatedNodes.put(associatedNode, associatedNode.getCurrentState()) != null;
+        associatedNodes.put(associatedNode, associatedNode.getCurrentState());
         syncSliderValue();
-        return errorHappen;
+        return true;
     }
 
     @Override
@@ -44,8 +44,6 @@ public class AssociativeSlider extends SliderValueController implements Associat
 
     @Override
     public boolean removeAssociatedNode(Associable associated) {
-        if (!associatedNodes.containsKey(associated)) return false;
-
         return associatedNodes.remove(associated) != null;
     }
 

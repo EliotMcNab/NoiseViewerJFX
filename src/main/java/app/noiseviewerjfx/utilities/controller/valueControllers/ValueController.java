@@ -20,6 +20,7 @@ abstract public class ValueController implements Evolving, Loadable {
 
     @Override
     public boolean restoreToState(State state) {
+        newState();
         return setValue((Double) state.getVALUE());
     }
 

@@ -50,14 +50,14 @@ public class AssociativeDraggableProgressBar extends DraggableProgressBarValueCo
             if (!hasUpdated(associatedNodes.get(associatedNode), associatedNode.getCurrentState())) continue;
 
             associatedNodes.replace(associatedNode, associatedNode.getCurrentState());
-            setValue(associatedNode.getValue() / 100);
+            setValue(associatedNode.getValue());
         }
 
     }
 
     private void syncProgressBarValue() {
         for (Associable associatedNode : associatedNodes.keySet()) {
-            setValue(associatedNode.getValue() / 100);
+            setValue(associatedNode.getValue());
         }
     }
 }

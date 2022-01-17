@@ -18,7 +18,7 @@ public class ProgressBarValueController extends ValueController implements Assoc
 
     @Override
     protected boolean setValue(double value) {
-        PROGRESS_BAR.setProgress(value);
+        PROGRESS_BAR.setProgress(value / 100);
         return true;
     }
 }
