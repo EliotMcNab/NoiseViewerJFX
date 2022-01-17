@@ -1,18 +1,21 @@
 
 package app.noiseviewerjfx.utilities.processing;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+
 import static app.noiseviewerjfx.utilities.ComplementaryMath.maptoInt;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.euclideanDistance;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.distanceToCircle;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Random;
 
-public class NoiseProcessing {
+public class Map {
 
-    public static Image debugGeneration(int imageSize, int border, int red, int green, int blue) {
+    /*public static Image debugGeneration(int imageSize, int border, int red, int green, int blue) {
 
         BufferedImage image = new BufferedImage(imageSize, imageSize, BufferedImage.TYPE_INT_RGB);
 
@@ -28,6 +31,44 @@ public class NoiseProcessing {
         }
 
         return image;
+    }*/
+
+    public static Image toGrayScale(int[][] grayScaleValues) {
+
+        // image size
+        final int IMAGE_HEIGHT = grayScaleValues.length;
+        final int IMAGE_WIDTH = grayScaleValues[0].length;
+
+        WritableImage grayScaleImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
+        PixelWriter pixelWriter = grayScaleImage.getPixelWriter();
+
+        for (int y = 0; y < IMAGE_HEIGHT; y++) {
+            for (int x = 0; x < IMAGE_WIDTH; x++) {
+                int grayScaleValue = grayScaleValues[y][x];
+                int color = ColorProcessing.grayScaleToArgb(grayScaleValue);
+                pixelWriter.setArgb(x, y, color);
+            }
+        }
+
+        return grayScaleImage;
+    }
+
+    public static Image toMaskImage(int[][] mask, float transparency) {
+
+        // image size
+        final int IMAGE_HEIGHT = mask.length;
+        final int IMAGE_WIDTH  = mask[0].length;
+
+        WritableImage maskImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
+        PixelWriter maskPixelWriter = maskImage.getPixelWriter();
+
+        for (int y = 0; y < IMAGE_HEIGHT; y++) {
+            for (int x = 0; x < IMAGE_WIDTH; x++) {
+                maskPixelWriter.setArgb(x, y, ColorProcessing.argb((int) (mask[y][x] * transparency), 0, 0, 0));
+            }
+        }
+
+        return maskImage;
     }
 
     /**
@@ -36,7 +77,7 @@ public class NoiseProcessing {
      * @param map2 (float[][]): the map that will be subtacted onto map1
      * @return
      */
-    public static int[][] subtract(int[][] map1, int[][] map2, int strength) {
+    public static int[][] subtract(int[][] map1, int[][] map2) {
 
         // handles the case where both maps are not the same size
         if (map1.length != map2.length || map1[0].length != map2[0].length) {
@@ -60,7 +101,7 @@ public class NoiseProcessing {
         // loops through every value of each map
         for (int y = 0; y < map1Copy.length; y++) {
             for (int x = 0; x < map1Copy[0].length; x++) {
-                map1Copy[y][x] -= map2[y][x] * strength;
+                map1Copy[y][x] -= map2[y][x];
                 // clamps the value to 0, 255
                 if (map1Copy[y][x] < 0) map1Copy[y][x] = 0;
             }
@@ -199,7 +240,7 @@ public class NoiseProcessing {
          * @param maskWidth (float): percentage of the map the mask will cover
          * @return (float[height][width]): mask used to create falloff at the end of a map
          */
-        public static int[][] generateRoundedSquareMask(int width, int height, float maskWidth, float maskHeight) {
+        public static int[][] generateRoundedSquareMask(int width, int height, float maskWidth, float maskHeight, int strength) {
 
             final float[][] floatMask = new float[height][width];
             final int[][] clampedMask = new int[height][width];
@@ -251,10 +292,19 @@ public class NoiseProcessing {
                 }
             }
 
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    clampedMask[y][x] *= strength;
+                    if (clampedMask[y][x] > 255) {
+                        clampedMask[y][x] = 255;
+                    }
+                }
+            }
+
             return clampedMask;
         }
 
-        public static int[][] generateCircularMask(int width, int height, float maskSize) {
+        public static int[][] generateCircularMask(int width, int height, float maskSize, int strength) {
 
             final float[][] floatMask = new float[height][width];
             final int[][] clampedMask = new int[height][width];
@@ -296,6 +346,15 @@ public class NoiseProcessing {
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     clampedMask[y][x] = maptoInt(floatMask[y][x], minVal, maxVal, 0, 255);
+                }
+            }
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    clampedMask[y][x] *= strength;
+                    if (clampedMask[y][x] > 255) {
+                        clampedMask[y][x] = 255;
+                    }
                 }
             }
 

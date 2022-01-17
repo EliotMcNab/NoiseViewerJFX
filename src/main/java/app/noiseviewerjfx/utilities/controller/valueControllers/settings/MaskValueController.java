@@ -137,7 +137,7 @@ public class MaskValueController extends ValueController implements Updatable, L
     }
 
     private boolean isMaskVisible() {
-        return IS_MASK_VISIBLE.getValue() >= 1;
+        return IS_MASK_VISIBLE.getValue() < 1;
     }
 
     private boolean isMaskActive() { return IS_MASK_ACTIVE.getValue() >= 1;}

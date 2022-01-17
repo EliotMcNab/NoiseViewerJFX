@@ -23,44 +23,19 @@ public class ImageProcessing {
 
     }
 
-    /*public static BufferedImage toGrayScale(int[][] grayScaleValues) {
+    /*public static Image overlay(Image background, Image foreground) {
 
-        // image size
-        final int IMAGE_HEIGHT = grayScaleValues.length;
-        final int IMAGE_WIDTH = grayScaleValues[0].length;
+        // the dimensions of the image
+        final int IMAGE_HEIGHT  = (int) background.getHeight();
+        final int IMAGE_WIDTH   = (int) background.getWidth();
 
-        BufferedImage grayScaleImage = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        PixelReader backgroundPixelReader = background.getPixelReader();
+        PixelReader foregroundPixelReader = foreground.getPixelReader();
+        WritableImage layeredImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        for (int y = 0; y < IMAGE_HEIGHT; y++) {
-            for (int x = 0; x < IMAGE_WIDTH; x++) {
-                int grayScaleValue = grayScaleValues[y][x];
-                int color = (grayScaleValue << 16) | (grayScaleValue << 8) | grayScaleValue;
-                grayScaleImage.setRGB(x, y, color);
-            }
-        }
 
-        return grayScaleImage;
+
     }*/
-
-    public static Image toGrayScale(int[][] grayScaleValues) {
-
-        // image size
-        final int IMAGE_HEIGHT = grayScaleValues.length;
-        final int IMAGE_WIDTH = grayScaleValues[0].length;
-
-        WritableImage grayScaleImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
-        PixelWriter pixelWriter = grayScaleImage.getPixelWriter();
-
-        for (int y = 0; y < IMAGE_HEIGHT; y++) {
-            for (int x = 0; x < IMAGE_WIDTH; x++) {
-                int grayScaleValue = grayScaleValues[y][x];
-                int color = ColorProcessing.grayScaleToArgb(grayScaleValue);
-                pixelWriter.setArgb(x, y, color);
-            }
-        }
-
-        return grayScaleImage;
-    }
 
     public static Image upScale(Image originalImage, final int scale) {
 

@@ -57,18 +57,17 @@
                      <content>
                         <AnchorPane id="BACKGROUND" fx:id="BACKGROUND" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <HBox id="TEST" fx:id="WORLD_CONTAINER" layoutX="-10.0" layoutY="-10.0">
+                              <StackPane fx:id="WORLD_CONTAINER" layoutX="-15.0" layoutY="-15.0">
                                  <children>
-                                    <ImageView id="IMAGE_SHADOW" fx:id="WORLD_IMAGE_VIEW" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                                    <ImageView id="IMAGE_SHADOW" fx:id="NOISE_LAYER" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
                                           <Image url="@images/generation_example.png" />
                                        </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
                                     </ImageView>
+                                    <ImageView fx:id="MASK_LAYER" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="TERRAIN_LAYER" fitHeight="300.0" fitWidth="300.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
                                  </children>
-                              </HBox>
+                              </StackPane>
                            </children>
                         </AnchorPane>
                      </content>

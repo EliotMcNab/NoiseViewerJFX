@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.scene.layout.StackPane;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
@@ -28,6 +29,9 @@ public class NoiseViewerController implements Initializable {
 
     @FXML
     private ScrollPane DISPLAY_SCROLL_PANE;
+
+    @FXML
+    private StackPane WORLD_CONTAINER;
 
     // region SPINNERS
     @FXML
@@ -163,14 +167,13 @@ public class NoiseViewerController implements Initializable {
     // region IMAGE VIEW
 
     @FXML
-    private ImageView WORLD_IMAGE_VIEW;
-
-    // endregion
-
-    // region HBOX
+    private ImageView NOISE_LAYER;
 
     @FXML
-    private HBox WORLD_CONTAINER;
+    private ImageView MASK_LAYER;
+
+    @FXML
+    private ImageView TERRAIN_LAYER;
 
     // endregion
 
@@ -328,7 +331,9 @@ public class NoiseViewerController implements Initializable {
         );
 
         NoiseDisplayHandler noiseDisplay = new NoiseDisplayHandler(
-                WORLD_IMAGE_VIEW,
+                NOISE_LAYER,
+                MASK_LAYER,
+                TERRAIN_LAYER,
                 noiseValueController,
                 maskValueController
         );
