@@ -7,6 +7,8 @@ import app.noiseviewerjfx.utilities.io.serialization.Save;
 public class NoiseValueController extends ValueController implements Updatable {
 
     private final ValueController NOISE_RESET;
+    private final ValueController SCALE;
+    private final ValueController LACUNARITY;
     private final ValueController OCTAVE;
     private final ValueController PERSISTENCE;
     private final ValueController SEED;
@@ -14,12 +16,16 @@ public class NoiseValueController extends ValueController implements Updatable {
     private final ValueController MAP_HEIGHT;
 
     private int lastNoiseResetState;
+    private int lastScaleState;
+    private int lastLacunarityState;
     private int lastOctaveState;
     private int lastPersistenceState;
     private int lastSeedState;
     private int lastMapWidthState;
     private int lastMapHeightState;
 
+    private final String SCALE_KEY          = "SCALE";
+    private final String LACUNARITY_KEY     = "LACUNARITY";
     private final String OCTAVES_KEY        = "OCTAVE_COUNT";
     private final String PERSISTENCE_KEY    = "PERSISTENCE";
     private final String SEED_KEY           = "SEED";
@@ -31,6 +37,8 @@ public class NoiseValueController extends ValueController implements Updatable {
 
     public NoiseValueController(
             ValueController noiseReset,
+            ValueController scale,
+            ValueController lacunarity,
             ValueController octave,
             ValueController persistence,
             ValueController seed,
@@ -38,6 +46,8 @@ public class NoiseValueController extends ValueController implements Updatable {
             ValueController mapHeight
     ) {
         this.NOISE_RESET    = noiseReset;
+        this.SCALE          = scale;
+        this.LACUNARITY     = lacunarity;
         this.OCTAVE         = octave;
         this.PERSISTENCE    = persistence;
         this.SEED           = seed;
@@ -45,6 +55,8 @@ public class NoiseValueController extends ValueController implements Updatable {
         this.MAP_HEIGHT     = mapHeight;
 
         this.lastNoiseResetState    = NOISE_RESET.getCurrentState();
+        this.lastScaleState         = SCALE.getCurrentState();
+        this.lastLacunarityState    = LACUNARITY.getCurrentState();
         this.lastOctaveState        = OCTAVE.getCurrentState();
         this.lastPersistenceState   = PERSISTENCE.getCurrentState();
         this.lastSeedState          = SEED.getCurrentState();
@@ -58,6 +70,8 @@ public class NoiseValueController extends ValueController implements Updatable {
     public Save save() {
         Save save = new Save(currentVersion++);
 
+        save.put(SCALE_KEY, SCALE.getState());
+        save.put(LACUNARITY_KEY, LACUNARITY.getState());
         save.put(OCTAVES_KEY, OCTAVE.getState());
         save.put(PERSISTENCE_KEY, PERSISTENCE.getState());
         save.put(SEED_KEY, SEED.getState());
@@ -69,8 +83,10 @@ public class NoiseValueController extends ValueController implements Updatable {
 
     @Override
     public boolean load(Save save) {
-        boolean loadSuccessful = true;
+        boolean loadSuccessful;
 
+        loadSuccessful = SCALE      .restoreToState(save.get(SCALE_KEY));
+        loadSuccessful = LACUNARITY .restoreToState(save.get(LACUNARITY_KEY))   && loadSuccessful;
         loadSuccessful = OCTAVE     .restoreToState(save.get(OCTAVES_KEY))      && loadSuccessful;
         loadSuccessful = PERSISTENCE.restoreToState(save.get(PERSISTENCE_KEY))  && loadSuccessful;
         loadSuccessful = SEED       .restoreToState(save.get(SEED_KEY))         && loadSuccessful;
@@ -81,6 +97,8 @@ public class NoiseValueController extends ValueController implements Updatable {
     }
 
     public record NoiseValues(
+            int SCALE,
+            double LACUNARITY,
             int OCTAVES,
             double PERSISTENCE,
             int SEED,
@@ -91,6 +109,8 @@ public class NoiseValueController extends ValueController implements Updatable {
     @Override
     public Object getObjectValue() {
         return new NoiseValues(
+                getScale(),
+                getLacunarity(),
                 getOctaves(),
                 getPersistence(),
                 getSeed(),
@@ -101,6 +121,14 @@ public class NoiseValueController extends ValueController implements Updatable {
 
     private boolean shouldReset() {
         return NOISE_RESET.getValue() >= 1;
+    }
+
+    private int getScale() {
+        return (int) SCALE.getValue();
+    }
+
+    private double getLacunarity() {
+        return LACUNARITY.getValue();
     }
 
     private int getOctaves() {
@@ -128,7 +156,13 @@ public class NoiseValueController extends ValueController implements Updatable {
         if (hasUpdated(lastNoiseResetState, NOISE_RESET.getCurrentState())) {
             lastNoiseResetState = NOISE_RESET.getCurrentState();
             return true;
-        }else if (hasUpdated(lastOctaveState, OCTAVE.getCurrentState())) {
+        } else if (hasUpdated(lastScaleState, SCALE.getCurrentState())) {
+            lastScaleState = SCALE.getCurrentState();
+            return true;
+        } else if (hasUpdated(lastLacunarityState, LACUNARITY.getCurrentState())) {
+            lastLacunarityState = LACUNARITY.getCurrentState();
+            return true;
+        } else if (hasUpdated(lastOctaveState, OCTAVE.getCurrentState())) {
             lastOctaveState = OCTAVE.getCurrentState();
             return true;
         } else if (hasUpdated(lastPersistenceState, PERSISTENCE.getCurrentState())) {

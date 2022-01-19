@@ -41,9 +41,17 @@ public class MainAppController implements Initializable {
 
     // region SPINNERS
     @FXML
+    private Spinner<Integer> NOISE_SCALE_SPINNER;
+    private final SpinnerValueFactory<Integer> noiseScaleVF =
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(10, 100, 10);
+    @FXML
     private Spinner<Integer> OCTAVE_SPINNER;
     private final SpinnerValueFactory<Integer> octaveSpinnerVF =
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+    @FXML
+    private Spinner<Double> LACUNARITY_SPINNER;
+    private final SpinnerValueFactory<Double> lacunaritySpinnerVf =
+            new SpinnerValueFactory.DoubleSpinnerValueFactory(1.1, 5, 1.1, 0.1);
     @FXML
     private Spinner<Double> PERSISTENCE_SPINNER;
     private final SpinnerValueFactory<Double> persistenceSpinnerVF =
@@ -79,6 +87,8 @@ public class MainAppController implements Initializable {
     // endregion SPINNERS
 
     // region SLIDERS
+    @FXML
+    private Slider NOISE_SCALE_SLIDER;
     @FXML
     private Slider MASK_WIDTH_SLIDER;
     @FXML
@@ -210,8 +220,14 @@ public class MainAppController implements Initializable {
                 MAP_HEIGHT_SPINNER, mapHeightSpinnerVF, 100, ""
         );
 
+        AssociativeIntegerSpinner noiseScaleSpinner = new AssociativeIntegerSpinner(
+                NOISE_SCALE_SPINNER, noiseScaleVF, 10, ""
+        );
         AssociativeIntegerSpinner octaveSpinner = new AssociativeIntegerSpinner(
                 OCTAVE_SPINNER, octaveSpinnerVF, 1, ""
+        );
+        AssociativeDoubleSpinner lacunaritySpinner = new AssociativeDoubleSpinner(
+                LACUNARITY_SPINNER, lacunaritySpinnerVf, 1.1, "", 1
         );
         AssociativeDoubleSpinner persistenceSpinner = new AssociativeDoubleSpinner(
                 PERSISTENCE_SPINNER, persistenceSpinnerVF, 0.1, "", 1
@@ -237,9 +253,11 @@ public class MainAppController implements Initializable {
 
         // region SLIDER
 
-        AssociativeSlider maskWidthSlider     = new AssociativeSlider(MASK_WIDTH_SLIDER);
-        AssociativeSlider maskHeightSlider    = new AssociativeSlider(MASK_HEIGHT_SLIDER);
-        AssociativeSlider maskStrengthSlider  = new AssociativeSlider(MASK_STRENGTH_SLIDER);
+        AssociativeSlider noiseScaleSlider      = new AssociativeSlider(NOISE_SCALE_SLIDER);
+
+        AssociativeSlider maskWidthSlider       = new AssociativeSlider(MASK_WIDTH_SLIDER);
+        AssociativeSlider maskHeightSlider      = new AssociativeSlider(MASK_HEIGHT_SLIDER);
+        AssociativeSlider maskStrengthSlider    = new AssociativeSlider(MASK_STRENGTH_SLIDER);
 
         // endregion
 
@@ -329,6 +347,8 @@ public class MainAppController implements Initializable {
 
         NoiseValueController noiseValueController = new NoiseValueController(
                 noiseResetButton,
+                noiseScaleSlider,
+                lacunaritySpinner,
                 octaveSpinner,
                 persistenceSpinner,
                 seedTextField,
@@ -360,11 +380,15 @@ public class MainAppController implements Initializable {
 
         // region NOISE
 
+        noiseScaleSlider    .addAssociatedNode(noiseScaleSpinner);
+        noiseScaleSpinner   .addAssociatedNode(noiseScaleSlider);
         octaveSpinner       .addAssociatedNode(randomOctaveButton);
         persistenceSpinner  .addAssociatedNode(randomPersistenceButton);
         seedTextField       .addAssociatedNode(randomSeedButton);
 
         UpdateScene noiseUpdateStage = new UpdateScene(
+                noiseScaleSlider,
+                noiseScaleSpinner,
                 octaveSpinner,
                 persistenceSpinner,
                 seedTextField,

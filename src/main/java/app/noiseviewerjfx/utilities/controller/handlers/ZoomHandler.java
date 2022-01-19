@@ -35,6 +35,9 @@ public class ZoomHandler {
     private final int SCROLL_AMOUNT         = 10;
     private double scale = 1;
 
+    private long lastUpdateCycle = 0;
+    private final int DELAY      = 10;
+
     private final Keyboard KEYBOARD = new Keyboard() {
         @Override
         protected void onKeyPressed(KeyEvent keyEvent) {
@@ -156,6 +159,8 @@ public class ZoomHandler {
         return mouseEvent -> {
 
             if (!KEYBOARD.isKeyPressed(KeyCode.SPACE)) return;
+            if (System.currentTimeMillis() - lastUpdateCycle <= 10) return;
+            lastUpdateCycle = System.currentTimeMillis();
 
             pickUpImage();
             dragInitialised = true;
@@ -166,6 +171,8 @@ public class ZoomHandler {
         return mouseEvent -> {
 
             if (!dragInitialised) return;
+            if (System.currentTimeMillis() - lastUpdateCycle <= 10) return;
+            lastUpdateCycle = System.currentTimeMillis();
 
             dropImage();
             dragInitialised = false;
@@ -176,6 +183,9 @@ public class ZoomHandler {
         return mouseEvent -> {
 
             if (!KEYBOARD.isKeyPressed(KeyCode.SPACE)) return;
+
+            if (System.currentTimeMillis() - lastUpdateCycle <= DELAY) return;
+            lastUpdateCycle = System.currentTimeMillis();
 
             Point2D newMousePosition = new Point2D(mouseEvent.getX(), mouseEvent.getY());
             Point2D mouseTranslation = lastMousePosition.subtract(newMousePosition);
@@ -189,6 +199,9 @@ public class ZoomHandler {
         return scrollEvent -> {
 
             if (scrollEvent.getDeltaY() == 0 && scrollEvent.getDeltaX() == 0) return;
+
+            if (System.currentTimeMillis() - lastUpdateCycle <= 10) return;
+            lastUpdateCycle = System.currentTimeMillis();
 
             if (KEYBOARD.isKeyPressed(KeyCode.CONTROL)) {
                 zoom(scrollEvent);
@@ -248,6 +261,7 @@ public class ZoomHandler {
     }
 
     private void applyDrag(Point2D dragAmount) {
+
         // updates the total displacement caused by drag (used when we re-center the image)
         dragOffset = dragOffset.subtract(dragAmount);
 
