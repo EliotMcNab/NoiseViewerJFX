@@ -569,8 +569,11 @@
                                        <children>
                                           <Button id="BIG-ICON-BUTTON" fx:id="TERRAIN_VISIBILITY_BUTTON" mnemonicParsing="false">
                                              <graphic>
-                                                <FontIcon id="GRAY-ICON" fx:id="TERRAIN_VISIBILITY_ICON" iconLiteral="far-eye" styleClass="big-icon" />
+                                                <FontIcon id="GRAY-ICON" fx:id="TERRAIN_VISIBILITY_ICON" iconLiteral="far-eye" styleClass="big-icon" text="" />
                                              </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Hides the terrain" />
+                                             </tooltip>
                                           </Button>
                                           <Button id="BIG-ICON-BUTTON" mnemonicParsing="false">
                                              <HBox.margin>
@@ -579,6 +582,9 @@
                                              <graphic>
                                                 <FontIcon id="RED-ICON" iconLiteral="fas-sync-alt" styleClass="big-icon" />
                                              </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Resets terrain settings" />
+                                             </tooltip>
                                           </Button>
                                           <Text id="TITLE" strokeType="OUTSIDE" strokeWidth="0.0" text="Terrain Generation">
                                              <font>
@@ -588,7 +594,10 @@
                                                 <Insets left="5.0" right="5.0" />
                                              </HBox.margin>
                                           </Text>
-                                          <CheckBox mnemonicParsing="false" />
+                                          <CheckBox mnemonicParsing="false">
+                                             <tooltip>
+                                                <Tooltip text="Activates terrain view" />
+                                             </tooltip></CheckBox>
                                        </children>
                                        <BorderPane.margin>
                                           <Insets />
@@ -612,6 +621,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Adds a new layer" />
+                                                         </tooltip>
                                                       </Button>
                                                       <Button id="ICON-BUTTON" fx:id="DELETE_TERRAIN_LAYER_BUTTON" layoutX="10.0" layoutY="10.0" mnemonicParsing="false">
                                                          <graphic>
@@ -620,6 +632,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Deletes the current layer" />
+                                                         </tooltip>
                                                       </Button>
                                                    </children>
                                                 </HBox>
@@ -634,6 +649,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Hides the current layer" />
+                                                         </tooltip>
                                                       </Button>
                                                       <Button id="ICON-BUTTON" fx:id="TERRAIN_LAYER_LOCK_BUTTON" mnemonicParsing="false">
                                                          <graphic>
@@ -642,6 +660,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Prevents any changes to the current layer" />
+                                                         </tooltip>
                                                       </Button>
                                                    </children>
                                                 </HBox>
@@ -656,6 +677,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Moves the current layer to the top" />
+                                                         </tooltip>
                                                       </Button>
                                                       <Button id="ICON-BUTTON" layoutX="62.0" layoutY="10.0" mnemonicParsing="false">
                                                          <graphic>
@@ -664,6 +688,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Raises the current layer by one" />
+                                                         </tooltip>
                                                       </Button>
                                                       <Button id="ICON-BUTTON" layoutX="83.0" layoutY="10.0" mnemonicParsing="false">
                                                          <graphic>
@@ -672,6 +699,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Lowers the current layer by one" />
+                                                         </tooltip>
                                                       </Button>
                                                       <Button id="ICON-BUTTON" mnemonicParsing="false">
                                                          <graphic>
@@ -680,6 +710,9 @@
                                                          <HBox.margin>
                                                             <Insets bottom="-2.0" left="-2.0" right="-2.0" top="-2.0" />
                                                          </HBox.margin>
+                                                         <tooltip>
+                                                            <Tooltip text="Moves the current layer to the bottom" />
+                                                         </tooltip>
                                                       </Button>
                                                    </children>
                                                 </HBox>
