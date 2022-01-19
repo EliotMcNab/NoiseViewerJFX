@@ -74,8 +74,6 @@ public class NoiseDisplayHandler implements Persistent {
 
     private void updateView() {
 
-        if (seedHasChanged()) generateNewSeed();
-
         if (noiseHasChanged()) {
             Grid noise = generateNoise();
             NOISE_LAYER.setImage(noise.toGrayscaleImage());
@@ -85,6 +83,11 @@ public class NoiseDisplayHandler implements Persistent {
     }
 
     private Grid generateNoise() {
+
+        if (seedHasChanged()) {
+            noiseField = noiseField.generate(lastNoiseValues.SEED());
+        }
+
         PerlinNoiseTransformation perlinNoise = new PerlinNoiseTransformation(
                 lastNoiseValues.MAP_WIDTH(),
                 lastNoiseValues.MAP_HEIGHT(),
@@ -146,9 +149,5 @@ public class NoiseDisplayHandler implements Persistent {
 
         lastSeed = lastNoiseValues.SEED();
         return true;
-    }
-
-    private void generateNewSeed() {
-        noiseField = noiseField.generate(lastSeed);
     }
 }
