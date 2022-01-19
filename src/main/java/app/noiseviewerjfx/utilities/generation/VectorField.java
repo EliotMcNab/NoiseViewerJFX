@@ -107,6 +107,10 @@ public class VectorField implements Plane, Generated, Cloneable {
         );
     }
 
+    public VectorField resize(int newWidth, int newHeight) {
+        return new VectorField(grid, newWidth, newHeight);
+    }
+
     // =====================================
     //              GENERATION
     // =====================================
@@ -122,10 +126,14 @@ public class VectorField implements Plane, Generated, Cloneable {
     }
 
     @Override
-    public void generate(long seed) {
+    public VectorField generate(long seed) {
         VectorField generated = generationModel.generate(this, seed);
 
-        this.grid = generated.grid;
+        return new VectorField(
+                generated.grid,
+                generated.WIDHT,
+                generated.HEIGHT
+        );
     }
 
     public static FieldGenerationModel RANDOM_GENERATION = (other, seed) -> {

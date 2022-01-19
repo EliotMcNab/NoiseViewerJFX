@@ -6,6 +6,8 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseVa
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController.NoiseValues;
 import app.noiseviewerjfx.utilities.generation.Grid;
 import app.noiseviewerjfx.utilities.generation.VectorField;
+import app.noiseviewerjfx.utilities.generation.effects.Upscale;
+import app.noiseviewerjfx.utilities.generation.transformations.FractalNoiseTransformation;
 import app.noiseviewerjfx.utilities.generation.transformations.PerlinNoiseTransformation;
 import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.Map;
@@ -18,7 +20,7 @@ public class NoiseDisplayHandler implements Persistent {
     private final ImageView MASK_LAYER;
     private final ImageView TERRAIN_LAYER;
 
-    private final VectorField noiseField;
+    private VectorField noiseField;
 
     private final NoiseValueController NOISE_PARAMETERS;
     private final MaskValueController MASK_PARAMETERS;
@@ -57,7 +59,7 @@ public class NoiseDisplayHandler implements Persistent {
 
         noiseField = new VectorField(1000, 1000);
         noiseField.setGenerationModel(VectorField.RANDOM_GENERATION);
-        noiseField.generate(lastNoiseValues.SEED());
+        noiseField = noiseField.generate(lastNoiseValues.SEED());
 
         updateView();
     }
@@ -72,17 +74,64 @@ public class NoiseDisplayHandler implements Persistent {
     private void updateView() {
 
         Grid noise = generateNoise();
-        NOISE_LAYER.setImage(ImageProcessing.upScale(noise.toGrayscaleImage(), 2));
+        NOISE_LAYER.setImage(noise.toGrayscaleImage());
 
         MASK_LAYER.setVisible(useMask() && maskIsVisible());
     }
 
     private Grid generateNoise() {
-        return noiseField.applyTransformation(new PerlinNoiseTransformation(
+
+        PerlinNoiseTransformation perlinNoise = new PerlinNoiseTransformation(100, 100, 10);
+        return noiseField.applyTransformation(new FractalNoiseTransformation(perlinNoise, 2, 0.5, 3));
+
+        /*noiseField = noiseField.generate((long) (Math.random() * 10_000_000));
+
+        int SCALE = 10;
+        double STRENGTH = 1;
+        final int WIDTH  = lastNoiseValues.MAP_WIDTH();
+        final int HEIGHT = lastNoiseValues.MAP_HEIGHT();
+
+        noiseField = noiseField.resize(
+                WIDTH / SCALE,
+                HEIGHT / SCALE);
+
+        Grid noise = noiseField.applyTransformation(new PerlinNoiseTransformation(
                 lastNoiseValues.MAP_WIDTH(),
                 lastNoiseValues.MAP_HEIGHT(),
-                10
+                SCALE
         ));
+
+        SCALE /= 2;
+        STRENGTH /= 2;
+
+        noiseField = noiseField.resize(
+                WIDTH / SCALE,
+                HEIGHT / SCALE);
+
+        Grid noise1 = noiseField.applyTransformation(new PerlinNoiseTransformation(
+                lastNoiseValues.MAP_WIDTH(),
+                lastNoiseValues.MAP_HEIGHT(),
+                SCALE
+        ));
+
+        Grid noiseF = noise.add(noise1, STRENGTH);
+
+        SCALE /= 2;
+        STRENGTH /= 2;
+
+        noiseField = noiseField.resize(
+                WIDTH / SCALE,
+                HEIGHT / SCALE);
+
+        Grid noise2 = noiseField.applyTransformation(new PerlinNoiseTransformation(
+                lastNoiseValues.MAP_WIDTH(),
+                lastNoiseValues.MAP_HEIGHT(),
+                SCALE
+        ));
+
+        noiseF = noiseF.add(noise2, STRENGTH);
+
+        return noiseF.applyEffect(new Upscale(2));*/
     }
 
     private boolean changeOccurred() {

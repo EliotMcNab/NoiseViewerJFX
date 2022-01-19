@@ -23,20 +23,6 @@ public class ImageProcessing {
 
     }
 
-    /*public static Image overlay(Image background, Image foreground) {
-
-        // the dimensions of the image
-        final int IMAGE_HEIGHT  = (int) background.getHeight();
-        final int IMAGE_WIDTH   = (int) background.getWidth();
-
-        PixelReader backgroundPixelReader = background.getPixelReader();
-        PixelReader foregroundPixelReader = foreground.getPixelReader();
-        WritableImage layeredImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
-
-
-
-    }*/
-
     public static Image upScale(Image originalImage, final int scale) {
 
         final int IMAGE_WIDTH = (int) originalImage.getWidth();

@@ -7,16 +7,15 @@ import app.noiseviewerjfx.utilities.generation.VectorField;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.lerp;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.smoothStep;
 
-public class PerlinNoiseTransformation implements FieldTransform {
+public class PerlinNoiseTransformation extends Noise {
 
-    private final int WIDTH;
-    private final int HEIGHT;
-    private final int SCALE;
+    public PerlinNoiseTransformation(final int width, final int height, final double scale) {
+        super(width, height, scale);
+    }
 
-    public PerlinNoiseTransformation(final int width, final int height, final int scale) {
-        this.WIDTH  = width;
-        this.HEIGHT = height;
-        this.SCALE  = scale;
+    @Override
+    public PerlinNoiseTransformation setScale(double scale) {
+        return new PerlinNoiseTransformation(WIDTH, HEIGHT, scale);
     }
 
     @Override

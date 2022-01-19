@@ -7,7 +7,7 @@ public interface Generated {
 
     int getSize();
 
-    void generate(long seed);
+    Generated generate(long seed);
 
     void setGenerationModel(GenerationModel generationModel);
 

@@ -45,11 +45,6 @@ public class Grid implements Plane, Generated, Cloneable {
         this.MIN    = min;
         this.MAX    = max;
         this.grid   = Arrays.copyOf(gridArray, WIDHT * HEIGHT);
-
-        this.max_Value = MIN;
-        this.min_Value = MAX;
-
-        normalise();
     }
 
     // =====================================
@@ -104,16 +99,54 @@ public class Grid implements Plane, Generated, Cloneable {
     //       TRANSFORMATIONS & EFFECTS
     // =====================================
 
-    private void normalise() {
-        for (int i = 0; i < grid.length; i++) {
-            grid[i] = ComplementaryMath.mapToDouble(grid[i], min_Value, max_Value, MIN, MAX);
-        }
-    }
-
     public Grid applyEffect(GridEffect effect) {
         checkGeneration();
         return effect.applyTo(this);
     }
+
+    public Grid applyAllEffects(GridEffect... effects) {
+        Grid copy = this;
+
+        for (GridEffect effect : effects) {
+            copy = copy.applyEffect(effect);
+        }
+
+        return copy;
+    }
+
+    public Grid add(Grid other) {
+        return add(other, 1);
+    }
+
+    public Grid add(Grid other, double strength) {
+        double[] grid = new double[getSize()];
+
+        double min = MAX + other.MAX * strength;
+        double max = MIN + other.MIN * strength;
+
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDHT; x++) {
+                int i = y * WIDHT + x;
+                grid[i] = get(x, y) + other.get(x, y) * strength;
+                if (grid[i] < min) min = grid[i];
+                if (grid[i] > max) max = grid[i];
+            }
+        }
+
+        return new Grid(grid, WIDHT, HEIGHT, min, max);
+    }
+
+    /*public Grid addAll(Grid... others) {
+
+        double max = MIN;
+        double min = MAX;
+
+        for (Grid other : others) {
+            max += other.MIN;
+            min += other.MAX;
+        }
+
+    }*/
 
     // =====================================
     //               IMAGE
@@ -167,14 +200,16 @@ public class Grid implements Plane, Generated, Cloneable {
     }
 
     @Override
-    public void generate(long seed) {
+    public Grid generate(long seed) {
         Grid generated = generationModel.generate(this, seed);
 
-        this.grid = generated.grid;
-        this.min_Value = generated.min_Value;
-        this.max_Value = generated.max_Value;
-        this.MIN = generated.MIN;
-        this.MAX = generated.MAX;
+        return new Grid(
+                generated.grid,
+                generated.WIDHT,
+                generated.HEIGHT,
+                generated.MIN,
+                generated.MAX
+        );
     }
 
     public static GridGenerationModel RANDOM_GENERATION = (other, seed) -> {
