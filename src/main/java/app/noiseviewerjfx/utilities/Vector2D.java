@@ -2,67 +2,80 @@ package app.noiseviewerjfx.utilities;
 
 import javafx.geometry.Point2D;
 
-public class Vector2D {
+public class Vector2D implements Cloneable{
 
-    private final double X;
-    private final double Y;
+    public final double x;
+    public final double y;
 
     public Vector2D() {
-        this.X = 0;
-        this.Y = 0;
+        this.x = 0;
+        this.y = 0;
     }
 
     public Vector2D(double x, double y) {
-        this.X = x;
-        this.Y = y;
+        this.x = x;
+        this.y = y;
     }
 
     public Vector2D(Vector2D other) {
-        this.X = other.X;
-        this.Y = other.Y;
+        this.x = other.x;
+        this.y = other.y;
     }
 
     public Vector2D sub(Vector2D other) {
-        return new Vector2D(X - other.X, Y - other.Y);
+        return new Vector2D(x - other.x, y - other.y);
     }
 
     public Vector2D sub(double X, double Y) {
-        return new Vector2D(this.X - X, this.Y - Y);
+        return new Vector2D(this.x - X, this.y - Y);
     }
 
     public Vector2D add(Vector2D other) {
-        return new Vector2D(X + other.X, Y + other.Y);
+        return new Vector2D(x + other.x, y + other.y);
     }
 
     public Vector2D add(double X, double Y) {
-        return new Vector2D(this.X + X, this.Y + Y);
+        return new Vector2D(this.x + X, this.y + Y);
     }
 
     public Vector2D mult(double d) {
-        return new Vector2D(X * d, Y * d);
+        return new Vector2D(x * d, y * d);
     }
 
     public Vector2D div(double d) {
-        return new Vector2D(X / d, Y / d);
+        return new Vector2D(x / d, y / d);
+    }
+
+    public Vector2D floor() {
+        return new Vector2D(Math.floor(x), Math.floor(y));
+    }
+
+    public double dot(Vector2D other) {
+        return x * other.x + y * other.y;
     }
 
     public double getX() {
-        return X;
+        return x;
     }
 
     public double getY() {
-        return Y;
+        return y;
+    }
+
+    @Override
+    public Vector2D clone() {
+        return new Vector2D(x, y);
     }
 
     public Point2D toPoint2D() {
-        return new Point2D(X, Y);
+        return new Point2D(x, y);
     }
 
     @Override
     public String toString() {
         return "Vector2D{" +
-                "X=" + X +
-                ", Y=" + Y +
+                "X=" + x +
+                ", Y=" + y +
                 '}';
     }
 }

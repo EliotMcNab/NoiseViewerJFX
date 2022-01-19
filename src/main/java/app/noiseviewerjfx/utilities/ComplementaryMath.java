@@ -5,8 +5,16 @@ import java.math.RoundingMode;
 
 public class ComplementaryMath {
 
-    public static int maptoInt(float val, float minA, float maxA, int minB, int maxB) {
+    public static int mapToInt(float val, float minA, float maxA, int minB, int maxB) {
         return (int) ((1 - ((val - minA) / (maxA - minA))) * minB + ((val - minA) / (maxA - minA)) * maxB);
+    }
+
+    public static float mapToFloat(float val, float minA, float maxA, float minB, float maxB) {
+        return (1 - ((val - minA) / (maxA - minA))) * minB + ((val - minA) / (maxA - minA)) * maxB;
+    }
+
+    public static double mapToDouble(double val, double minA, double maxA, double minB, double maxB) {
+        return (1 - ((val - minA) / (maxA - minA))) * minB + ((val - minA) / (maxA - minA)) * maxB;
     }
 
     public static float euclideanDistance(float x1, float y1, float x2, float y2) {
@@ -36,6 +44,18 @@ public class ComplementaryMath {
         if (value < min) return min;
         if (value > max) return max;
         return value;
+    }
+
+    public static double smoothStep(double t) {
+        return t * t * (3 - 2 * t);
+    }
+
+    public static double quintic(double t) {
+        return t * t * t * (t * (t * 6 - 15) + 10);
+    }
+
+    public static double lerp(double val1, double val2, double t) {
+        return val1 + (val2 - val1) * t;
     }
 
 }

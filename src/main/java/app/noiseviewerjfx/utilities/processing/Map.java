@@ -5,53 +5,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
-import static app.noiseviewerjfx.utilities.ComplementaryMath.maptoInt;
+import static app.noiseviewerjfx.utilities.ComplementaryMath.mapToInt;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.euclideanDistance;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.distanceToCircle;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
+@Deprecated
 public class Map {
-
-    /*public static Image debugGeneration(int imageSize, int border, int red, int green, int blue) {
-
-        BufferedImage image = new BufferedImage(imageSize, imageSize, BufferedImage.TYPE_INT_RGB);
-
-        for (int y = 0; y < imageSize; y++) {
-            for (int x = 0; x < imageSize; x++) {
-                if (x <= border || x >= imageSize - border - 1 || y <= border || y >= imageSize - border - 1) {
-                    image.setRGB(x, y, 0x242729);
-                    continue;
-                }
-                int color = (red << 16) | (green << 8) | blue;
-                image.setRGB(x, y, color);
-            }
-        }
-
-        return image;
-    }*/
-
-    public static Image toGrayScale(int[][] grayScaleValues) {
-
-        // image size
-        final int IMAGE_HEIGHT = grayScaleValues.length;
-        final int IMAGE_WIDTH = grayScaleValues[0].length;
-
-        WritableImage grayScaleImage = new WritableImage(IMAGE_WIDTH, IMAGE_HEIGHT);
-        PixelWriter pixelWriter = grayScaleImage.getPixelWriter();
-
-        for (int y = 0; y < IMAGE_HEIGHT; y++) {
-            for (int x = 0; x < IMAGE_WIDTH; x++) {
-                int grayScaleValue = grayScaleValues[y][x];
-                int color = ColorProcessing.grayScaleToArgb(grayScaleValue);
-                pixelWriter.setArgb(x, y, color);
-            }
-        }
-
-        return grayScaleImage;
-    }
 
     public static Image toMaskImage(int[][] mask, float transparency) {
 
@@ -173,7 +135,63 @@ public class Map {
             //normalize values so that they stay between 0..255
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    alphaPerlinNoise[y][x] = maptoInt(perlinNoise[y][x], minNoiseValue, maxNoiseValue, 0, 255);
+                    alphaPerlinNoise[y][x] = mapToInt(perlinNoise[y][x], minNoiseValue, maxNoiseValue, 0, 255);
+                }
+            }
+
+            return alphaPerlinNoise;
+        }
+
+        public static int[][] acceleratedPerlinNoise(int width, int height, int octaveCount, double persistence, long seed) {
+
+            final float[][] base = new float[height][width];
+            final float[][] perlinNoise = new float[height][width];
+            final int[][] alphaPerlinNoise = new int[height][width];
+            final float[][][] noiseLayers = new float[octaveCount][][];
+
+            float maxNoiseValue = 0;
+            float minNoiseValue = 1;
+
+            Random random = new Random(seed);
+            //fill base array with random values as base for noise
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    base[y][x] = random.nextFloat();
+                }
+            }
+
+            //calculate octaves with different roughness
+            for (int octave = 0; octave < octaveCount; octave++) {
+                noiseLayers[octave] = generatePerlinNoiseLayer(base, width, height, octave);
+            }
+
+            float amplitude = 1f;
+            float totalAmplitude = 0f;
+
+            //calculate perlin noise by blending each layer together with specific persistence
+            for (int octave = octaveCount - 1; octave >= 0; octave--) {
+                amplitude *= persistence;
+                totalAmplitude += amplitude;
+
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        //adding each value of the noise layer to the noise
+                        //by increasing amplitude the rougher noises will have more impact
+                        perlinNoise[y][x] += noiseLayers[octave][y][x] * amplitude;
+
+                        if (perlinNoise[y][x] > maxNoiseValue) {
+                            maxNoiseValue = perlinNoise[y][x];
+                        } else if (perlinNoise[y][x] < minNoiseValue) {
+                            minNoiseValue = perlinNoise[y][x];
+                        }
+                    }
+                }
+            }
+
+            //normalize values so that they stay between 0..255
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    alphaPerlinNoise[y][x] = mapToInt(perlinNoise[y][x], minNoiseValue, maxNoiseValue, 0, 255);
                 }
             }
 
@@ -288,7 +306,7 @@ public class Map {
             // clamps the value of the mask between 0 and 255 for display
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    clampedMask[y][x] = maptoInt(floatMask[y][x], minVal, maxVal, 0, 255);
+                    clampedMask[y][x] = mapToInt(floatMask[y][x], minVal, maxVal, 0, 255);
                 }
             }
 
@@ -345,7 +363,7 @@ public class Map {
             // clamps the value of the mask between 0 and 255 for display
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    clampedMask[y][x] = maptoInt(floatMask[y][x], minVal, maxVal, 0, 255);
+                    clampedMask[y][x] = mapToInt(floatMask[y][x], minVal, maxVal, 0, 255);
                 }
             }
 

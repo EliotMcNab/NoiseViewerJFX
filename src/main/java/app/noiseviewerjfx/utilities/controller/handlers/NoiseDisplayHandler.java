@@ -1,14 +1,15 @@
 package app.noiseviewerjfx.utilities.controller.handlers;
 
-import app.noiseviewerjfx.utilities.controller.valueControllers.Updatable;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskValueController;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskValueController.MaskValues;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController.NoiseValues;
+import app.noiseviewerjfx.utilities.generation.Grid;
+import app.noiseviewerjfx.utilities.generation.VectorField;
+import app.noiseviewerjfx.utilities.generation.transformations.PerlinNoiseTransformation;
 import app.noiseviewerjfx.utilities.processing.ImageProcessing;
 import app.noiseviewerjfx.utilities.processing.Map;
 import app.noiseviewerjfx.utilities.tasks.Persistent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class NoiseDisplayHandler implements Persistent {
@@ -17,8 +18,7 @@ public class NoiseDisplayHandler implements Persistent {
     private final ImageView MASK_LAYER;
     private final ImageView TERRAIN_LAYER;
 
-    private int[][] noise   = new int[1][1];
-    private int[][] mask    = new int[1][1];
+    private final VectorField noiseField;
 
     private final NoiseValueController NOISE_PARAMETERS;
     private final MaskValueController MASK_PARAMETERS;
@@ -55,6 +55,10 @@ public class NoiseDisplayHandler implements Persistent {
         lastNoiseValues = getNoiseValues();
         lastMaskValues  = getMaskValues();
 
+        noiseField = new VectorField(1000, 1000);
+        noiseField.setGenerationModel(VectorField.RANDOM_GENERATION);
+        noiseField.generate(lastNoiseValues.SEED());
+
         updateView();
     }
 
@@ -63,55 +67,22 @@ public class NoiseDisplayHandler implements Persistent {
         if (changeOccurred()) updateView();
     }
 
+    int i = 1;
+
     private void updateView() {
 
-        noise = generateNoise();
-        mask = generateMask();
-
-        NOISE_LAYER.setImage(generateNoiseLayer());
-        MASK_LAYER.setImage(generateMaskLayer());
-        // TERRAIN_LAYER.setImage(generateTerrainLayer());
+        Grid noise = generateNoise();
+        NOISE_LAYER.setImage(ImageProcessing.upScale(noise.toGrayscaleImage(), 2));
 
         MASK_LAYER.setVisible(useMask() && maskIsVisible());
     }
 
-    private int[][] generateNoise() {
-        return Map.PerlinNoise.generatePerlinNoise(
+    private Grid generateNoise() {
+        return noiseField.applyTransformation(new PerlinNoiseTransformation(
                 lastNoiseValues.MAP_WIDTH(),
                 lastNoiseValues.MAP_HEIGHT(),
-                lastNoiseValues.OCTAVES(),
-                lastNoiseValues.PERSISTENCE(),
-                lastNoiseValues.SEED()
-        );
-    }
-
-    private int[][] generateMask() {
-        if (lastMaskValues.IS_RECTANGLE_MASK()) {
-            return Map.Mask.generateRoundedSquareMask(
-                    lastNoiseValues.MAP_WIDTH(),
-                    lastNoiseValues.MAP_HEIGHT(),
-                    (float) lastMaskValues.MASK_WIDTH(),
-                    (float) lastMaskValues.MASK_HEIGHT(),
-                    lastMaskValues.MASK_STRENGTH()
-            );
-        } else {
-            return Map.Mask.generateCircularMask(
-                    lastNoiseValues.MAP_WIDTH(),
-                    lastNoiseValues.MAP_HEIGHT(),
-                    (float) lastMaskValues.MASK_WIDTH(),
-                    lastMaskValues.MASK_STRENGTH()
-            );
-        }
-    }
-
-    private Image generateNoiseLayer() {
-        Image noiseImage = Map.toGrayScale(noise);
-
-        return ImageProcessing.upScale(noiseImage, 2);
-    }
-
-    private Image generateMaskLayer() {
-        return Map.toMaskImage(mask, lastMaskValues.MASK_OPACITY() / 100f);
+                10
+        ));
     }
 
     private boolean changeOccurred() {
