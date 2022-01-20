@@ -2,6 +2,9 @@ package app.noiseviewerjfx.utilities.generation.effects;
 
 import app.noiseviewerjfx.utilities.generation.Grid;
 
+/**
+ * An {@link Effect} that upscales the values in a {@link Grid}
+ */
 public class Upscale implements GridEffect{
 
     private final int SCALE;
@@ -41,6 +44,6 @@ public class Upscale implements GridEffect{
             }
         }
 
-        return new Grid(grid, wS, hS, target.getMin(), target.getMax());
+        return new Grid(grid, wS, hS, target.getMin(), target.getMax(), target.getImageModel(), target.getGenerationModel());
     }
 }

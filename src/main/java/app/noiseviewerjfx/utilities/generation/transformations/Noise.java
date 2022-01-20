@@ -1,6 +1,10 @@
 package app.noiseviewerjfx.utilities.generation.transformations;
 
-public abstract class Noise implements FieldTransform{
+/**
+ * A pseudo-randomly generated 2D texture <br>
+ * <i>see {@link PerlinNoiseTransformation} for a working implementation</i>
+ */
+public abstract class Noise implements FieldTransformation {
 
     protected final int WIDTH;
     protected final int HEIGHT;

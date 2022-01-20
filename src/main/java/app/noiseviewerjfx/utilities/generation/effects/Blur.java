@@ -2,6 +2,9 @@ package app.noiseviewerjfx.utilities.generation.effects;
 
 import app.noiseviewerjfx.utilities.generation.Grid;
 
+/**
+ * A Blur {@link Effect} which can be applied to a {@link Grid}
+ */
 public class Blur implements GridEffect {
 
     private final int STRENGTH;
@@ -34,9 +37,9 @@ public class Blur implements GridEffect {
                     ) / 9;
                 }
             }
-            target = new Grid(grid, WIDTH, HEIGHT, target.getMin(), target.getMax());
+            target = new Grid(grid, WIDTH, HEIGHT, target.getMin(), target.getMax(), target.getImageModel(), target.getGenerationModel());
         }
 
-        return new Grid(grid, WIDTH, HEIGHT, target.getMin(), target.getMax());
+        return new Grid(grid, WIDTH, HEIGHT, target.getMin(), target.getMax(), target.getImageModel(), target.getGenerationModel());
     }
 }

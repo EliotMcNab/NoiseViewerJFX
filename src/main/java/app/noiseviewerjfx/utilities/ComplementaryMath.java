@@ -22,6 +22,19 @@ public class ComplementaryMath {
     }
 
     /**
+     * Determines whether a point is inside a circle
+     * @param x (int): x-coordinates of the point
+     * @param y (int): y-coordinates of the point
+     * @param dX (int): x-coordinates of the center of the circle
+     * @param dY (int): y-coordinates of the center of the circle
+     * @param r (int): circle radius
+     * @return (boolean): whether the point is inside the circle
+     */
+    public static boolean isInCircle(int x, int y, int dX, int dY, int r) {
+        return distanceToCircle(x, y, dX, dY, r) < 0;
+    }
+
+    /**
      * Calculates the shortest distance between a point and the edge of a circle
      * @param x (float): x-coordinates of the point
      * @param y (float): y-coordinates of the point
@@ -33,7 +46,7 @@ public class ComplementaryMath {
      *     click for more info concerning the formula being used</a>
      */
     public static float distanceToCircle(float x, float y, float h, float i, float r) {
-        return (float) java.lang.Math.abs(java.lang.Math.sqrt((x - h) * (x - h) + (y - i) * (y - i)) - r);
+        return (float) java.lang.Math.sqrt((x - h) * (x - h) + (y - i) * (y - i)) - r;
     }
 
     public static double roundToPrecision(double value, int precision) {

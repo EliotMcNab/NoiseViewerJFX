@@ -3,7 +3,10 @@ package app.noiseviewerjfx.utilities.generation.transformations;
 import app.noiseviewerjfx.utilities.generation.Grid;
 import app.noiseviewerjfx.utilities.generation.VectorField;
 
-public class FractalNoiseTransformation implements FieldTransform{
+/**
+ * A {@link FieldTransformation field transformation} used to layer multiple layers of {@link Noise} on top of each other
+ */
+public class FractalNoiseTransformation implements FieldTransformation {
 
     private Noise transformation;
 

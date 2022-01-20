@@ -7,6 +7,9 @@ import app.noiseviewerjfx.utilities.generation.VectorField;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.lerp;
 import static app.noiseviewerjfx.utilities.ComplementaryMath.smoothStep;
 
+/**
+ * Generates Perlin {@link Noise} from a {@link VectorField vector field}
+ */
 public class PerlinNoiseTransformation extends Noise {
 
     public PerlinNoiseTransformation(final int width, final int height, final double scale) {
@@ -38,7 +41,7 @@ public class PerlinNoiseTransformation extends Noise {
             }
         }
 
-        return new Grid(noiseGrid, WIDTH, HEIGHT, min, max);
+        return new Grid(noiseGrid, WIDTH, HEIGHT, min, max, Grid.GRAYSCALE, Grid.RANDOM_GENERATION);
     }
 
     private double getNoiseAt(VectorField target, int x, int y) {

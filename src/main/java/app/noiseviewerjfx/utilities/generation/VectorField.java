@@ -2,18 +2,25 @@ package app.noiseviewerjfx.utilities.generation;
 
 import app.noiseviewerjfx.utilities.Vector2D;
 import app.noiseviewerjfx.utilities.generation.errors.GenerationError;
-import app.noiseviewerjfx.utilities.generation.transformations.FieldTransform;
+import app.noiseviewerjfx.utilities.generation.generationmodel.FieldGenerationModel;
+import app.noiseviewerjfx.utilities.generation.generationmodel.GenerationModel;
+import app.noiseviewerjfx.utilities.generation.transformations.FieldTransformation;
 
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * A {@link Plane} composed of {@link Vector2D Vectors}, which can ge {@link Generated} using a {@link FieldGenerationModel}
+ * and have {@link FieldTransformation field transformations} or
+ * {@link app.noiseviewerjfx.utilities.generation.effects.FieldEffect field effects} applied to it
+ */
 public class VectorField implements Plane, Generated, Cloneable {
 
     // =====================================
     //               FIELDS
     // =====================================
 
-    private Vector2D[] grid;
+    private Vector2D[] grid = new Vector2D[1];
     private final int WIDHT;
     private final int HEIGHT;
     private FieldGenerationModel generationModel = RANDOM_GENERATION;
@@ -29,12 +36,13 @@ public class VectorField implements Plane, Generated, Cloneable {
 
     public VectorField(VectorField otherGrid) {
         this(otherGrid.grid, otherGrid.WIDHT, otherGrid.HEIGHT);
+        generationModel = otherGrid.generationModel;
     }
 
     public VectorField(Vector2D[] gridArray, final int width, final int height) {
         this.WIDHT  = width;
         this.HEIGHT = height;
-        this.grid   = gridArray;
+        this.grid   = Arrays.copyOf(gridArray, gridArray.length);
     }
 
     // =====================================
@@ -93,18 +101,14 @@ public class VectorField implements Plane, Generated, Cloneable {
         throw new GenerationError(this);
     }
 
-    public Grid applyTransformation(FieldTransform effect) {
+    public Grid applyTransformation(FieldTransformation effect) {
         checkGeneration();
         return effect.transform(this);
     }
 
     @Override
     protected VectorField clone() {
-        return new VectorField(
-                Arrays.copyOf(grid, WIDHT * HEIGHT),
-                WIDHT,
-                HEIGHT
-        );
+        return new VectorField(this);
     }
 
     public VectorField resize(int newWidth, int newHeight) {
@@ -116,8 +120,10 @@ public class VectorField implements Plane, Generated, Cloneable {
     // =====================================
 
     @Override
-    public void setGenerationModel(GenerationModel generationModel) {
-        this.generationModel = (FieldGenerationModel) generationModel;
+    public VectorField setGenerationModel(GenerationModel generationModel) {
+        VectorField clone = clone();
+        clone.generationModel = (FieldGenerationModel) generationModel;
+        return clone;
     }
 
     @Override

@@ -7,6 +7,7 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseVa
 import app.noiseviewerjfx.utilities.generation.Grid;
 import app.noiseviewerjfx.utilities.generation.VectorField;
 import app.noiseviewerjfx.utilities.generation.effects.Upscale;
+import app.noiseviewerjfx.utilities.generation.generationmodel.GradientCircleGenerationModel;
 import app.noiseviewerjfx.utilities.generation.transformations.FractalNoiseTransformation;
 import app.noiseviewerjfx.utilities.generation.transformations.PerlinNoiseTransformation;
 import app.noiseviewerjfx.utilities.tasks.Persistent;
@@ -25,7 +26,10 @@ public class NoiseDisplayHandler implements Persistent {
 
     private int lastNoiseState;
     private int lastMaskState;
+
     private long lastSeed;
+    private int lastMapWidth;
+    private int lastMapHeight;
 
     private NoiseValues lastNoiseValues;
     private MaskValues lastMaskValues;
@@ -56,10 +60,12 @@ public class NoiseDisplayHandler implements Persistent {
         lastNoiseValues = getNoiseValues();
         lastMaskValues  = getMaskValues();
 
-        lastSeed = lastNoiseValues.SEED();
+        lastSeed        = lastNoiseValues.SEED();
+        lastMapWidth    = lastNoiseValues.MAP_WIDTH();
+        lastMapHeight   = lastNoiseValues.MAP_HEIGHT();
 
         noiseField = new VectorField(1000, 1000);
-        noiseField.setGenerationModel(VectorField.RANDOM_GENERATION);
+        noiseField = noiseField.setGenerationModel(VectorField.RANDOM_GENERATION);
         noiseField = noiseField.generate(lastNoiseValues.SEED());
 
         updateView();
@@ -70,8 +76,6 @@ public class NoiseDisplayHandler implements Persistent {
         updateView();
     }
 
-    int i = 1;
-
     private void updateView() {
 
         if (noiseHasChanged()) {
@@ -79,7 +83,13 @@ public class NoiseDisplayHandler implements Persistent {
             NOISE_LAYER.setImage(noise.toGrayscaleImage());
         }
 
+        if (maskHasChanged() && useMask() && maskIsVisible() || mapResized()) {
+            Grid mask = generateMask();
+            MASK_LAYER.setImage(mask.toGrayscaleImage());
+        }
+
         MASK_LAYER.setVisible(useMask() && maskIsVisible());
+
     }
 
     private Grid generateNoise() {
@@ -106,6 +116,23 @@ public class NoiseDisplayHandler implements Persistent {
         return fractalPerlinNoise.applyEffect(new Upscale(2));
     }
 
+    private Grid generateMask() {
+
+        Grid mask = new Grid(
+                lastNoiseValues.MAP_WIDTH(),
+                lastNoiseValues.MAP_HEIGHT()
+        );
+
+        final int size = (int) (lastNoiseValues.MAP_WIDTH() * lastMaskValues.MASK_WIDTH() / 100);
+
+        mask = mask.setGenerationModel(new GradientCircleGenerationModel(size / 2));
+        mask = mask.setImageModel(Grid.OPACITY);
+        mask = mask.generate(0);
+        mask = mask.applyEffect(new Upscale(2));
+
+        return mask;
+    }
+
     private boolean noiseHasChanged() {
         if (!hasUpdated(lastNoiseState, NOISE_PARAMETERS.getCurrentState())) return false;
 
@@ -114,18 +141,12 @@ public class NoiseDisplayHandler implements Persistent {
         return true;
     }
 
-    private boolean changeOccurred() {
-        if (hasUpdated(lastNoiseState, NOISE_PARAMETERS.getCurrentState())) {
-            lastNoiseState = NOISE_PARAMETERS.getCurrentState();
-            lastNoiseValues = getNoiseValues();
-            return true;
-        } else if (hasUpdated(lastMaskState, MASK_PARAMETERS.getCurrentState())) {
-            lastMaskState = MASK_PARAMETERS.getCurrentState();
-            lastMaskValues = getMaskValues();
-            return true;
-        }
+    private boolean maskHasChanged() {
+        if (!hasUpdated(lastMaskState, MASK_PARAMETERS.getCurrentState())) return false;
 
-        return false;
+        lastMaskState = MASK_PARAMETERS.getCurrentState();
+        lastMaskValues = getMaskValues();
+        return true;
     }
 
     private NoiseValues getNoiseValues() {
@@ -148,6 +169,15 @@ public class NoiseDisplayHandler implements Persistent {
         if (lastSeed == lastNoiseValues.SEED()) return false;
 
         lastSeed = lastNoiseValues.SEED();
+        return true;
+    }
+
+    private boolean mapResized() {
+        if (lastNoiseValues.MAP_HEIGHT() == lastMapHeight && lastNoiseValues.MAP_WIDTH() == lastMapWidth) return false;
+
+        lastMapHeight   = lastNoiseValues.MAP_HEIGHT();
+        lastMapWidth    = lastNoiseValues.MAP_WIDTH();
+
         return true;
     }
 }

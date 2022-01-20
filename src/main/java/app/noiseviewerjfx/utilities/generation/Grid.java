@@ -1,9 +1,12 @@
 package app.noiseviewerjfx.utilities.generation;
 
-import app.noiseviewerjfx.utilities.ComplementaryMath;
 import app.noiseviewerjfx.utilities.Vector2D;
+import app.noiseviewerjfx.utilities.generation.ImageModel.ImageModel;
 import app.noiseviewerjfx.utilities.generation.effects.GridEffect;
 import app.noiseviewerjfx.utilities.generation.errors.GenerationError;
+import app.noiseviewerjfx.utilities.generation.generationmodel.GenerationModel;
+import app.noiseviewerjfx.utilities.generation.generationmodel.GridGenerationModel;
+import app.noiseviewerjfx.utilities.generation.transformations.GridTransformation;
 import app.noiseviewerjfx.utilities.processing.ColorProcessing;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -12,19 +15,22 @@ import javafx.scene.image.WritableImage;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * A {@link Plane plane} composed of double values, which can ge {@link Generated generated} using a
+ * {@link GridGenerationModel grid generation model} and have {@link GridTransformation grid transformations}
+ * or {@link GridEffect grid effects} applied to it
+ */
 public class Grid implements Plane, Generated, Cloneable {
 
-    private double[] grid;
+    private double[] grid = new double[1];
     private final int WIDHT;
     private final int HEIGHT;
 
     private double MIN;
     private double MAX;
 
-    private double max_Value;
-    private double min_Value;
-
     private GridGenerationModel generationModel = RANDOM_GENERATION;
+    private ImageModel imageModel = GRAYSCALE;
 
     // =====================================
     //             CONSTRUCTORS
@@ -37,14 +43,26 @@ public class Grid implements Plane, Generated, Cloneable {
 
     public Grid(Grid otherGrid) {
         this(otherGrid.grid, otherGrid.WIDHT, otherGrid.HEIGHT, otherGrid.MIN, otherGrid.MAX);
+        imageModel = otherGrid.imageModel;
+        generationModel = otherGrid.generationModel;
     }
 
-    public Grid(double[] gridArray, final int width, final int height, final double min, final double max) {
+    private Grid(double[] gridArray, final int width, final int height, final double min, final double max) {
         this.WIDHT  = width;
         this.HEIGHT = height;
         this.MIN    = min;
         this.MAX    = max;
-        this.grid   = Arrays.copyOf(gridArray, WIDHT * HEIGHT);
+        this.grid   = Arrays.copyOf(gridArray, gridArray.length);
+    }
+
+    public Grid(double[] gridArray, final int width, final int height, final double min, final double max, ImageModel imageModel, GridGenerationModel generationModel) {
+        this.WIDHT  = width;
+        this.HEIGHT = height;
+        this.MIN    = min;
+        this.MAX    = max;
+        this.grid   = Arrays.copyOf(gridArray, gridArray.length);
+        this.imageModel = imageModel;
+        this.generationModel = generationModel;
     }
 
     // =====================================
@@ -136,53 +154,9 @@ public class Grid implements Plane, Generated, Cloneable {
         return new Grid(grid, WIDHT, HEIGHT, min, max);
     }
 
-    /*public Grid addAll(Grid... others) {
-
-        double max = MIN;
-        double min = MAX;
-
-        for (Grid other : others) {
-            max += other.MIN;
-            min += other.MAX;
-        }
-
-    }*/
-
-    // =====================================
-    //               IMAGE
-    // =====================================
-
-    private void checkGeneration() {
-        if (grid != null) return;
-        throw new GenerationError(this);
-    }
-
-    public Image toGrayscaleImage() {
-
-        checkGeneration();
-
-        WritableImage grayscale = new WritableImage(WIDHT, HEIGHT);
-        PixelWriter pixelWriter = grayscale.getPixelWriter();
-
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDHT; x++) {
-                final int pixelValue = (int) ((get(x, y) + Math.abs(MIN)) / (MAX + Math.abs(MIN)) * 255);
-                pixelWriter.setArgb(x, y, ColorProcessing.grayScaleToArgb(pixelValue));
-            }
-        }
-
-        return grayscale;
-    }
-
     @Override
     protected Grid clone() {
-        return new Grid(
-                Arrays.copyOf(grid, WIDHT * HEIGHT),
-                WIDHT,
-                HEIGHT,
-                MIN,
-                MAX
-        );
+        return new Grid(this);
     }
 
     // =====================================
@@ -190,8 +164,10 @@ public class Grid implements Plane, Generated, Cloneable {
     // =====================================
 
     @Override
-    public void setGenerationModel(GenerationModel generationModel) {
-        this.generationModel = (GridGenerationModel) generationModel;
+    public Grid setGenerationModel(GenerationModel generationModel) {
+        Grid clone = clone();
+        clone.generationModel = (GridGenerationModel) generationModel;
+        return clone;
     }
 
     @Override
@@ -208,7 +184,9 @@ public class Grid implements Plane, Generated, Cloneable {
                 generated.WIDHT,
                 generated.HEIGHT,
                 generated.MIN,
-                generated.MAX
+                generated.MAX,
+                imageModel,
+                generationModel
         );
     }
 
@@ -299,6 +277,60 @@ public class Grid implements Plane, Generated, Cloneable {
         double max = 1;
 
         return new Grid(grid, other.getWidth(), other.getHeight(), min, max);
+    };
+
+    // =====================================
+    //          IMAGE CONVERSION
+    // =====================================
+
+    private void checkGeneration() {
+        if (grid != null) return;
+        throw new GenerationError(this);
+    }
+
+    public Image toGrayscaleImage() {
+        checkGeneration();
+        return imageModel.toImage(this);
+    }
+
+    public Grid setImageModel(ImageModel newModel) {
+        Grid clone = clone();
+        clone.imageModel = newModel;
+        return clone;
+    }
+
+    public ImageModel getImageModel() {
+        return imageModel;
+    }
+
+    public static ImageModel GRAYSCALE = plane -> {
+
+        WritableImage grayscale = new WritableImage(plane.getWidth(), plane.getHeight());
+        PixelWriter pixelWriter = grayscale.getPixelWriter();
+
+        for (int y = 0; y < plane.getHeight(); y++) {
+            for (int x = 0; x < plane.getWidth(); x++) {
+                final int pixelValue = (int) ((plane.get(x, y) + Math.abs(plane.getMin())) / (plane.getMax() + Math.abs(plane.getMin())) * 255);
+                pixelWriter.setArgb(x, y, ColorProcessing.grayScaleToArgb(pixelValue));
+            }
+        }
+
+        return grayscale;
+    };
+
+    public static ImageModel OPACITY = plane -> {
+
+        WritableImage maskImage = new WritableImage(plane.getWidth(), plane.getHeight());
+        PixelWriter maskPixelWriter = maskImage.getPixelWriter();
+
+        for (int y = 0; y < plane.getHeight(); y++) {
+            for (int x = 0; x < plane.getWidth(); x++) {
+                maskPixelWriter.setArgb(x, y, ColorProcessing.argb((int) (plane.get(x, y) * 255), 0, 0, 0));
+            }
+        }
+
+        return maskImage;
+
     };
 
 }
