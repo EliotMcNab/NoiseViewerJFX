@@ -6,9 +6,11 @@ import static app.noiseviewerjfx.utilities.ComplementaryMath.distanceToCircle;
 public class GradientCircleGenerationModel implements GridGenerationModel{
 
     private final int RADIUS;
+    private final double STRENGTH;
 
-    public GradientCircleGenerationModel(final int radius) {
+    public GradientCircleGenerationModel(final int radius, double strength) {
         this.RADIUS = radius;
+        this.STRENGTH = strength;
     }
 
     @Override
@@ -33,8 +35,9 @@ public class GradientCircleGenerationModel implements GridGenerationModel{
 
                 // saves the ratio between the point's distance to the circle
                 // and the maximum possible distance to the circle to obtain gradient
-                grid[y * WIDTH + x] = distanceToCircleEdge / maxDistanceToCircle;
-
+                int i = y * WIDTH + x;
+                grid[i] = distanceToCircleEdge / maxDistanceToCircle * STRENGTH;
+                if (grid[i] > 1) grid[i] = 1;
             }
         }
 

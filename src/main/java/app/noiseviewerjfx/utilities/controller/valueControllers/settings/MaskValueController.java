@@ -115,7 +115,7 @@ public class MaskValueController extends ValueController implements Updatable, L
             int MASK_STRENGTH,
             boolean IS_CIRCLE_MASK,
             boolean IS_RECTANGLE_MASK,
-            int MASK_OPACITY
+            double MASK_OPACITY
     ) { }
 
     @Override
@@ -162,8 +162,8 @@ public class MaskValueController extends ValueController implements Updatable, L
         return IS_RECTANGLE_MASK.getValue() >= 1;
     }
 
-    private int getMaskOpacity() {
-        return (int) MASK_OPACITY.getValue();
+    private double getMaskOpacity() {
+        return (MASK_OPACITY.getValue() / 100.);
     }
 
     private boolean changeOccurred() {

@@ -2,6 +2,7 @@ package app.noiseviewerjfx.utilities.generation;
 
 import app.noiseviewerjfx.utilities.Vector2D;
 import app.noiseviewerjfx.utilities.generation.ImageModel.ImageModel;
+import app.noiseviewerjfx.utilities.generation.ImageModel.Opacity;
 import app.noiseviewerjfx.utilities.generation.effects.GridEffect;
 import app.noiseviewerjfx.utilities.generation.errors.GenerationError;
 import app.noiseviewerjfx.utilities.generation.generationmodel.GenerationModel;
@@ -318,19 +319,6 @@ public class Grid implements Plane, Generated, Cloneable {
         return grayscale;
     };
 
-    public static ImageModel OPACITY = plane -> {
-
-        WritableImage maskImage = new WritableImage(plane.getWidth(), plane.getHeight());
-        PixelWriter maskPixelWriter = maskImage.getPixelWriter();
-
-        for (int y = 0; y < plane.getHeight(); y++) {
-            for (int x = 0; x < plane.getWidth(); x++) {
-                maskPixelWriter.setArgb(x, y, ColorProcessing.argb((int) (plane.get(x, y) * 255), 0, 0, 0));
-            }
-        }
-
-        return maskImage;
-
-    };
+    public static ImageModel OPACITY = new Opacity(1);
 
 }

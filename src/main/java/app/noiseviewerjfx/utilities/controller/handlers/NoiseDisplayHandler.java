@@ -5,6 +5,7 @@ import app.noiseviewerjfx.utilities.controller.valueControllers.settings.MaskVal
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController;
 import app.noiseviewerjfx.utilities.controller.valueControllers.settings.NoiseValueController.NoiseValues;
 import app.noiseviewerjfx.utilities.generation.Grid;
+import app.noiseviewerjfx.utilities.generation.ImageModel.Opacity;
 import app.noiseviewerjfx.utilities.generation.VectorField;
 import app.noiseviewerjfx.utilities.generation.effects.Upscale;
 import app.noiseviewerjfx.utilities.generation.generationmodel.GradientCircleGenerationModel;
@@ -125,8 +126,8 @@ public class NoiseDisplayHandler implements Persistent {
 
         final int size = (int) (lastNoiseValues.MAP_WIDTH() * lastMaskValues.MASK_WIDTH() / 100);
 
-        mask = mask.setGenerationModel(new GradientCircleGenerationModel(size / 2));
-        mask = mask.setImageModel(Grid.OPACITY);
+        mask = mask.setGenerationModel(new GradientCircleGenerationModel(size / 2, lastMaskValues.MASK_STRENGTH()));
+        mask = mask.setImageModel(new Opacity(lastMaskValues.MASK_OPACITY()));
         mask = mask.generate(0);
         mask = mask.applyEffect(new Upscale(2));
 
