@@ -3,12 +3,12 @@ import app.noiseviewerjfx.utilities.generation.Grid;
 
 import static app.noiseviewerjfx.utilities.ComplementaryMath.distanceToCircle;
 
-public class GradientCircleGenerationModel implements GridGenerationModel{
+public class GradientCircleGeneration implements GridGenerationModel{
 
     private final int RADIUS;
     private final double STRENGTH;
 
-    public GradientCircleGenerationModel(final int radius, double strength) {
+    public GradientCircleGeneration(final int radius, double strength) {
         this.RADIUS = radius;
         this.STRENGTH = strength;
     }

@@ -8,7 +8,8 @@ import app.noiseviewerjfx.utilities.generation.Grid;
 import app.noiseviewerjfx.utilities.generation.ImageModel.Opacity;
 import app.noiseviewerjfx.utilities.generation.VectorField;
 import app.noiseviewerjfx.utilities.generation.effects.Upscale;
-import app.noiseviewerjfx.utilities.generation.generationmodel.GradientCircleGenerationModel;
+import app.noiseviewerjfx.utilities.generation.generationmodel.GradientCircleGeneration;
+import app.noiseviewerjfx.utilities.generation.generationmodel.GradientRectangleGeneration;
 import app.noiseviewerjfx.utilities.generation.transformations.FractalNoiseTransformation;
 import app.noiseviewerjfx.utilities.generation.transformations.PerlinNoiseTransformation;
 import app.noiseviewerjfx.utilities.tasks.Persistent;
@@ -124,13 +125,22 @@ public class NoiseDisplayHandler implements Persistent {
                 lastNoiseValues.MAP_HEIGHT()
         );
 
-        final int size = (int) (lastNoiseValues.MAP_WIDTH() * lastMaskValues.MASK_WIDTH() / 100);
+        // determines the size of the mask respectively to the rest of the map
+        final int width = (int) (lastNoiseValues.MAP_WIDTH() * lastMaskValues.MASK_WIDTH() / 100);
+        final int height = (int) (lastNoiseValues.MAP_HEIGHT() * lastMaskValues.MASK_HEIGHT() / 100);
 
-        mask = mask.setGenerationModel(new GradientCircleGenerationModel(size / 2, lastMaskValues.MASK_STRENGTH()));
+        // sets the type of mask being used
+        if (lastMaskValues.IS_CIRCLE_MASK())
+            mask = mask.setGenerationModel(new GradientCircleGeneration(width / 2, lastMaskValues.MASK_STRENGTH()));
+        else if (lastMaskValues.IS_RECTANGLE_MASK())
+            mask = mask.setGenerationModel(new GradientRectangleGeneration(width, height, lastMaskValues.MASK_STRENGTH()));
+
+        // generates the mask and scales it
         mask = mask.setImageModel(new Opacity(lastMaskValues.MASK_OPACITY()));
         mask = mask.generate(0);
         mask = mask.applyEffect(new Upscale(2));
 
+        // returns the final mask
         return mask;
     }
 

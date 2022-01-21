@@ -4,11 +4,11 @@ import app.noiseviewerjfx.utilities.generation.Grid;
 
 import static app.noiseviewerjfx.utilities.ComplementaryMath.isInCircle;
 
-public class CircleGenerationModel implements GridGenerationModel{
+public class CircleGeneration implements GridGenerationModel{
 
     private final int RADIUS;
 
-    public CircleGenerationModel(final int radius) {
+    public CircleGeneration(final int radius) {
         this.RADIUS = radius;
     }
 

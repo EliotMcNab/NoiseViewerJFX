@@ -22,6 +22,20 @@ public class ComplementaryMath {
     }
 
     /**
+     * Determines whether a point is inside a rectangle
+     * @param x (int): x-coordinates of the point
+     * @param y (int): y-coordinates of the point
+     * @param dx (int): x-coordinates of the top-left corner of the rectangle
+     * @param dy (int): y-coordinates of the top-left corner of the rectangle
+     * @param w (int): the rectangle's width
+     * @param h (int): the rectangle's height
+     * @return (boolean): whether the point is inside the rectangle
+     */
+    public static boolean isInRectangle(int x, int y, int dx, int dy, int w, int h) {
+        return (x >= dx && x <= dx + w) && (y >= dy && y <= dy + h);
+    }
+
+    /**
      * Determines whether a point is inside a circle
      * @param x (int): x-coordinates of the point
      * @param y (int): y-coordinates of the point

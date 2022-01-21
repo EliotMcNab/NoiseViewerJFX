@@ -218,7 +218,7 @@ public class ZoomHandler {
         final Point2D dragAmount;
 
         if (KEYBOARD.isKeyPressed(KeyCode.SHIFT)) {
-            deltaDrag = scrollEvent.getDeltaX() > 0 ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
+            deltaDrag = scrollEvent.getDeltaX() > 0 ? -SCROLL_AMOUNT : SCROLL_AMOUNT;
             dragAmount = new Point2D(deltaDrag, 0);
         } else {
             deltaDrag = scrollEvent.getDeltaY() > 0 ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
