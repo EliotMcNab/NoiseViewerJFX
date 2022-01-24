@@ -13,7 +13,7 @@ public class Rectangle {
     private final Vector2D minPosition;
     private final Vector2D maxPosition;
 
-    public Rectangle(final int w, final int h) {
+    public Rectangle(final int w, final int h   ) {
         this(w, h, new Vector2D());
     }
 

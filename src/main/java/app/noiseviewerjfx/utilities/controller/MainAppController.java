@@ -1,5 +1,6 @@
 package app.noiseviewerjfx.utilities.controller;
 
+import app.noiseviewerjfx.utilities.controller.handlers.DragHandler;
 import app.noiseviewerjfx.utilities.controller.handlers.NoiseDisplayHandler;
 import app.noiseviewerjfx.utilities.controller.handlers.ZoomHandler;
 import app.noiseviewerjfx.utilities.controller.valueControllers.*;
@@ -19,6 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -210,6 +212,7 @@ public class MainAppController implements Initializable {
 
         MASK_WIDTH_SLIDER.setValue(50);
         MASK_HEIGHT_SLIDER.setValue(50);
+
 
         // region SPINNERS
 

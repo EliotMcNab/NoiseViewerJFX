@@ -477,7 +477,7 @@
                                                    <children>
                                                       <Label>
                                                          <graphic>
-                                                            <ImageView id="IMAGE_SHADOW" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                                                            <ImageView id="IMAGE_SHADOW" fx:id="CIRCLE_MASK" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                                                <image>
                                                                   <Image url="@images/circular_mask.png" />
                                                                </image>
@@ -728,7 +728,10 @@
                                        <center>
                                           <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" styleClass="terrain-scroll-pane" BorderPane.alignment="CENTER">
                                              <content>
-                                                <VBox id="TERRAIN_LAYERS" />
+                                                <VBox id="TERRAIN_LAYERS">
+                                                   <children>
+                                                      <HBox id="BACKGROUND" fx:id="TEST_TERRAIN_LAYER" prefHeight="100.0" prefWidth="200.0" />
+                                                   </children></VBox>
                                              </content>
                                           </ScrollPane>
                                        </center>
